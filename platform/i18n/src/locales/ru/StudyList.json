@@ -1,0 +1,19 @@
+{
+  "AccessionNumber": "Номер выборки",
+  "ClearFilters": "Очистить фильтры",
+  "Description": "Описание",
+  "Empty": "Пусто",
+  "Instances": "Экземпляры",
+  "MRN": "УМК",
+  "NumOfStudiesHiggerThan100Message": "Фильтровать список до 100 исследований и менее для возможности сортировки",
+  "Modality": "Модальность",
+  "PatientName": "Имя пациента",
+  "Previous": "Назад",
+  "Page": "Страница",
+  "Next": "Вперед",
+  "ResultsPerPage": "Количество результатов на страницу",
+  "Studies": "Исследования",
+  "StudyDate": "Дата исследования",
+  "StudyDescription": "Описание",
+  "StudyList": "Список исследований"
+}
