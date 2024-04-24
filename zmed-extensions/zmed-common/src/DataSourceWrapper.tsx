@@ -107,6 +107,8 @@ function DataSourceWrapper(props) {
 
   const [data, setData] = useState(DEFAULT_DATA);
   const [isLoading, setIsLoading] = useState(false);
+  const [pages, setPages] = useState(null);
+  const [size, setSize] = useState(null);
 
   /**
    * The effect to initialize the data source whenever it changes. Similar to
@@ -181,7 +183,10 @@ function DataSourceWrapper(props) {
     async function getData() {
       setIsLoading(true);
 
-      const studies = await dataSource.query.studies.search(queryFilterValues);
+      const {studies, pages, size, total} = await dataSource.query.studies.search(queryFilterValues);
+
+      setPages(pages);
+      setSize(size);
 
       const config = {
         method: 'post',
@@ -278,6 +283,8 @@ function DataSourceWrapper(props) {
       dataTotal={data.total}
       dataSource={dataSource}
       isLoadingData={isLoading}
+      pages={pages}
+      size={size}
       // To refresh the data, simply reset it to DEFAULT_DATA which invalidates it and triggers a new query to fetch the data.
       onRefresh={() => setData(DEFAULT_DATA)}
     />
@@ -319,9 +326,6 @@ function _getQueryFilterValues(query, queryLimit) {
     // Rarely supported server-side
     sortBy: query.get('sortBy'),
     sortDirection: query.get('sortDirection'),
-    // Offset...
-    offset:
-      Math.floor((pageNumber * resultsPerPage) / queryLimit) * (queryLimit - 1),
     config: query.get('configUrl'),
     me: true
   };
