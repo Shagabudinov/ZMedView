@@ -153,7 +153,7 @@ function createDicomWebApi(dicomWebConfig, userAuthenticationService) {
 
             response = await axios(config);
             if (response.status == 200) {
-              const studies = response.data.map(el => {
+              const studies = response.data.items.map(el => {
                 return el.study_id;
               });
               if (studies.length > 0) {
