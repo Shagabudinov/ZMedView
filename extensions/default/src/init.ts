@@ -10,7 +10,15 @@ const metadataProvider = classes.MetadataProvider;
  * @param {Object} servicesManager
  * @param {Object} configuration
  */
+<<<<<<< HEAD
 export default function init({ servicesManager, configuration = {}, commandsManager }): void {
+=======
+export default function init({
+  servicesManager,
+  configuration = {},
+  commandsManager,
+}: withAppTypes): void {
+>>>>>>> origin/master
   const { stateSyncService, toolbarService, cineService, viewportGridService } =
     servicesManager.services;
 
@@ -77,7 +85,11 @@ export default function init({ servicesManager, configuration = {}, commandsMana
   toolbarService.subscribe(toolbarService.EVENTS.TOOL_BAR_MODIFIED, state => {
     const { buttons } = state;
     for (const [id, button] of Object.entries(buttons)) {
+<<<<<<< HEAD
       const { groupId, items, listeners } = button.props;
+=======
+      const { groupId, items, listeners } = button.props || {};
+>>>>>>> origin/master
 
       // Handle group items' listeners
       if (groupId && items) {

@@ -1,6 +1,10 @@
 {
   "name": "@ohif/i18n",
+<<<<<<< HEAD
   "version": "3.8.0-beta.69",
+=======
+  "version": "3.9.0-beta.9",
+>>>>>>> origin/master
   "description": "Internationalization library for The OHIF Viewer",
   "author": "OHIF",
   "license": "MIT",

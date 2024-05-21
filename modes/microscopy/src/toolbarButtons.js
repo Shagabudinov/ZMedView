@@ -143,6 +143,23 @@ const toolbarButtons = [
         },
       ],
       evaluate: 'evaluate.microscopyTool',
+<<<<<<< HEAD
+=======
+    },
+  },
+  {
+    id: 'TagBrowser',
+    uiType: 'ohif.radioGroup',
+    props: {
+      icon: 'dicom-tag-browser',
+      label: 'Dicom Tag Browser',
+      commands: [
+        {
+          commandName: 'openDICOMTagViewer',
+        },
+      ],
+      evaluate: 'evaluate.action',
+>>>>>>> origin/master
     },
   },
 ];

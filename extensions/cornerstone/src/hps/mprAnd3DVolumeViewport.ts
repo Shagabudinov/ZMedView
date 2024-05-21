@@ -84,7 +84,15 @@ export const mprAnd3DVolumeViewport = {
             {
               id: 'mprDisplaySet',
               options: {
+<<<<<<< HEAD
                 displayPreset: 'CT-Bone',
+=======
+                displayPreset: {
+                  CT: 'CT-Bone',
+                  MR: 'MR-Default',
+                  default: 'CT-Bone',
+                },
+>>>>>>> origin/master
               },
             },
           ],

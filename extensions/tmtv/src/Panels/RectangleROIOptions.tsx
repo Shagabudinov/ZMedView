@@ -40,7 +40,11 @@ function reducer(state, action) {
   }
 }
 
+<<<<<<< HEAD
 function RectangleROIOptions({ servicesManager, commandsManager }) {
+=======
+function RectangleROIOptions({ servicesManager, commandsManager }: withAppTypes) {
+>>>>>>> origin/master
   const { segmentationService } = servicesManager.services;
   const [selectedSegmentationId, setSelectedSegmentationId] = useState(null);
 
@@ -62,18 +66,26 @@ function RectangleROIOptions({ servicesManager, commandsManager }) {
 
   const handleROIThresholding = useCallback(() => {
     const segmentationId = selectedSegmentationId;
+<<<<<<< HEAD
 
     const segmentation = segmentationService.getSegmentation(segmentationId);
+=======
+>>>>>>> origin/master
     const activeSegmentIndex =
       cs3dTools.segmentation.segmentIndex.getActiveSegmentIndex(segmentationId);
 
     // run the threshold based on the active segment index
     // Todo: later find a way to associate each rectangle with a segment (e.g., maybe with color?)
+<<<<<<< HEAD
     const labelmap = runCommand('thresholdSegmentationByRectangleROITool', {
+=======
+    runCommand('thresholdSegmentationByRectangleROITool', {
+>>>>>>> origin/master
       segmentationId,
       config,
       segmentIndex: activeSegmentIndex,
     });
+<<<<<<< HEAD
 
     // re-calculating the cached stats for the active segmentation
     const updatedPerSegmentCachedStats = {};
@@ -128,6 +140,8 @@ function RectangleROIOptions({ servicesManager, commandsManager }) {
       false, // don't suppress events
       notYetUpdatedAtSource
     );
+=======
+>>>>>>> origin/master
   }, [selectedSegmentationId, config]);
 
   useEffect(() => {
@@ -171,6 +185,7 @@ function RectangleROIOptions({ servicesManager, commandsManager }) {
     };
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     const { unsubscribe } = segmentationService.subscribe(
       segmentationService.EVENTS.SEGMENTATION_REMOVED,
@@ -192,6 +207,8 @@ function RectangleROIOptions({ servicesManager, commandsManager }) {
     };
   }, []);
 
+=======
+>>>>>>> origin/master
   return (
     <div className="invisible-scrollbar mb-2 flex flex-col overflow-y-auto overflow-x-hidden">
       <ROIThresholdConfiguration

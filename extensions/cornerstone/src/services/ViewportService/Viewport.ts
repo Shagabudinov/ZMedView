@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 import { Types, Enums } from '@cornerstonejs/core';
+=======
+import {
+  Types,
+  Enums,
+  getEnabledElementByViewportId,
+  VolumeViewport,
+  utilities,
+} from '@cornerstonejs/core';
+>>>>>>> origin/master
 import { Types as CoreTypes } from '@ohif/core';
 import { StackViewportData, VolumeViewportData } from '../../types/CornerstoneCacheService';
 import getCornerstoneBlendMode from '../../utils/getCornerstoneBlendMode';
@@ -89,13 +99,37 @@ const DEFAULT_TOOLGROUP_ID = 'default';
 
 // Return true if the data contains the given display set UID OR the imageId
 // if it is a composite object.
+<<<<<<< HEAD
 const dataContains = (data, displaySetUID: string, imageId?: string): boolean => {
   if (data.displaySetInstanceUID === displaySetUID) {
     return true;
   }
+=======
+const dataContains = ({ data, displaySetUID, imageId, viewport }): boolean => {
+>>>>>>> origin/master
   if (imageId && data.isCompositeStack && data.imageIds) {
     return !!data.imageIds.find(dataId => dataId === imageId);
   }
+
+  if (imageId && (data.volumeId || viewport instanceof VolumeViewport)) {
+    const isAcquisition = !!viewport.getCurrentImageId();
+
+    if (!isAcquisition) {
+      return false;
+    }
+
+    const imageURI = utilities.imageIdToURI(imageId);
+    const hasImageId = viewport.hasImageURI(imageURI);
+
+    if (hasImageId) {
+      return true;
+    }
+  }
+
+  if (data.displaySetInstanceUID === displaySetUID) {
+    return true;
+  }
+
   return false;
 };
 
@@ -122,10 +156,24 @@ class ViewportInfo {
       return false;
     }
 
+    const { viewport } = getEnabledElementByViewportId(this.viewportId) || {};
+
     if (this.viewportData.data.length) {
+<<<<<<< HEAD
       return !!this.viewportData.data.find(data => dataContains(data, displaySetUID, imageId));
+=======
+      return !!this.viewportData.data.find(data =>
+        dataContains({ data, displaySetUID, imageId, viewport })
+      );
+>>>>>>> origin/master
     }
-    return dataContains(this.viewportData.data, displaySetUID, imageId);
+
+    return dataContains({
+      data: this.viewportData.data,
+      displaySetUID,
+      imageId,
+      viewport,
+    });
   }
 
   public destroy = (): void => {

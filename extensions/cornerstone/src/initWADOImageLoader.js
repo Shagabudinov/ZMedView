@@ -1,6 +1,13 @@
 import * as cornerstone from '@cornerstonejs/core';
 import { volumeLoader } from '@cornerstonejs/core';
+<<<<<<< HEAD
 import { cornerstoneStreamingImageVolumeLoader } from '@cornerstonejs/streaming-image-volume-loader';
+=======
+import {
+  cornerstoneStreamingImageVolumeLoader,
+  cornerstoneStreamingDynamicImageVolumeLoader,
+} from '@cornerstonejs/streaming-image-volume-loader';
+>>>>>>> origin/master
 import dicomImageLoader, { webWorkerManager } from '@cornerstonejs/dicom-image-loader';
 import dicomParser from 'dicom-parser';
 import { errorHandler, utils } from '@ohif/core';
@@ -40,6 +47,14 @@ export default function initWADOImageLoader(
   dicomImageLoader.external.dicomParser = dicomParser;
 
   registerVolumeLoader('cornerstoneStreamingImageVolume', cornerstoneStreamingImageVolumeLoader);
+<<<<<<< HEAD
+=======
+
+  registerVolumeLoader(
+    'cornerstoneStreamingDynamicImageVolume',
+    cornerstoneStreamingDynamicImageVolumeLoader
+  );
+>>>>>>> origin/master
 
   dicomImageLoader.configure({
     decodeConfig: {

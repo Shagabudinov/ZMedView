@@ -1,6 +1,10 @@
 import dcmjs from 'dcmjs';
 import { createReportDialogPrompt } from '@ohif/extension-default';
+<<<<<<< HEAD
 import { ServicesManager, Types } from '@ohif/core';
+=======
+import { Types } from '@ohif/core';
+>>>>>>> origin/master
 import { cache, metaData } from '@cornerstonejs/core';
 import {
   segmentation as cornerstoneToolsSegmentation,
@@ -48,7 +52,11 @@ const commandsModule = ({
     displaySetService,
     viewportGridService,
     toolGroupService,
+<<<<<<< HEAD
   } = (servicesManager as ServicesManager).services;
+=======
+  } = servicesManager.services;
+>>>>>>> origin/master
 
   const actions = {
     /**
@@ -258,9 +266,18 @@ const commandsModule = ({
       labelmapObj.metadata = [];
 
       const segmentationInOHIF = segmentationService.getSegmentation(segmentationId);
+<<<<<<< HEAD
       labelmapObj.segmentsOnLabelmap.forEach(segmentIndex => {
         // segmentation service already has a color for each segment
         const segment = segmentationInOHIF?.segments[segmentIndex];
+=======
+      segmentationInOHIF.segments.forEach(segment => {
+        // segmentation service already has a color for each segment
+        if (!segment) {
+          return;
+        }
+        const segmentIndex = segment.segmentIndex;
+>>>>>>> origin/master
         const { label, color } = segment;
 
         const RecommendedDisplayCIELabValue = dcmjs.data.Colors.rgb2DICOMLAB(
@@ -434,6 +451,7 @@ const commandsModule = ({
         });
       });
     },
+<<<<<<< HEAD
     toggleThresholdRangeAndDynamic() {
       const toolGroupIds = toolGroupService.getToolGroupIds();
 
@@ -458,6 +476,8 @@ const commandsModule = ({
         });
       });
     },
+=======
+>>>>>>> origin/master
   };
 
   const definitions = {
@@ -491,9 +511,12 @@ const commandsModule = ({
     setThresholdRange: {
       commandFn: actions.setThresholdRange,
     },
+<<<<<<< HEAD
     toggleThresholdRangeAndDynamic: {
       commandFn: actions.toggleThresholdRangeAndDynamic,
     },
+=======
+>>>>>>> origin/master
   };
 
   return {

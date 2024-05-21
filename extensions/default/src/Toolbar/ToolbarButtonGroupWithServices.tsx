@@ -11,6 +11,10 @@ function ToolbarButtonGroupWithServices({ groupId, items, onInteraction, size })
           label={item.label}
           disabled={item.disabled}
           className={item.className}
+<<<<<<< HEAD
+=======
+          disabledText={item.disabledText}
+>>>>>>> origin/master
           id={item.id}
           size={size}
           onClick={() => {

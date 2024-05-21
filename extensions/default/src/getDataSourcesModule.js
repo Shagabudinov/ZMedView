@@ -5,7 +5,11 @@
 import { createDicomWebApi } from './DicomWebDataSource/index.js';
 import { createDicomJSONApi } from './DicomJSONDataSource/index.js';
 import { createDicomLocalApi } from './DicomLocalDataSource/index.js';
+<<<<<<< HEAD
 import { createDicomWebProxyApi } from './DicomWebProxyDataSource/index.js';
+=======
+import { createDicomWebProxyApi } from './DicomWebProxyDataSource/index';
+>>>>>>> origin/master
 import { createMergeDataSourceApi } from './MergeDataSource/index';
 
 /**

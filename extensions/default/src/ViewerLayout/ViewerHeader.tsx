@@ -6,13 +6,25 @@ import { useLocation } from 'react-router';
 import { ErrorBoundary, UserPreferences, AboutModal, Header, useModal } from '@ohif/ui';
 import i18n from '@ohif/i18n';
 import { hotkeys } from '@ohif/core';
+<<<<<<< HEAD
 import { useAppConfig } from '@state';
+=======
+>>>>>>> origin/master
 import { Toolbar } from '../Toolbar/Toolbar';
 
 const { availableLanguages, defaultLanguage, currentLanguage } = i18n;
 
+<<<<<<< HEAD
 function ViewerHeader({ hotkeysManager, extensionManager, servicesManager }) {
   const [appConfig] = useAppConfig();
+=======
+function ViewerHeader({
+  hotkeysManager,
+  extensionManager,
+  servicesManager,
+  appConfig,
+}: withAppTypes) {
+>>>>>>> origin/master
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -55,6 +67,10 @@ function ViewerHeader({ hotkeysManager, extensionManager, servicesManager }) {
           content: AboutModal,
           title: t('AboutModal:About OHIF Viewer'),
           contentProps: { versionNumber, commitHash },
+<<<<<<< HEAD
+=======
+          containerDimensions: 'max-w-4xl max-h-4xl',
+>>>>>>> origin/master
         }),
     },
     {
@@ -64,6 +80,10 @@ function ViewerHeader({ hotkeysManager, extensionManager, servicesManager }) {
         show({
           title: t('UserPreferencesModal:User preferences'),
           content: UserPreferences,
+<<<<<<< HEAD
+=======
+          containerDimensions: 'w-[70%] max-w-[900px]',
+>>>>>>> origin/master
           contentProps: {
             hotkeyDefaults: hotkeysManager.getValidHotkeyDefinitions(hotkeyDefaults),
             hotkeyDefinitions,
@@ -107,9 +127,22 @@ function ViewerHeader({ hotkeysManager, extensionManager, servicesManager }) {
       WhiteLabeling={appConfig.whiteLabeling}
       showPatientInfo={appConfig.showPatientInfo}
       servicesManager={servicesManager}
+<<<<<<< HEAD
     >
       <ErrorBoundary context="Primary Toolbar">
         <div className="relative flex justify-center">
+=======
+      Secondary={
+        <Toolbar
+          servicesManager={servicesManager}
+          buttonSection="secondary"
+        />
+      }
+      appConfig={appConfig}
+    >
+      <ErrorBoundary context="Primary Toolbar">
+        <div className="relative flex justify-center gap-[4px]">
+>>>>>>> origin/master
           <Toolbar servicesManager={servicesManager} />
         </div>
       </ErrorBoundary>

@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { metaData, Enums, utilities } from '@cornerstonejs/core';
 import { ImageSliceData } from '@cornerstonejs/core/dist/esm/types';
 import { ViewportOverlay } from '@ohif/ui';
+<<<<<<< HEAD
 import { ServicesManager } from '@ohif/core';
+=======
+>>>>>>> origin/master
 import { InstanceMetadata } from '@ohif/core/src/types';
 import { formatPN, formatDICOMDate, formatDICOMTime, formatNumberPrecision } from './utils';
 import { StackViewportData, VolumeViewportData } from '../../types/CornerstoneCacheService';
@@ -19,7 +22,11 @@ interface OverlayItemProps {
   element: HTMLElement;
   viewportData: ViewportData;
   imageSliceData: ImageSliceData;
+<<<<<<< HEAD
   servicesManager: ServicesManager;
+=======
+  servicesManager: AppTypes.ServicesManager;
+>>>>>>> origin/master
   viewportId: string;
   instance: InstanceMetadata;
   customization: any;
@@ -59,7 +66,11 @@ function CustomizableViewportOverlay({
   viewportData: ViewportData;
   imageSliceData: ImageSliceData;
   viewportId: string;
+<<<<<<< HEAD
   servicesManager: ServicesManager;
+=======
+  servicesManager: AppTypes.ServicesManager;
+>>>>>>> origin/master
 }) {
   const { cornerstoneViewportService, customizationService, toolGroupService } =
     servicesManager.services;
@@ -80,9 +91,9 @@ function CustomizableViewportOverlay({
     'cornerstoneOverlayBottomRight'
   );
 
-  const instance = useMemo(() => {
+  const instances = useMemo(() => {
     if (viewportData != null) {
-      return _getViewportInstance(viewportData, imageIndex);
+      return _getViewportInstances(viewportData);
     } else {
       return null;
     }
@@ -137,8 +148,9 @@ function CustomizableViewportOverlay({
           return;
         }
 
-        const imageData = viewport.getImageData();
+        const scale = viewport.getZoom();
 
+<<<<<<< HEAD
         if (!imageData) {
           return;
         }
@@ -151,6 +163,8 @@ function CustomizableViewportOverlay({
         const { spacing } = imageData;
         // convert parallel scale to scale
         const scale = (element.clientHeight * spacing[0] * 0.5) / camera.parallelScale;
+=======
+>>>>>>> origin/master
         setScale(scale);
       }
     };
@@ -177,7 +191,11 @@ function CustomizableViewportOverlay({
           formatTime: formatDICOMTime,
           formatNumberPrecision,
         },
+<<<<<<< HEAD
         instance,
+=======
+        instance: instances ? instances[item?.instanceIndex] : null,
+>>>>>>> origin/master
         voi,
         scale,
         instanceNumber,
@@ -207,7 +225,7 @@ function CustomizableViewportOverlay({
       viewportId,
       servicesManager,
       customizationService,
-      instance,
+      instances,
       voi,
       scale,
       instanceNumber,
@@ -217,6 +235,7 @@ function CustomizableViewportOverlay({
   const getContent = useCallback(
     (customization, defaultItems, keyPrefix) => {
       const items = customization?.items ?? defaultItems;
+<<<<<<< HEAD
 
       return (
         <>
@@ -234,6 +253,64 @@ function CustomizableViewportOverlay({
     },
     [_renderOverlayItem]
   );
+=======
+      return (
+        <>
+          {items.map((item, index) => (
+            <div key={`${keyPrefix}_${index}`}>
+              {item?.condition
+                ? item.condition({
+                    instance: instances ? instances[item?.instanceIndex] : null,
+                    formatters: { formatDate: formatDICOMDate },
+                  })
+                  ? _renderOverlayItem(item)
+                  : null
+                : _renderOverlayItem(item)}
+            </div>
+          ))}
+        </>
+      );
+    },
+    [_renderOverlayItem]
+  );
+
+  const studyDateItem = {
+    id: 'StudyDate',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Study date',
+    condition: ({ instance }) => instance && instance.StudyDate,
+    contentF: ({ instance, formatters: { formatDate } }) => formatDate(instance.StudyDate),
+  };
+
+  const seriesDescriptionItem = {
+    id: 'SeriesDescription',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'Series description',
+    attribute: 'SeriesDescription',
+    condition: ({ instance }) => {
+      return instance && instance.SeriesDescription;
+    },
+  };
+
+  const topLeftItems = instances
+    ? instances
+        .map((instance, index) => {
+          return [
+            {
+              ...studyDateItem,
+              instanceIndex: index,
+            },
+            {
+              ...seriesDescriptionItem,
+              instanceIndex: index,
+            },
+          ];
+        })
+        .flat()
+    : [];
+>>>>>>> origin/master
 
   return (
     <ViewportOverlay
@@ -241,6 +318,7 @@ function CustomizableViewportOverlay({
         /**
          * Inline default overlay items for a more standard expansion
          */
+<<<<<<< HEAD
         getContent(
           topLeftCustomization,
           [
@@ -264,6 +342,9 @@ function CustomizableViewportOverlay({
           ],
           'topLeftOverlayItem'
         )
+=======
+        getContent(topLeftCustomization, [...topLeftItems], 'topLeftOverlayItem')
+>>>>>>> origin/master
       }
       topRight={getContent(topRightCustomization, [], 'topRightOverlayItem')}
       bottomLeft={getContent(
@@ -298,18 +379,26 @@ function CustomizableViewportOverlay({
   );
 }
 
-function _getViewportInstance(viewportData, imageIndex) {
-  let imageId = null;
+function _getViewportInstances(viewportData) {
+  const imageIds = [];
   if (viewportData.viewportType === Enums.ViewportType.STACK) {
-    imageId = viewportData.data.imageIds[imageIndex];
+    imageIds.push(viewportData.data.imageIds[0]);
   } else if (viewportData.viewportType === Enums.ViewportType.ORTHOGRAPHIC) {
     const volumes = viewportData.data;
-    if (volumes && volumes.length == 1) {
-      const volume = volumes[0];
-      imageId = volume.imageIds[imageIndex];
-    }
+    volumes.forEach(volume => {
+      if (!volume?.imageIds || volume.imageIds.length === 0) {
+        return;
+      }
+      imageIds.push(volume.imageIds[0]);
+    });
   }
-  return imageId ? metaData.get('instance', imageId) || {} : {};
+  const instances = [];
+
+  imageIds.forEach(imageId => {
+    const instance = metaData.get('instance', imageId) || {};
+    instances.push(instance);
+  });
+  return instances;
 }
 
 const getInstanceNumber = (viewportData, viewportId, imageIndex, cornerstoneViewportService) => {
@@ -323,7 +412,12 @@ const getInstanceNumber = (viewportData, viewportId, imageIndex, cornerstoneView
       instanceNumber = _getInstanceNumberFromVolume(
         viewportData,
         viewportId,
+<<<<<<< HEAD
         cornerstoneViewportService
+=======
+        cornerstoneViewportService,
+        imageIndex
+>>>>>>> origin/master
       );
       break;
   }
@@ -354,15 +448,25 @@ function _getInstanceNumberFromStack(viewportData, imageIndex) {
 // Since volume viewports can be in any view direction, they can render
 // a reconstructed image which don't have imageIds; therefore, no instance and instanceNumber
 // Here we check if viewport is in the acquisition direction and if so, we get the instanceNumber
+<<<<<<< HEAD
 function _getInstanceNumberFromVolume(viewportData, viewportId, cornerstoneViewportService) {
   const volumes = viewportData.volumes;
+=======
+function _getInstanceNumberFromVolume(
+  viewportData,
+  viewportId,
+  cornerstoneViewportService,
+  imageIndex
+) {
+  const volumes = viewportData.data;
+>>>>>>> origin/master
 
-  // Todo: support fusion of acquisition plane which has instanceNumber
-  if (!volumes || volumes.length > 1) {
+  if (!volumes) {
     return;
   }
 
-  const volume = volumes[0];
+  // Todo: support fusion of acquisition plane which has instanceNumber
+  const { volume } = volumes[0];
   const { direction, imageIds } = volume;
 
   const cornerstoneViewport = cornerstoneViewportService.getCornerstoneViewport(viewportId);
@@ -445,11 +549,23 @@ function InstanceNumberOverlayItem({
       className="overlay-item flex flex-row"
       style={{ color: (customization && customization.color) || undefined }}
     >
+<<<<<<< HEAD
       <span className="mr-1 shrink-0">I:</span>
       <span>
         {instanceNumber !== undefined && instanceNumber !== null
           ? `${instanceNumber} (${imageIndex + 1}/${numberOfSlices})`
           : `${imageIndex + 1}/${numberOfSlices}`}
+=======
+      <span>
+        {instanceNumber !== undefined && instanceNumber !== null ? (
+          <>
+            <span className="mr-1 shrink-0">I:</span>
+            <span>{`${instanceNumber} (${imageIndex + 1}/${numberOfSlices})`}</span>
+          </>
+        ) : (
+          `${imageIndex + 1}/${numberOfSlices}`
+        )}
+>>>>>>> origin/master
       </span>
     </div>
   );

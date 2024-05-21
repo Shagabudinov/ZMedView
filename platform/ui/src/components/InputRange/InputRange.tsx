@@ -10,7 +10,6 @@ import getMaxDigits from '../../utils/getMaxDigits';
  * value is a number value
  * onChange is a function that will be called when the range input is changed
  *
- *
  */
 
 type Label = {
@@ -31,9 +30,19 @@ type InputRangeProps = {
   labelVariant?: string;
   showLabel?: boolean;
   labelPosition?: string;
+<<<<<<< HEAD
   trackColor?: string;
   allowNumberEdit?: boolean;
   showAdjustmentArrows?: boolean;
+=======
+  leftColor?: string;
+  rightColor?: string;
+  thumbColor?: string;
+  thumbColorOuter?: string;
+  allowNumberEdit?: boolean;
+  showAdjustmentArrows?: boolean;
+  trackHeight?: string;
+>>>>>>> origin/master
   labels?: Label[];
 };
 
@@ -47,19 +56,31 @@ const InputRange: React.FC<InputRangeProps> = ({
   containerClassName,
   inputClassName,
   labelClassName,
-  labelVariant,
   showLabel = true,
   labelPosition = 'right',
+<<<<<<< HEAD
   trackColor,
+=======
+  leftColor = '#5acce6',
+  rightColor = '#3a3f99',
+  thumbColor = '#5acce6',
+  thumbColorOuter = '#090c29',
+  trackHeight = '3px',
+>>>>>>> origin/master
   allowNumberEdit = false,
   showAdjustmentArrows = true,
   labels = [],
 }) => {
   const [rangeValue, setRangeValue] = useState(value);
+  const maxDigits = getMaxDigits(maxValue, step);
+  const labelWidth = `${maxDigits * 15}px`;
 
+<<<<<<< HEAD
   const maxDigits = getMaxDigits(maxValue, step);
   const labelWidth = `${maxDigits * 10}px`;
 
+=======
+>>>>>>> origin/master
   useEffect(() => setRangeValue(value), [value]);
 
   const handleChange = useCallback(
@@ -88,8 +109,12 @@ const InputRange: React.FC<InputRangeProps> = ({
     />
   ) : (
     <span className={classNames(labelClassName ?? 'text-white')}>
+<<<<<<< HEAD
       {rangeValue}
       {unit}
+=======
+      {rangeValue} {unit}
+>>>>>>> origin/master
     </span>
   );
 
@@ -101,19 +126,35 @@ const InputRange: React.FC<InputRangeProps> = ({
         e.preventDefault();
       }}
     >
+<<<<<<< HEAD
       <div className="relative flex w-full items-center space-x-2">
         {showLabel && labelPosition === 'left' && (
           <div style={{ width: labelWidth }}>{LabelOrEditableNumber}</div>
         )}
         <div className="range-track"></div>
+=======
+      <div className={'relative flex w-full items-center ' + (showLabel ? 'space-x-2' : '')}>
+        {showLabel && labelPosition === 'left' && (
+          <div style={{ width: labelWidth }}>{LabelOrEditableNumber}</div>
+        )}
+>>>>>>> origin/master
         <input
           type="range"
           min={minValue}
           max={maxValue}
           value={rangeValue}
+<<<<<<< HEAD
           className={`h-[3px] appearance-none rounded-md ${inputClassName ?? ''}`}
           style={{
             background: `linear-gradient(to right, #5acce6 0%, #5acce6 ${rangeValuePercentage}%, #3a3f99 ${rangeValuePercentage}%, #3a3f99 100%)`,
+=======
+          className={`w-full appearance-none rounded-md ${inputClassName ?? ''}`}
+          style={{
+            background: `linear-gradient(to right, ${leftColor} 0%, ${leftColor} ${rangeValuePercentage}%, ${rightColor} ${rangeValuePercentage}%, ${rightColor} 100%)`,
+            '--thumb-inner-color': thumbColor,
+            '--thumb-outer-color': thumbColorOuter,
+            height: trackHeight,
+>>>>>>> origin/master
           }}
           onChange={handleChange}
           id="myRange"

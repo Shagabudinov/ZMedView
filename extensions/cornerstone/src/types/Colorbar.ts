@@ -1,5 +1,8 @@
 import { ColorMapPreset } from './Colormap';
+<<<<<<< HEAD
 import { CommandsManager, ServicesManager } from '@ohif/core';
+=======
+>>>>>>> origin/master
 
 export type ColorbarOptions = {
   position: string;
@@ -11,8 +14,11 @@ export type ColorbarOptions = {
 
 export type ColorbarProps = {
   viewportId: string;
+<<<<<<< HEAD
   commandsManager: CommandsManager;
   serviceManager: ServicesManager;
+=======
+>>>>>>> origin/master
   displaySets: Array<any>;
   colorbarProperties: ColorbarProperties;
 };

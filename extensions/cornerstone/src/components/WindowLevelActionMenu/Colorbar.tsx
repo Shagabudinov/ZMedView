@@ -8,10 +8,17 @@ export function setViewportColorbar(
   viewportId,
   displaySets,
   commandsManager,
+<<<<<<< HEAD
   serviceManager,
   colorbarOptions
 ) {
   const { cornerstoneViewportService } = serviceManager.services;
+=======
+  servicesManager: AppTypes.ServicesManager,
+  colorbarOptions
+) {
+  const { cornerstoneViewportService } = servicesManager.services;
+>>>>>>> origin/master
   const viewport = cornerstoneViewportService.getCornerstoneViewport(viewportId);
 
   const viewportInfo = cornerstoneViewportService.getViewportInfo(viewportId);
@@ -59,10 +66,17 @@ export function Colorbar({
   viewportId,
   displaySets,
   commandsManager,
+<<<<<<< HEAD
   serviceManager,
   colorbarProperties,
 }: ColorbarProps): ReactElement {
   const { colorbarService } = serviceManager.services;
+=======
+  servicesManager,
+  colorbarProperties,
+}: withAppTypes<ColorbarProps>): ReactElement {
+  const { colorbarService } = servicesManager.services;
+>>>>>>> origin/master
   const {
     width: colorbarWidth,
     colorbarTickPosition,
@@ -73,7 +87,11 @@ export function Colorbar({
   const [showColorbar, setShowColorbar] = useState(colorbarService.hasColorbar(viewportId));
 
   const onSetColorbar = useCallback(() => {
+<<<<<<< HEAD
     setViewportColorbar(viewportId, displaySets, commandsManager, serviceManager, {
+=======
+    setViewportColorbar(viewportId, displaySets, commandsManager, servicesManager, {
+>>>>>>> origin/master
       viewportId,
       colormaps,
       ticks: {
@@ -102,6 +120,10 @@ export function Colorbar({
 
   return (
     <div className="all-in-one-menu-item flex w-full justify-center">
+<<<<<<< HEAD
+=======
+      <div className="mr-2 w-[28px]"></div>
+>>>>>>> origin/master
       <SwitchButton
         label="Display Color bar"
         checked={showColorbar}

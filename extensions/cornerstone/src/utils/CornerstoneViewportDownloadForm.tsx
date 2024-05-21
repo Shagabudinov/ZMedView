@@ -27,7 +27,15 @@ const CornerstoneViewportDownloadForm = ({
   const activeViewportElement = enabledElement?.element;
   const activeViewportEnabledElement = getEnabledElement(activeViewportElement);
 
+<<<<<<< HEAD
   const { viewportId: activeViewportId, renderingEngineId } = activeViewportEnabledElement;
+=======
+  const {
+    viewportId: activeViewportId,
+    renderingEngineId,
+    viewport: activeViewport,
+  } = activeViewportEnabledElement;
+>>>>>>> origin/master
 
   const toolGroup = ToolGroupManager.getToolGroupForViewport(activeViewportId, renderingEngineId);
 
@@ -93,7 +101,11 @@ const CornerstoneViewportDownloadForm = ({
       renderingEngine.resize();
 
       // Trigger the render on the viewport to update the on screen
+<<<<<<< HEAD
       downloadViewport.resetCamera();
+=======
+      // downloadViewport.resetCamera();
+>>>>>>> origin/master
       downloadViewport.render();
 
       downloadViewportElement.addEventListener(
@@ -120,6 +132,15 @@ const CornerstoneViewportDownloadForm = ({
           resolve({ dataUrl, width: newWidth, height: newHeight });
 
           downloadViewportElement.removeEventListener(Enums.Events.IMAGE_RENDERED, updateViewport);
+<<<<<<< HEAD
+=======
+
+          // for some reason we need a reset camera here, and I don't know why
+          downloadViewport.resetCamera();
+          const presentation = activeViewport.getViewPresentation();
+          downloadViewport.setView(activeViewport.getViewReference(), presentation);
+          downloadViewport.render();
+>>>>>>> origin/master
         }
       );
     });
@@ -161,7 +182,6 @@ const CornerstoneViewportDownloadForm = ({
             downloadViewport.addActor(actor);
           });
 
-          downloadViewport.setCamera(viewport.getCamera());
           downloadViewport.render();
 
           const newWidth = Math.min(width || image.width, MAX_TEXTURE_SIZE);

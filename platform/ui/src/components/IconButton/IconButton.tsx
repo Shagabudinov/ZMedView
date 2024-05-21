@@ -63,7 +63,12 @@ const iconSizeClasses = {
   small: 'w-4 h-4',
   medium: 'w-5 h-5',
   large: 'w-6 h-6',
+<<<<<<< HEAD
   toolbar: 'w-[24px] h-[24px]',
+=======
+  toolbar: 'w-[28px] h-[28px]',
+  toolbox: 'w-[24px] h-[24px]',
+>>>>>>> origin/master
 };
 
 const fullWidthClasses = {
@@ -92,7 +97,11 @@ const IconButton = ({
     onClick(e);
   };
 
+<<<<<<< HEAD
   const padding = size === 'toolbar' ? '8px' : size === 'toolbox' ? '4px' : null;
+=======
+  const padding = size === 'toolbar' ? '6px' : size === 'toolbox' ? '4px' : null;
+>>>>>>> origin/master
 
   return (
     <button

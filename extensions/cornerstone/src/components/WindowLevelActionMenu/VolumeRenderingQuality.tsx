@@ -4,10 +4,17 @@ import { VolumeRenderingQualityProps } from '../../types/ViewportPresets';
 export function VolumeRenderingQuality({
   volumeRenderingQualityRange,
   commandsManager,
+<<<<<<< HEAD
   serviceManager,
   viewportId,
 }: VolumeRenderingQualityProps): ReactElement {
   const { cornerstoneViewportService } = serviceManager.services;
+=======
+  servicesManager,
+  viewportId,
+}: VolumeRenderingQualityProps): ReactElement {
+  const { cornerstoneViewportService } = servicesManager.services;
+>>>>>>> origin/master
   const { min, max, step } = volumeRenderingQualityRange;
   const [quality, setQuality] = useState(null);
 
@@ -60,7 +67,15 @@ export function VolumeRenderingQuality({
             type="range"
             step={step}
             onChange={e => onChange(parseInt(e.target.value, 10))}
+<<<<<<< HEAD
             style={{ background: calculateBackground((quality - min) / (max - min)) }}
+=======
+            style={{
+              background: calculateBackground((quality - min) / (max - min)),
+              '--thumb-inner-color': '#5acce6',
+              '--thumb-outer-color': '#090c29',
+            }}
+>>>>>>> origin/master
           />
         )}
       </div>

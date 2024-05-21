@@ -8,9 +8,15 @@ export function Colormap({
   viewportId,
   displaySets,
   commandsManager,
+<<<<<<< HEAD
   serviceManager,
 }: ColormapProps): ReactElement {
   const { cornerstoneViewportService } = serviceManager.services;
+=======
+  servicesManager,
+}: ColormapProps): ReactElement {
+  const { cornerstoneViewportService } = servicesManager.services;
+>>>>>>> origin/master
 
   const [activeDisplaySet, setActiveDisplaySet] = useState(displaySets[0]);
 
@@ -68,6 +74,14 @@ export function Colormap({
       key: index,
       style: {
         minWidth: `calc(100% / ${displaySets.length})`,
+<<<<<<< HEAD
+=======
+        fontSize: '0.8rem',
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+>>>>>>> origin/master
       },
     }));
   }, [displaySets]);

@@ -13,7 +13,17 @@ import { useToolbox } from '../../contextProviders';
  * role in enhancing the app with a toolbox by providing a way to integrate
  * and display various tools and their corresponding options
  */
+<<<<<<< HEAD
 function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...props }) {
+=======
+function Toolbox({
+  servicesManager,
+  buttonSectionId,
+  commandsManager,
+  title,
+  ...props
+}: withAppTypes) {
+>>>>>>> origin/master
   const { state: toolboxState, api } = useToolbox(buttonSectionId);
   const { onInteraction, toolbarButtons } = useToolbar({
     servicesManager,
@@ -21,6 +31,10 @@ function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...
   });
 
   const prevButtonIdsRef = useRef();
+<<<<<<< HEAD
+=======
+  const prevToolboxStateRef = useRef();
+>>>>>>> origin/master
 
   useEffect(() => {
     const currentButtonIdsStr = JSON.stringify(
@@ -33,11 +47,31 @@ function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...
       })
     );
 
+<<<<<<< HEAD
     if (prevButtonIdsRef.current === currentButtonIdsStr) {
+=======
+    const currentToolBoxStateStr = JSON.stringify(
+      Object.keys(toolboxState.toolOptions).map(tool => {
+        const options = toolboxState.toolOptions[tool];
+        if (Array.isArray(options)) {
+          return options?.map(option => `${option.id}-${option.value}`);
+        }
+      })
+    );
+
+    if (
+      prevButtonIdsRef.current === currentButtonIdsStr &&
+      prevToolboxStateRef.current === currentToolBoxStateStr
+    ) {
+>>>>>>> origin/master
       return;
     }
 
     prevButtonIdsRef.current = currentButtonIdsStr;
+<<<<<<< HEAD
+=======
+    prevToolboxStateRef.current = currentToolBoxStateStr;
+>>>>>>> origin/master
 
     const initializeOptionsWithEnhancements = toolbarButtons.reduce(
       (accumulator, toolbarButton) => {
@@ -51,11 +85,23 @@ function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...
               return option;
             }
 
+<<<<<<< HEAD
             return {
               ...option,
               value:
                 toolboxState.toolOptions?.[parentId]?.find(prop => prop.id === option.id)?.value ??
                 option.value,
+=======
+            const value =
+              toolboxState.toolOptions?.[parentId]?.find(prop => prop.id === option.id)?.value ??
+              option.value;
+
+            const updatedOptions = toolboxState.toolOptions?.[parentId];
+
+            return {
+              ...option,
+              value,
+>>>>>>> origin/master
               commands: value => {
                 api.handleToolOptionChange(parentId, option.id, value);
 
@@ -65,14 +111,30 @@ function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...
                 cmds.forEach(command => {
                   const isString = typeof command === 'string';
                   const isObject = typeof command === 'object';
+<<<<<<< HEAD
+=======
+                  const isFunction = typeof command === 'function';
+>>>>>>> origin/master
 
                   if (isString) {
                     commandsManager.run(command, { value });
                   } else if (isObject) {
                     commandsManager.run({
                       ...command,
+<<<<<<< HEAD
                       commandOptions: { ...command.commandOptions, ...option, value },
                     });
+=======
+                      commandOptions: {
+                        ...command.commandOptions,
+                        ...option,
+                        value,
+                        options: updatedOptions,
+                      },
+                    });
+                  } else if (isFunction) {
+                    command({ value, commandsManager, servicesManager, options: updatedOptions });
+>>>>>>> origin/master
                   }
                 });
               },
@@ -98,12 +160,25 @@ function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...
     );
 
     api.initializeToolOptions(initializeOptionsWithEnhancements);
+<<<<<<< HEAD
   }, [toolbarButtons, api]);
+=======
+  }, [toolbarButtons, api, toolboxState]);
+>>>>>>> origin/master
 
   const handleToolOptionChange = (toolName, optionName, newValue) => {
     api.handleToolOptionChange(toolName, optionName, newValue);
   };
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    return () => {
+      api.handleToolSelect(null);
+    };
+  }, []);
+
+>>>>>>> origin/master
   return (
     <ToolboxUI
       {...props}

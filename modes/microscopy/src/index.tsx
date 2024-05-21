@@ -47,14 +47,21 @@ function modeFactory({ modeConfiguration }) {
     /**
      * Lifecycle hooks
      */
-    onModeEnter: ({ servicesManager, extensionManager, commandsManager }) => {
+    onModeEnter: ({ servicesManager, extensionManager, commandsManager }: withAppTypes) => {
       const { toolbarService } = servicesManager.services;
 
       toolbarService.addButtons(toolbarButtons);
+<<<<<<< HEAD
       toolbarService.createButtonSection('primary', ['MeasurementTools', 'dragPan']);
     },
 
     onModeExit: ({ servicesManager }) => {
+=======
+      toolbarService.createButtonSection('primary', ['MeasurementTools', 'dragPan', 'TagBrowser']);
+    },
+
+    onModeExit: ({ servicesManager }: withAppTypes) => {
+>>>>>>> origin/master
       const { toolbarService, uiDialogService, uiModalService } = servicesManager.services;
 
       uiDialogService.dismissAll();
@@ -87,8 +94,13 @@ function modeFactory({ modeConfiguration }) {
             id: ohif.layout,
             props: {
               leftPanels: [ohif.leftPanel],
+<<<<<<< HEAD
               leftPanelDefaultClosed: true, // we have problem with rendering thumbnails for microscopy images
               rightPanelDefaultClosed: true, // we do not have the save microscopy measurements yet
+=======
+              leftPanelClosed: true, // we have problem with rendering thumbnails for microscopy images
+              rightPanelClosed: true, // we do not have the save microscopy measurements yet
+>>>>>>> origin/master
               rightPanels: ['@ohif/extension-dicom-microscopy.panelModule.measure'],
               viewports: [
                 {

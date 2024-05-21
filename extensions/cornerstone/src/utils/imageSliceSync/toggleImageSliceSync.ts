@@ -1,10 +1,19 @@
+<<<<<<< HEAD
+=======
+import { DisplaySetService, ViewportGridService } from '@ohif/core';
+
+>>>>>>> origin/master
 const IMAGE_SLICE_SYNC_NAME = 'IMAGE_SLICE_SYNC';
 
 export default function toggleImageSliceSync({
   servicesManager,
   viewports: providedViewports,
   syncId,
+<<<<<<< HEAD
 }) {
+=======
+}: withAppTypes) {
+>>>>>>> origin/master
   const { syncGroupService, viewportGridService, displaySetService, cornerstoneViewportService } =
     servicesManager.services;
 
@@ -46,7 +55,11 @@ export default function toggleImageSliceSync({
   });
 }
 
+<<<<<<< HEAD
 function disableSync(syncName, servicesManager) {
+=======
+function disableSync(syncName, servicesManager: AppTypes.ServicesManager) {
+>>>>>>> origin/master
   const { syncGroupService, viewportGridService, displaySetService, cornerstoneViewportService } =
     servicesManager.services;
   const viewports = getReconstructableStackViewports(viewportGridService, displaySetService);
@@ -68,7 +81,14 @@ function disableSync(syncName, servicesManager) {
  * Gets the consistent spacing stack viewport types, which are the ones which
  * can be navigated using the stack image sync right now.
  */
+<<<<<<< HEAD
 function getReconstructableStackViewports(viewportGridService, displaySetService) {
+=======
+function getReconstructableStackViewports(
+  viewportGridService: ViewportGridService,
+  displaySetService: DisplaySetService
+) {
+>>>>>>> origin/master
   let { viewports } = viewportGridService.getState();
 
   viewports = [...viewports.values()];

@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import { PanelPetSUV, PanelROIThresholdSegmentation } from './Panels';
+=======
+import { PanelPetSUV, PanelROIThresholdExport } from './Panels';
+>>>>>>> origin/master
 import { Toolbox } from '@ohif/ui';
 
 // TODO:
@@ -17,13 +21,14 @@ function getPanelModule({ commandsManager, extensionManager, servicesManager }) 
     );
   };
 
-  const wrappedROIThresholdSeg = () => {
+  const wrappedROIThresholdToolbox = () => {
     return (
       <>
         <Toolbox
           commandsManager={commandsManager}
           servicesManager={servicesManager}
           extensionManager={extensionManager}
+<<<<<<< HEAD
           buttonSectionId="tmtvToolbox"
           title="Threshold Tools"
         />
@@ -31,6 +36,21 @@ function getPanelModule({ commandsManager, extensionManager, servicesManager }) 
           commandsManager={commandsManager}
           servicesManager={servicesManager}
           extensionManager={extensionManager}
+=======
+          buttonSectionId="ROIThresholdToolbox"
+          title="Threshold Tools"
+        />
+      </>
+    );
+  };
+
+  const wrappedROIThresholdExport = () => {
+    return (
+      <>
+        <PanelROIThresholdExport
+          commandsManager={commandsManager}
+          servicesManager={servicesManager}
+>>>>>>> origin/master
         />
       </>
     );
@@ -45,11 +65,26 @@ function getPanelModule({ commandsManager, extensionManager, servicesManager }) 
       component: wrappedPanelPetSuv,
     },
     {
+<<<<<<< HEAD
       name: 'ROIThresholdSeg',
       iconName: 'tab-segmentation',
       iconLabel: 'Segmentation',
       label: 'Segmentation',
       component: wrappedROIThresholdSeg,
+=======
+      name: 'tmtvBox',
+      iconName: 'tab-segmentation',
+      iconLabel: 'Segmentation',
+      label: 'Segmentation Toolbox',
+      component: wrappedROIThresholdToolbox,
+    },
+    {
+      name: 'tmtvExport',
+      iconName: 'tab-segmentation',
+      iconLabel: 'Segmentation',
+      label: 'Segmentation Export',
+      component: wrappedROIThresholdExport,
+>>>>>>> origin/master
     },
   ];
 }

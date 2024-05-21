@@ -80,6 +80,7 @@ const moreTools = [
           icon: 'tool-referenceLines',
           label: 'Reference Lines',
           tooltip: 'Show Reference Lines',
+<<<<<<< HEAD
           commands: {
             commandName: 'setToolEnabled',
             commandOptions: {
@@ -87,6 +88,9 @@ const moreTools = [
               toggle: true, // Toggle the tool on/off upon click
             },
           },
+=======
+          commands: 'toggleEnabledDisabledToolbar',
+>>>>>>> origin/master
           listeners: {
             [ViewportGridService.EVENTS.ACTIVE_VIEWPORT_ID_CHANGED]: ReferenceLinesListeners,
             [ViewportGridService.EVENTS.VIEWPORTS_READY]: ReferenceLinesListeners,
@@ -94,6 +98,7 @@ const moreTools = [
           evaluate: 'evaluate.cornerstoneTool.toggle',
         }),
         createButton({
+<<<<<<< HEAD
           id: 'ImageOverlay',
           icon: 'toggle-dicom-overlay',
           label: 'Image Overlay',
@@ -105,6 +110,13 @@ const moreTools = [
               toggle: true, // Toggle the tool on/off upon click
             },
           },
+=======
+          id: 'ImageOverlayViewer',
+          icon: 'toggle-dicom-overlay',
+          label: 'Image Overlay',
+          tooltip: 'Toggle Image Overlay',
+          commands: 'toggleEnabledDisabledToolbar',
+>>>>>>> origin/master
           evaluate: 'evaluate.cornerstoneTool.toggle',
         }),
         createButton({
@@ -148,18 +160,32 @@ const moreTools = [
           evaluate: 'evaluate.cornerstoneTool',
         }),
         createButton({
+<<<<<<< HEAD
           id: 'Magnify',
           icon: 'tool-magnify',
           label: 'Magnify',
           tooltip: 'Magnify',
+=======
+          id: 'CobbAngle',
+          icon: 'tool-angle',
+          label: 'Cobb Angle',
+          tooltip: 'Cobb Angle',
+>>>>>>> origin/master
           commands: setToolActiveToolbar,
           evaluate: 'evaluate.cornerstoneTool',
         }),
         createButton({
+<<<<<<< HEAD
           id: 'RectangleROI',
           icon: 'tool-rectangle',
           label: 'Rectangle',
           tooltip: 'Rectangle',
+=======
+          id: 'Magnify',
+          icon: 'tool-magnify',
+          label: 'Zoom-in',
+          tooltip: 'Zoom-in',
+>>>>>>> origin/master
           commands: setToolActiveToolbar,
           evaluate: 'evaluate.cornerstoneTool',
         }),
@@ -173,11 +199,34 @@ const moreTools = [
         }),
         createButton({
           id: 'TagBrowser',
+<<<<<<< HEAD
           icon: 'list-bullets',
+=======
+          icon: 'dicom-tag-browser',
+>>>>>>> origin/master
           label: 'Dicom Tag Browser',
           tooltip: 'Dicom Tag Browser',
           commands: 'openDICOMTagViewer',
         }),
+<<<<<<< HEAD
+=======
+        createButton({
+          id: 'AdvancedMagnify',
+          icon: 'icon-tool-loupe',
+          label: 'Magnify Probe',
+          tooltip: 'Magnify Probe',
+          commands: 'toggleActiveDisabledToolbar',
+          evaluate: 'evaluate.cornerstoneTool.toggle.ifStrictlyDisabled',
+        }),
+        createButton({
+          id: 'UltrasoundDirectionalTool',
+          icon: 'icon-tool-ultrasound-bidirectional',
+          label: 'Ultrasound Directional',
+          tooltip: 'Ultrasound Directional',
+          commands: setToolActiveToolbar,
+          evaluate: ['evaluate.cornerstoneTool', 'evaluate.isUS'],
+        }),
+>>>>>>> origin/master
       ],
     },
   },

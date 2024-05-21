@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+import { DisplaySetService, ViewportGridService } from '@ohif/core';
+
+>>>>>>> origin/master
 const VOI_SYNC_NAME = 'VOI_SYNC';
 
 const getSyncId = modality => `${VOI_SYNC_NAME}_${modality}`;
@@ -6,7 +11,11 @@ export default function toggleVOISliceSync({
   servicesManager,
   viewports: providedViewports,
   syncId,
+<<<<<<< HEAD
 }) {
+=======
+}: withAppTypes) {
+>>>>>>> origin/master
   const { syncGroupService, viewportGridService, displaySetService, cornerstoneViewportService } =
     servicesManager.services;
 
@@ -52,7 +61,11 @@ export default function toggleVOISliceSync({
   }
 }
 
+<<<<<<< HEAD
 function disableSync(modalityViewports, syncId, servicesManager) {
+=======
+function disableSync(modalityViewports, syncId, servicesManager: AppTypes.ServicesManager) {
+>>>>>>> origin/master
   const { syncGroupService, cornerstoneViewportService } = servicesManager.services;
 
   const viewports = modalityViewports;
@@ -70,7 +83,14 @@ function disableSync(modalityViewports, syncId, servicesManager) {
   });
 }
 
+<<<<<<< HEAD
 function groupViewportsByModality(viewportGridService, displaySetService) {
+=======
+function groupViewportsByModality(
+  viewportGridService: ViewportGridService,
+  displaySetService: DisplaySetService
+) {
+>>>>>>> origin/master
   let { viewports } = viewportGridService.getState();
 
   viewports = [...viewports.values()];

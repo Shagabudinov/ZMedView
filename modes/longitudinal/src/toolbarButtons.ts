@@ -1,10 +1,16 @@
 // TODO: torn, can either bake this here; or have to create a whole new button type
 // Only ways that you can pass in a custom React component for render :l
+<<<<<<< HEAD
 import { WindowLevelMenuItem } from '@ohif/ui';
 import { defaults, ToolbarService } from '@ohif/core';
 import type { Button } from '@ohif/core/types';
 
 const { windowLevelPresets } = defaults;
+=======
+import { ToolbarService } from '@ohif/core';
+import type { Button } from '@ohif/core/types';
+
+>>>>>>> origin/master
 const { createButton } = ToolbarService;
 
 export const setToolActiveToolbar = {
@@ -68,6 +74,17 @@ const toolbarButtons: Button[] = [
           evaluate: 'evaluate.cornerstoneTool',
         }),
         createButton({
+<<<<<<< HEAD
+=======
+          id: 'RectangleROI',
+          icon: 'tool-rectangle',
+          label: 'Rectangle',
+          tooltip: 'Rectangle ROI',
+          commands: setToolActiveToolbar,
+          evaluate: 'evaluate.cornerstoneTool',
+        }),
+        createButton({
+>>>>>>> origin/master
           id: 'CircleROI',
           icon: 'tool-circle',
           label: 'Circle',
@@ -75,6 +92,33 @@ const toolbarButtons: Button[] = [
           commands: setToolActiveToolbar,
           evaluate: 'evaluate.cornerstoneTool',
         }),
+<<<<<<< HEAD
+=======
+        createButton({
+          id: 'PlanarFreehandROI',
+          icon: 'icon-tool-freehand-roi',
+          label: 'Freehand ROI',
+          tooltip: 'Freehand ROI',
+          commands: setToolActiveToolbar,
+          evaluate: 'evaluate.cornerstoneTool',
+        }),
+        createButton({
+          id: 'SplineROI',
+          icon: 'icon-tool-spline-roi',
+          label: 'Spline ROI',
+          tooltip: 'Spline ROI',
+          commands: setToolActiveToolbar,
+          evaluate: 'evaluate.cornerstoneTool',
+        }),
+        createButton({
+          id: 'LivewireContour',
+          icon: 'icon-tool-livewire',
+          label: 'Livewire tool',
+          tooltip: 'Livewire tool',
+          commands: setToolActiveToolbar,
+          evaluate: 'evaluate.cornerstoneTool',
+        }),
+>>>>>>> origin/master
       ],
     },
   },

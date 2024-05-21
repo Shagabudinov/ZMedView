@@ -10,14 +10,28 @@ import checkSingleFrames from './utils/validations/checkSingleFrames';
  */
 export default function getDisplaySetMessages(
   instances: Array<any>,
-  isReconstructable: boolean
+  isReconstructable: boolean,
+  isDynamicVolume: boolean
 ): DisplaySetMessageList {
   const messages = new DisplaySetMessageList();
+<<<<<<< HEAD
   if (!instances.length) {
     messages.addMessage(DisplaySetMessage.CODES.NO_VALID_INSTANCES);
     return;
   }
 
+=======
+
+  if (isDynamicVolume) {
+    return messages;
+  }
+
+  if (!instances.length) {
+    messages.addMessage(DisplaySetMessage.CODES.NO_VALID_INSTANCES);
+    return;
+  }
+
+>>>>>>> origin/master
   const firstInstance = instances[0];
   const { Modality, ImageType, NumberOfFrames } = firstInstance;
   // Due to current requirements, LOCALIZER series doesn't have any messages

@@ -20,8 +20,13 @@ function Header({
   WhiteLabeling,
   showPatientInfo = PatientInfoVisibility.VISIBLE_COLLAPSED,
   servicesManager,
+<<<<<<< HEAD
+=======
+  Secondary,
+  appConfig,
+>>>>>>> origin/master
   ...props
-}): ReactNode {
+}: withAppTypes): ReactNode {
   const { t } = useTranslation('Header');
 
   // TODO: this should be passed in as a prop instead and the react-router-dom
@@ -58,14 +63,26 @@ function Header({
             </div>
           </div>
         </div>
+<<<<<<< HEAD
         {/* <div className="absolute top-1/2 left-[211px]  h-8 w-20 -translate-y-1/2">{future left component}</div> */}
+=======
+        <div className="absolute top-1/2 left-[250px]  h-8 -translate-y-1/2">{Secondary}</div>
+>>>>>>> origin/master
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
           <div className="flex items-center justify-center space-x-2">{children}</div>
         </div>
         <div className="absolute right-0 top-1/2 flex -translate-y-1/2 select-none items-center">
+<<<<<<< HEAD
           {(showPatientInfo === PatientInfoVisibility.VISIBLE ||
             showPatientInfo === PatientInfoVisibility.VISIBLE_COLLAPSED) && (
             <HeaderPatientInfo servicesManager={servicesManager} />
+=======
+          {showPatientInfo !== PatientInfoVisibility.DISABLED && (
+            <HeaderPatientInfo
+              servicesManager={servicesManager}
+              appConfig={appConfig}
+            />
+>>>>>>> origin/master
           )}
           <div className="border-primary-dark mx-1.5 h-[25px] border-r"></div>
           <div className="flex-shrink-0">

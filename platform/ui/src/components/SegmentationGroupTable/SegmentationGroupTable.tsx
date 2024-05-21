@@ -42,6 +42,7 @@ const SegmentationGroupTable = ({
   setRenderFill,
   setRenderInactiveSegmentations,
   setRenderOutline,
+  addSegmentationClassName,
 }) => {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [activeSegmentationId, setActiveSegmentationId] = useState(null);
@@ -98,11 +99,22 @@ const SegmentationGroupTable = ({
             segmentationConfig={segmentationConfig}
           />
         )}
+<<<<<<< HEAD
         <div className="bg-primary-dark">
           {segmentations?.length === 0 ? (
             <div className="select-none bg-black pt-[5px] pb-[5px]">
               {showAddSegmentation && !disableEditing && (
                 <NoSegmentationRow onSegmentationAdd={onSegmentationAdd} />
+=======
+        <div className="bg-primary-dark ">
+          {segmentations?.length === 0 ? (
+            <div className="select-none bg-black py-[3px]">
+              {showAddSegmentation && !disableEditing && (
+                <NoSegmentationRow
+                  onSegmentationAdd={onSegmentationAdd}
+                  addSegmentationClassName={addSegmentationClassName}
+                />
+>>>>>>> origin/master
               )}
             </div>
           ) : (
@@ -118,6 +130,10 @@ const SegmentationGroupTable = ({
                 onSegmentationDownloadRTSS={onSegmentationDownloadRTSS}
                 storeSegmentation={storeSegmentation}
                 onSegmentationAdd={onSegmentationAdd}
+<<<<<<< HEAD
+=======
+                addSegmentationClassName={addSegmentationClassName}
+>>>>>>> origin/master
                 onToggleSegmentationVisibility={onToggleSegmentationVisibility}
               />
               {!disableEditing && showAddSegment && (
@@ -127,7 +143,11 @@ const SegmentationGroupTable = ({
           )}
         </div>
         {activeSegmentation && (
+<<<<<<< HEAD
           <div className="ohif-scrollbar flex h-fit max-h-[500px] min-h-0 flex-col overflow-auto bg-black">
+=======
+          <div className="ohif-scrollbar flex h-fit min-h-0 flex-1 flex-col overflow-auto bg-black">
+>>>>>>> origin/master
             {activeSegmentation?.segments?.map(segment => {
               if (!segment) {
                 return null;

@@ -4,7 +4,11 @@ import isSeriesFilterUsed from '../../utils/isSeriesFilterUsed';
 
 import { utils, Enums } from '@ohif/core';
 
+<<<<<<< HEAD
 const { sortingCriteria } = utils;
+=======
+const { sortingCriteria, getSplitParam } = utils;
+>>>>>>> origin/master
 
 /**
  * Initialize the route.
@@ -15,8 +19,13 @@ const { sortingCriteria } = utils;
  * @param props.filters filters from query params to read the data from
  * @returns array of subscriptions to cancel
  */
+<<<<<<< HEAD
 export function defaultRouteInit(
   { servicesManager, studyInstanceUIDs, dataSource, filters, appConfig },
+=======
+export async function defaultRouteInit(
+  { servicesManager, studyInstanceUIDs, dataSource, filters, appConfig }: withAppTypes,
+>>>>>>> origin/master
   hangingProtocolId
 ) {
   const { displaySetService, hangingProtocolService, uiNotificationService, customizationService } =
@@ -95,7 +104,23 @@ export function defaultRouteInit(
     });
   });
 
+<<<<<<< HEAD
   Promise.allSettled(allRetrieves).then(promises => {
+=======
+  // is displaysets from URL and has initialSOPInstanceUID or initialSeriesInstanceUID
+  // then we need to wait for all display sets to be retrieved before applying the hanging protocol
+  const params = new URLSearchParams(window.location.search);
+
+  const initialSeriesInstanceUID = getSplitParam('initialseriesinstanceuid', params);
+  const initialSOPInstanceUID = getSplitParam('initialsopinstanceuid', params);
+
+  let displaySetFromUrl = false;
+  if (initialSeriesInstanceUID || initialSOPInstanceUID) {
+    displaySetFromUrl = true;
+  }
+
+  await Promise.allSettled(allRetrieves).then(async promises => {
+>>>>>>> origin/master
     log.timeEnd(Enums.TimingEnum.STUDY_TO_DISPLAY_SETS);
     log.time(Enums.TimingEnum.DISPLAY_SETS_TO_FIRST_IMAGE);
     log.time(Enums.TimingEnum.DISPLAY_SETS_TO_ALL_IMAGES);
@@ -109,7 +134,20 @@ export function defaultRouteInit(
 
     promises.forEach(promise => {
       const retrieveSeriesMetadataPromise = promise.value;
+<<<<<<< HEAD
       if (Array.isArray(retrieveSeriesMetadataPromise)) {
+=======
+      if (!Array.isArray(retrieveSeriesMetadataPromise)) {
+        return;
+      }
+
+      if (displaySetFromUrl) {
+        const requiredSeriesPromises = retrieveSeriesMetadataPromise.map(promise =>
+          promise.start()
+        );
+        allPromises.push(Promise.allSettled(requiredSeriesPromises));
+      } else {
+>>>>>>> origin/master
         const { requiredSeries, remaining } = hangingProtocolService.filterSeriesRequiredForRun(
           hangingProtocolId,
           retrieveSeriesMetadataPromise
@@ -120,7 +158,11 @@ export function defaultRouteInit(
       }
     });
 
+<<<<<<< HEAD
     Promise.allSettled(allPromises).then(applyHangingProtocol);
+=======
+    await Promise.allSettled(allPromises).then(applyHangingProtocol);
+>>>>>>> origin/master
     startRemainingPromises(remainingPromises);
     applyHangingProtocol();
   });

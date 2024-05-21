@@ -1,4 +1,4 @@
-import { PubSubService, ServicesManager } from '@ohif/core';
+import { PubSubService } from '@ohif/core';
 import * as OhifTypes from '@ohif/core/types';
 import {
   RenderingEngine,
@@ -24,6 +24,10 @@ import JumpPresets from '../../utils/JumpPresets';
 
 const EVENTS = {
   VIEWPORT_DATA_CHANGED: 'event::cornerstoneViewportService:viewportDataChanged',
+<<<<<<< HEAD
+=======
+  VIEWPORT_VOLUMES_CHANGED: 'event::cornerstoneViewportService:viewportVolumesChanged',
+>>>>>>> origin/master
 };
 
 /**
@@ -51,14 +55,18 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
   enableResizeDetector: true;
   resizeRefreshRateMs: 200;
   resizeRefreshMode: 'debounce';
-  servicesManager = null;
+  servicesManager: AppTypes.ServicesManager = null;
 
   resizeQueue = [];
   viewportResizeTimer = null;
   gridResizeDelay = 50;
   gridResizeTimeOut = null;
 
+<<<<<<< HEAD
   constructor(servicesManager: ServicesManager) {
+=======
+  constructor(servicesManager: AppTypes.ServicesManager) {
+>>>>>>> origin/master
     super(EVENTS);
     this.renderingEngine = null;
     this.viewportGridResizeObserver = null;
@@ -182,7 +190,11 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
     const { lutPresentation, positionPresentation } = presentations;
     if (lutPresentation) {
       const { presentation } = lutPresentation;
+<<<<<<< HEAD
       if (viewport instanceof VolumeViewport) {
+=======
+      if (viewport instanceof BaseVolumeViewport) {
+>>>>>>> origin/master
         if (presentation instanceof Map) {
           presentation.forEach((properties, volumeId) => {
             viewport.setProperties(properties, volumeId);
@@ -531,11 +543,24 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
     cameraProps: unknown
   ): string {
     const viewportInfo = this.getViewportInfo(activeViewportId);
+<<<<<<< HEAD
     const { referencedImageId } = cameraProps;
     if (viewportInfo?.contains(displaySetInstanceUID, referencedImageId)) {
       return activeViewportId;
     }
 
+=======
+
+    if (viewportInfo.getViewportType() === csEnums.ViewportType.VOLUME_3D) {
+      return null;
+    }
+
+    const { referencedImageId } = cameraProps;
+    if (viewportInfo?.contains(displaySetInstanceUID, referencedImageId)) {
+      return activeViewportId;
+    }
+
+>>>>>>> origin/master
     return (
       [...this.viewportsById.values()].find(viewportInfo =>
         viewportInfo.contains(displaySetInstanceUID, referencedImageId)
@@ -720,10 +745,18 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
   }
 
   public async setVolumesForViewport(viewport, volumeInputArray, presentations) {
+<<<<<<< HEAD
     const { displaySetService, toolGroupService } = this.servicesManager.services;
+=======
+    const { displaySetService, toolGroupService, viewportGridService } =
+      this.servicesManager.services;
+>>>>>>> origin/master
 
     const viewportInfo = this.getViewportInfo(viewport.id);
     const displaySetOptions = viewportInfo.getDisplaySetOptions();
+    const displaySetUIDs = viewportGridService.getDisplaySetsUIDsForViewport(viewport.id);
+    const displaySet = displaySetService.getDisplaySetByUID(displaySetUIDs[0]);
+    const displaySetModality = displaySet?.Modality;
 
     // Todo: use presentations states
     const volumesProperties = volumeInputArray.map((volumeInput, index) => {
@@ -749,7 +782,7 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
       }
 
       if (displayPreset !== undefined) {
-        properties.preset = displayPreset;
+        properties.preset = displayPreset[displaySetModality] || displayPreset.default;
       }
 
       return { properties, volumeId };
@@ -793,6 +826,10 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
     }
 
     viewport.render();
+
+    this._broadcastEvent(this.EVENTS.VIEWPORT_VOLUMES_CHANGED, {
+      viewportInfo,
+    });
   }
 
   private _addSegmentationRepresentationToToolGroupIfNecessary(
@@ -1025,6 +1062,7 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
   private performResize() {
     const isImmediate = false;
 
+<<<<<<< HEAD
     const viewports = this.getRenderingEngine().getViewports();
 
     // Store the current position presentations for each viewport.
@@ -1047,6 +1085,35 @@ class CornerstoneViewportService extends PubSubService implements IViewportServi
     // Resize and render the rendering engine again.
     renderingEngine.resize(isImmediate);
     renderingEngine.render();
+=======
+    try {
+      const viewports = this.getRenderingEngine().getViewports();
+
+      // Store the current position presentations for each viewport.
+      viewports.forEach(({ id }) => {
+        const presentation = this.getPositionPresentation(id);
+        this.beforeResizePositionPresentations.set(id, presentation);
+      });
+
+      // Resize the rendering engine and render.
+      const renderingEngine = this.renderingEngine;
+      renderingEngine.resize(isImmediate);
+      renderingEngine.render();
+
+      // Reset the camera for viewports that should reset their camera on resize,
+      // which means only those viewports that have a zoom level of 1.
+      this.beforeResizePositionPresentations.forEach((positionPresentation, viewportId) => {
+        this.setPresentations(viewportId, { positionPresentation });
+      });
+
+      // Resize and render the rendering engine again.
+      renderingEngine.resize(isImmediate);
+      renderingEngine.render();
+    } catch (e) {
+      // This can happen if the resize is too close to navigation or shutdown
+      console.warn('Caught resize exception', e);
+    }
+>>>>>>> origin/master
   }
 
   private resetGridResizeTimeout() {

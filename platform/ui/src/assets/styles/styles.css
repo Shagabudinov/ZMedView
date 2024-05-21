@@ -2,6 +2,13 @@
 .ohif-scrollbar {
   scrollbar-color: #173239 transparent;
   overflow-y: auto;
+<<<<<<< HEAD
+=======
+}
+
+.ohif-scrollbar-stable-gutter {
+  scrollbar-gutter: stable;
+>>>>>>> origin/master
 }
 
 .study-min-height {

@@ -3,6 +3,7 @@ import ToolbarLayoutSelectorWithServices from './Toolbar/ToolbarLayoutSelector';
 import ToolbarSplitButtonWithServices from './Toolbar/ToolbarSplitButtonWithServices';
 import ToolbarButtonGroupWithServices from './Toolbar/ToolbarButtonGroupWithServices';
 import { ToolbarButton } from '@ohif/ui';
+<<<<<<< HEAD
 
 const getClassName = isToggled => {
   return {
@@ -13,6 +14,19 @@ const getClassName = isToggled => {
 };
 
 export default function getToolbarModule({ commandsManager, servicesManager }) {
+=======
+import ProgressDropdownWithService from './components/ProgressDropdownWithService';
+
+const getClassName = isToggled => {
+  return {
+    className: isToggled
+      ? '!text-primary-active'
+      : '!text-common-bright hover:!bg-primary-dark hover:text-primary-light',
+  };
+};
+
+export default function getToolbarModule({ commandsManager, servicesManager }: withAppTypes) {
+>>>>>>> origin/master
   const { cineService } = servicesManager.services;
   return [
     {
@@ -37,6 +51,13 @@ export default function getToolbarModule({ commandsManager, servicesManager }) {
       defaultComponent: ToolbarButtonGroupWithServices,
     },
     {
+<<<<<<< HEAD
+=======
+      name: 'ohif.progressDropdown',
+      defaultComponent: ProgressDropdownWithService,
+    },
+    {
+>>>>>>> origin/master
       name: 'evaluate.group.promoteToPrimary',
       evaluate: ({ viewportId, button, itemId }) => {
         const { items } = button.props;

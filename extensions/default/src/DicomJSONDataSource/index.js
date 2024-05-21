@@ -166,10 +166,14 @@ function createDicomJSONApi(dicomJsonConfig) {
        *    or is already retrieved, or a promise to a URL for such use if a BulkDataURI
        */
       directURL: params => {
-        return getDirectURL(wadoRoot, params);
+        return getDirectURL(dicomJsonConfig, params);
       },
       series: {
+<<<<<<< HEAD
         metadata: async ({ StudyInstanceUID, madeInClient = false, customSort } = {}) => {
+=======
+        metadata: async ({ filters, StudyInstanceUID, madeInClient = false, customSort } = {}) => {
+>>>>>>> origin/master
           if (!StudyInstanceUID) {
             throw new Error('Unable to query for SeriesMetadata without StudyInstanceUID');
           }
@@ -181,6 +185,18 @@ function createDicomJSONApi(dicomJsonConfig) {
             series = customSort(study.series);
           } else {
             series = study.series;
+          }
+
+          const seriesKeys = [
+            'SeriesInstanceUID',
+            'SeriesInstanceUIDs',
+            'seriesInstanceUID',
+            'seriesInstanceUIDs',
+          ];
+          const seriesFilter = seriesKeys.find(key => filters[key]);
+          if (seriesFilter) {
+            const seriesUIDs = filters[seriesFilter];
+            series = series.filter(s => seriesUIDs.includes(s.SeriesInstanceUID));
           }
 
           const seriesSummaryMetadata = series.map(series => {

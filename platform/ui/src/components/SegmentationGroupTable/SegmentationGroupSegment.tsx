@@ -28,9 +28,18 @@ const SegmentItem = ({
 
   return (
     <div
+<<<<<<< HEAD
       className={classnames('text-aqua-pale group/row bg-primary-dark flex min-h-[28px] flex-col', {
         'bg-primary-light border-primary-light rounded-l-[4px] border text-black': isActive,
       })}
+=======
+      className={classnames(
+        'text-aqua-pale group/row bg-primary-dark flex min-h-[28px] flex-col overflow-hidden',
+        {
+          'bg-primary-light border-primary-light rounded-l-[6px] border text-black': isActive,
+        }
+      )}
+>>>>>>> origin/master
       onClick={e => {
         e.stopPropagation();
         onClick(segmentationId, segmentIndex);
@@ -66,15 +75,22 @@ const SegmentItem = ({
           )}
         </div>
         <div
+<<<<<<< HEAD
           className=" h-[30px] bg-black"
           style={{ width: '3px' }}
         ></div>
         <div
+=======
+>>>>>>> origin/master
           className={classnames('text-aqua-pale relative flex w-full', {
             'border border-l-0 border-transparent': !isActive,
           })}
           style={{
+<<<<<<< HEAD
             width: 'calc(100% - 40px)',
+=======
+            width: 'calc(100% - 28px)',
+>>>>>>> origin/master
           }}
         >
           <div className="bg-primary-dark flex h-full flex-grow items-center">
@@ -97,7 +113,11 @@ const SegmentItem = ({
           </div>
           <div
             className={classnames(
+<<<<<<< HEAD
               'absolute right-3 top-0 flex flex-row-reverse rounded-lg pt-[3px]',
+=======
+              'absolute right-[8px] top-0 flex flex-row-reverse rounded-lg pt-[3px]',
+>>>>>>> origin/master
               {}
             )}
           >
@@ -155,11 +175,19 @@ const SegmentItem = ({
         </div>
       </div>
       {Array.isArray(displayText) ? (
+<<<<<<< HEAD
         <div className="flex flex-col py-[5px] pl-[43px]">
           {displayText.map(text => (
             <div
               key={text}
               className="text-aqua-pale flex h-full items-center bg-black text-[11px]"
+=======
+        <div className="flex flex-col bg-black py-[5px] pl-[43px]">
+          {displayText.map(text => (
+            <div
+              key={text}
+              className="text-aqua-pale flex h-full items-center text-[11px]"
+>>>>>>> origin/master
             >
               {text}
             </div>
@@ -167,7 +195,11 @@ const SegmentItem = ({
         </div>
       ) : (
         displayText && (
+<<<<<<< HEAD
           <div className="text-aqua-pale flex h-full items-center bg-black px-2 py-[5px] pl-[45px] text-[11px]">
+=======
+          <div className="text-aqua-pale flex h-full items-center px-2 py-[5px] pl-[45px] text-[11px]">
+>>>>>>> origin/master
             {displayText}
           </div>
         )

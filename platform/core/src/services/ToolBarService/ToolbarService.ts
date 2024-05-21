@@ -2,7 +2,10 @@ import { CommandsManager } from '../../classes';
 import { ExtensionManager } from '../../extensions';
 import { PubSubService } from '../_shared/pubSubServiceInterface';
 import type { RunCommand } from '../../types/Command';
+<<<<<<< HEAD
 import ServicesManager from '../ServicesManager';
+=======
+>>>>>>> origin/master
 import { Button, ButtonProps, EvaluateFunction, EvaluatePublic, NestedButtonProps } from './types';
 
 const EVENTS = {
@@ -52,14 +55,22 @@ export default class ToolbarService extends PubSubService {
 
   _commandsManager: CommandsManager;
   _extensionManager: ExtensionManager;
+<<<<<<< HEAD
   _servicesManager: ServicesManager;
+=======
+  _servicesManager: AppTypes.ServicesManager;
+>>>>>>> origin/master
   _evaluateFunction: Record<string, EvaluateFunction> = {};
   _serviceSubscriptions = [];
 
   constructor(
     commandsManager: CommandsManager,
     extensionManager: ExtensionManager,
+<<<<<<< HEAD
     servicesManager: ServicesManager
+=======
+    servicesManager: AppTypes.ServicesManager
+>>>>>>> origin/master
   ) {
     super(EVENTS);
     this._commandsManager = commandsManager;
@@ -68,7 +79,7 @@ export default class ToolbarService extends PubSubService {
   }
 
   public reset(): void {
-    this.unsubscriptions.forEach(unsub => unsub());
+    // this.unsubscriptions.forEach(unsub => unsub());
     this.state = {
       buttons: {},
       buttonSections: {},
@@ -120,6 +131,13 @@ export default class ToolbarService extends PubSubService {
   public addButtons(buttons: Button[]): void {
     buttons.forEach(button => {
       if (!this.state.buttons[button.id]) {
+<<<<<<< HEAD
+=======
+        if (!button.props) {
+          button.props = {};
+        }
+
+>>>>>>> origin/master
         this.state.buttons[button.id] = button;
       }
     });
@@ -141,6 +159,7 @@ export default class ToolbarService extends PubSubService {
     options?: {
       refreshProps: Record<string, unknown>;
       [key: string]: unknown;
+<<<<<<< HEAD
     }
   ) {
     // if interaction is a string, we can assume it is the itemId
@@ -165,6 +184,53 @@ export default class ToolbarService extends PubSubService {
     }
 
     const commandOptions = { ...options, ...interaction };
+=======
+    }
+  ) {
+    // if interaction is a string, we can assume it is the itemId
+    // and get the props to get the other properties
+    if (typeof interaction === 'string') {
+      interaction = this.getButtonProps(interaction);
+    }
+
+    const itemId = interaction.itemId ?? interaction.id;
+    interaction.itemId = itemId;
+
+    let commands = Array.isArray(interaction.commands)
+      ? interaction.commands
+      : [interaction.commands];
+
+    if (!commands?.length) {
+      this.refreshToolbarState({
+        ...options?.refreshProps,
+        itemId,
+        interaction,
+      });
+    }
+
+    const commandOptions = { ...options, ...interaction };
+
+    commands = commands.map(command => {
+      if (typeof command === 'function') {
+        return () => {
+          command({
+            ...commandOptions,
+            commandsManager: this._commandsManager,
+            servicesManager: this._servicesManager,
+          });
+        };
+      }
+
+      return command;
+    });
+
+    // if still no commands, return
+    commands = commands.filter(Boolean);
+
+    if (!commands.length) {
+      return;
+    }
+>>>>>>> origin/master
 
     // Loop through commands and run them with the combined options
     this._commandsManager.run(commands, commandOptions);
@@ -350,6 +416,10 @@ export default class ToolbarService extends PubSubService {
    * @param {Array} buttons - The buttons to be added to the section.
    */
   createButtonSection(key, buttons) {
+<<<<<<< HEAD
+=======
+    // make sure all buttons have at least an empty props
+>>>>>>> origin/master
     this.state.buttonSections[key] = buttons;
     this._broadcastEvent(this.EVENTS.TOOL_BAR_MODIFIED, { ...this.state });
   }
@@ -370,6 +440,29 @@ export default class ToolbarService extends PubSubService {
         return this._mapButtonToDisplay(btn, props);
       }) || []
     );
+<<<<<<< HEAD
+=======
+  }
+
+  /**
+   * Retrieves the tool name for a given button.
+   * @param button - The button object.
+   * @returns The tool name associated with the button.
+   */
+  getToolNameForButton(button) {
+    const { props } = button;
+
+    const commands = props?.commands || button.commands;
+    const commandsArray = Array.isArray(commands) ? commands : [commands];
+    const firstCommand = commandsArray[0];
+
+    if (firstCommand?.commandOptions) {
+      return firstCommand.commandOptions.toolName ?? props?.id ?? button.id;
+    }
+
+    // use id as a fallback for toolName
+    return props?.id ?? button.id;
+>>>>>>> origin/master
   }
 
   /**
@@ -433,7 +526,15 @@ export default class ToolbarService extends PubSubService {
     }
 
     if (Array.isArray(evaluate)) {
+<<<<<<< HEAD
       const evaluators = evaluate.map(evaluatorName => {
+=======
+      const evaluators = evaluate.map(evaluator => {
+        const isObject = typeof evaluator === 'object';
+
+        const evaluatorName = isObject ? evaluator.name : evaluator;
+
+>>>>>>> origin/master
         const evaluateFunction = this._evaluateFunction[evaluatorName];
 
         if (!evaluateFunction) {
@@ -442,6 +543,13 @@ export default class ToolbarService extends PubSubService {
           );
         }
 
+<<<<<<< HEAD
+=======
+        if (isObject) {
+          return args => evaluateFunction({ ...args, ...evaluator });
+        }
+
+>>>>>>> origin/master
         return evaluateFunction;
       });
 

@@ -2,11 +2,19 @@ import React, { ReactElement, useState, useEffect, useCallback } from 'react';
 import { VolumeLightingProps } from '../../types/ViewportPresets';
 
 export function VolumeLighting({
+<<<<<<< HEAD
   serviceManager,
   commandsManager,
   viewportId,
 }: VolumeLightingProps): ReactElement {
   const { cornerstoneViewportService } = serviceManager.services;
+=======
+  servicesManager,
+  commandsManager,
+  viewportId,
+}: VolumeLightingProps): ReactElement {
+  const { cornerstoneViewportService } = servicesManager.services;
+>>>>>>> origin/master
   const [ambient, setAmbient] = useState(null);
   const [diffuse, setDiffuse] = useState(null);
   const [specular, setSpecular] = useState(null);
@@ -60,7 +68,15 @@ export function VolumeLighting({
             min={0}
             type="range"
             step={0.1}
+<<<<<<< HEAD
             style={{ background: calculateBackground(ambient) }}
+=======
+            style={{
+              background: calculateBackground(ambient),
+              '--thumb-inner-color': '#5acce6',
+              '--thumb-outer-color': '#090c29',
+            }}
+>>>>>>> origin/master
           />
         )}
       </div>
@@ -84,7 +100,15 @@ export function VolumeLighting({
             min={0}
             type="range"
             step={0.1}
+<<<<<<< HEAD
             style={{ background: calculateBackground(diffuse) }}
+=======
+            style={{
+              background: calculateBackground(diffuse),
+              '--thumb-inner-color': '#5acce6',
+              '--thumb-outer-color': '#090c29',
+            }}
+>>>>>>> origin/master
           />
         )}
       </div>
@@ -109,7 +133,15 @@ export function VolumeLighting({
             min={0}
             type="range"
             step={0.1}
+<<<<<<< HEAD
             style={{ background: calculateBackground(specular) }}
+=======
+            style={{
+              background: calculateBackground(specular),
+              '--thumb-inner-color': '#5acce6',
+              '--thumb-outer-color': '#090c29',
+            }}
+>>>>>>> origin/master
           />
         )}
       </div>

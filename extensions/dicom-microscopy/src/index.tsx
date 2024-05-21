@@ -99,7 +99,13 @@ const extension: Types.Extensions.Extension = {
           const { microscopyService } = servicesManager.services;
 
           const activeInteractions = microscopyService.getActiveInteractions();
+<<<<<<< HEAD
 
+=======
+          if (!activeInteractions) {
+            return false;
+          }
+>>>>>>> origin/master
           const isPrimaryActive = activeInteractions.find(interactions => {
             const sameMouseButton = interactions[1].bindings.mouseButtons.includes('left');
 

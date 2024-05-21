@@ -16,11 +16,18 @@ import { Types as OhifTypes } from '@ohif/core';
 import { vec3, mat4 } from 'gl-matrix';
 
 import CornerstoneViewportDownloadForm from './utils/CornerstoneViewportDownloadForm';
+<<<<<<< HEAD
 import callInputDialog from './utils/callInputDialog';
 import toggleImageSliceSync from './utils/imageSliceSync/toggleImageSliceSync';
 import { getFirstAnnotationSelected } from './utils/measurementServiceMappings/utils/selection';
 import getActiveViewportEnabledElement from './utils/getActiveViewportEnabledElement';
 import { CornerstoneServices } from './types';
+=======
+import { callLabelAutocompleteDialog, showLabelAnnotationPopup } from './utils/callInputDialog';
+import toggleImageSliceSync from './utils/imageSliceSync/toggleImageSliceSync';
+import { getFirstAnnotationSelected } from './utils/measurementServiceMappings/utils/selection';
+import getActiveViewportEnabledElement from './utils/getActiveViewportEnabledElement';
+>>>>>>> origin/master
 import toggleVOISliceSync from './utils/toggleVOISliceSync';
 
 const toggleSyncFunctions = {
@@ -40,16 +47,30 @@ function commandsModule({
     cornerstoneViewportService,
     uiNotificationService,
     measurementService,
+<<<<<<< HEAD
     colorbarService,
     hangingProtocolService,
     syncGroupService,
   } = servicesManager.services as CornerstoneServices;
+=======
+    customizationService,
+    colorbarService,
+    hangingProtocolService,
+    syncGroupService,
+  } = servicesManager.services;
+>>>>>>> origin/master
 
   const { measurementServiceSource } = this;
 
   function _getActiveViewportEnabledElement() {
     return getActiveViewportEnabledElement(viewportGridService);
   }
+
+  function _getActiveViewportToolGroupId() {
+    const viewport = _getActiveViewportEnabledElement();
+    return toolGroupService.getToolGroupForViewport(viewport.id);
+  }
+
   const actions = {
     /**
      * Generates the selector props for the context menu, specific to
@@ -125,22 +146,20 @@ function commandsModule({
         ? nearbyToolData
         : null;
     },
-
-    // Measurement tool commands:
-
     /** Delete the given measurement */
     deleteMeasurement: ({ uid }) => {
       if (uid) {
         measurementServiceSource.remove(uid);
       }
     },
-
     /**
      * Show the measurement labelling input dialog and update the label
      * on the measurement with a response if not cancelled.
      */
     setMeasurementLabel: ({ uid }) => {
+      const labelConfig = customizationService.get('measurementLabels');
       const measurement = measurementService.getMeasurement(uid);
+<<<<<<< HEAD
 
       callInputDialog(
         uiDialogService,
@@ -157,6 +176,18 @@ function commandsModule({
           measurementService.update(updatedMeasurement.uid, updatedMeasurement, true);
         },
         false
+=======
+      showLabelAnnotationPopup(measurement, uiDialogService, labelConfig).then(
+        (val: Map<any, any>) => {
+          measurementService.update(
+            uid,
+            {
+              ...val,
+            },
+            true
+          );
+        }
+>>>>>>> origin/master
       );
     },
 
@@ -232,8 +263,9 @@ function commandsModule({
 
       viewportGridService.setActiveViewportId(viewportId);
     },
-    arrowTextCallback: ({ callback, data }) => {
-      callInputDialog(uiDialogService, data, callback);
+    arrowTextCallback: ({ callback, data, uid }) => {
+      const labelConfig = customizationService.get('measurementLabels');
+      callLabelAutocompleteDialog(uiDialogService, callback, {}, labelConfig);
     },
     toggleCine: () => {
       const { viewports } = viewportGridService.getState();
@@ -282,16 +314,26 @@ function commandsModule({
 
       actions.setViewportWindowLevel({ ...props, viewportId });
     },
+<<<<<<< HEAD
     setToolEnabled: ({ toolName, toggle }) => {
+=======
+    setToolEnabled: ({ toolName, toggle, toolGroupId }) => {
+>>>>>>> origin/master
       const { viewports } = viewportGridService.getState();
 
       if (!viewports.size) {
         return;
       }
 
+<<<<<<< HEAD
       const toolGroup = toolGroupService.getToolGroup(null);
 
       if (!toolGroup) {
+=======
+      const toolGroup = toolGroupService.getToolGroup(toolGroupId ?? null);
+
+      if (!toolGroup || !toolGroup.hasTool(toolName)) {
+>>>>>>> origin/master
         return;
       }
 
@@ -300,11 +342,17 @@ function commandsModule({
       // Toggle the tool's state only if the toggle is true
       if (toggle) {
         toolIsEnabled ? toolGroup.setToolDisabled(toolName) : toolGroup.setToolEnabled(toolName);
+<<<<<<< HEAD
+=======
+      } else {
+        toolGroup.setToolEnabled(toolName);
+>>>>>>> origin/master
       }
 
       const renderingEngine = cornerstoneViewportService.getRenderingEngine();
       renderingEngine.render();
     },
+<<<<<<< HEAD
     setToolActiveToolbar: ({ value, itemId, toolGroupIds = [] }) => {
       // Sometimes it is passed as value (tools with options), sometimes as itemId (toolbar buttons)
       const toolName = itemId || value;
@@ -332,6 +380,75 @@ function commandsModule({
         return;
       }
 
+=======
+    toggleEnabledDisabledToolbar({ value, itemId, toolGroupId }) {
+      const toolName = itemId || value;
+      toolGroupId = toolGroupId ?? _getActiveViewportToolGroupId();
+
+      const toolGroup = toolGroupService.getToolGroup(toolGroupId);
+      if (!toolGroup || !toolGroup.hasTool(toolName)) {
+        return;
+      }
+
+      const toolIsEnabled = toolGroup.getToolOptions(toolName).mode === Enums.ToolModes.Enabled;
+
+      toolIsEnabled ? toolGroup.setToolDisabled(toolName) : toolGroup.setToolEnabled(toolName);
+    },
+    toggleActiveDisabledToolbar({ value, itemId, toolGroupId }) {
+      const toolName = itemId || value;
+      toolGroupId = toolGroupId ?? _getActiveViewportToolGroupId();
+      const toolGroup = toolGroupService.getToolGroup(toolGroupId);
+      if (!toolGroup || !toolGroup.hasTool(toolName)) {
+        return;
+      }
+
+      const toolIsActive = [
+        Enums.ToolModes.Active,
+        Enums.ToolModes.Enabled,
+        Enums.ToolModes.Passive,
+      ].includes(toolGroup.getToolOptions(toolName).mode);
+
+      toolIsActive
+        ? toolGroup.setToolDisabled(toolName)
+        : actions.setToolActive({ toolName, toolGroupId });
+
+      // we should set the previously active tool to active after we set the
+      // current tool disabled
+      if (toolIsActive) {
+        const prevToolName = toolGroup.getPrevActivePrimaryToolName();
+        if (prevToolName !== toolName) {
+          actions.setToolActive({ toolName: prevToolName, toolGroupId });
+        }
+      }
+    },
+    setToolActiveToolbar: ({ value, itemId, toolName, toolGroupIds = [] }) => {
+      // Sometimes it is passed as value (tools with options), sometimes as itemId (toolbar buttons)
+      toolName = toolName || itemId || value;
+
+      toolGroupIds = toolGroupIds.length ? toolGroupIds : toolGroupService.getToolGroupIds();
+
+      toolGroupIds.forEach(toolGroupId => {
+        actions.setToolActive({ toolName, toolGroupId });
+      });
+    },
+    setToolActive: ({ toolName, toolGroupId = null }) => {
+      const { viewports } = viewportGridService.getState();
+
+      if (!viewports.size) {
+        return;
+      }
+
+      const toolGroup = toolGroupService.getToolGroup(toolGroupId);
+
+      if (!toolGroup) {
+        return;
+      }
+
+      if (!toolGroup.hasTool(toolName)) {
+        return;
+      }
+
+>>>>>>> origin/master
       const activeToolName = toolGroup.getActivePrimaryMouseButtonTool();
 
       if (activeToolName) {
@@ -374,6 +491,7 @@ function commandsModule({
             onClose: uiModalService.hide,
             cornerstoneViewportService,
           },
+          containerDimensions: 'w-[70%] max-w-[900px]',
         });
       }
     },
@@ -409,11 +527,9 @@ function commandsModule({
 
       const { viewport } = enabledElement;
 
-      if (viewport instanceof StackViewport) {
-        const { flipHorizontal } = viewport.getCamera();
-        viewport.setCamera({ flipHorizontal: !flipHorizontal });
-        viewport.render();
-      }
+      const { flipHorizontal } = viewport.getCamera();
+      viewport.setCamera({ flipHorizontal: !flipHorizontal });
+      viewport.render();
     },
     flipViewportVertical: () => {
       const enabledElement = _getActiveViewportEnabledElement();
@@ -424,11 +540,9 @@ function commandsModule({
 
       const { viewport } = enabledElement;
 
-      if (viewport instanceof StackViewport) {
-        const { flipVertical } = viewport.getCamera();
-        viewport.setCamera({ flipVertical: !flipVertical });
-        viewport.render();
-      }
+      const { flipVertical } = viewport.getCamera();
+      viewport.setCamera({ flipVertical: !flipVertical });
+      viewport.render();
     },
     invertViewport: ({ element }) => {
       let enabledElement;
@@ -642,6 +756,20 @@ function commandsModule({
     storePresentation: ({ viewportId }) => {
       cornerstoneViewportService.storePresentation({ viewportId });
     },
+<<<<<<< HEAD
+=======
+    updateVolumeData: ({ volume }) => {
+      // update vtkOpenGLTexture and imageData of computed volume
+      const { imageData, vtkOpenGLTexture } = volume;
+      const numSlices = imageData.getDimensions()[2];
+      const slicesToUpdate = [...Array(numSlices).keys()];
+      slicesToUpdate.forEach(i => {
+        vtkOpenGLTexture.setUpdatedFrame(i);
+      });
+      imageData.modified();
+    },
+
+>>>>>>> origin/master
     attachProtocolViewportDataListener: ({ protocol, stageIndex }) => {
       const EVENT = cornerstoneViewportService.EVENTS.VIEWPORT_DATA_CHANGED;
       const command = protocol.callbacks.onViewportDataInitialized;
@@ -776,7 +904,11 @@ function commandsModule({
       }
 
       crosshairInstances.forEach(ins => {
+<<<<<<< HEAD
         ins.resetCrosshairs();
+=======
+        ins?.resetCrosshairs();
+>>>>>>> origin/master
       });
     },
   };
@@ -930,6 +1062,18 @@ function commandsModule({
     },
     toggleSynchronizer: {
       commandFn: actions.toggleSynchronizer,
+<<<<<<< HEAD
+=======
+    },
+    updateVolumeData: {
+      commandFn: actions.updateVolumeData,
+    },
+    toggleEnabledDisabledToolbar: {
+      commandFn: actions.toggleEnabledDisabledToolbar,
+    },
+    toggleActiveDisabledToolbar: {
+      commandFn: actions.toggleActiveDisabledToolbar,
+>>>>>>> origin/master
     },
   };
 

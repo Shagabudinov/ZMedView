@@ -77,8 +77,16 @@ export const primary3D = {
             {
               id: 'mprDisplaySet',
               options: {
+<<<<<<< HEAD
                 // ToDo: choose appropriate preset
                 displayPreset: 'CT-Bone',
+=======
+                displayPreset: {
+                  CT: 'CT-Bone',
+                  MR: 'MR-Default',
+                  default: 'CT-Bone',
+                },
+>>>>>>> origin/master
               },
             },
           ],

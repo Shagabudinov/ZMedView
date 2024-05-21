@@ -123,7 +123,13 @@ Here are a list of some options available:
   what is specified by `maxNumberOfWebWorkers`. Some windows machines require smaller values.
 - `acceptHeader` : accept header to request specific dicom transfer syntax ex : [ 'multipart/related; type=image/jls; q=1', 'multipart/related; type=application/octet-stream; q=0.1' ]
 - `investigationalUseDialog`: This should contain an object with `option` value, it can be either `always` which always shows the dialog once per session, `never` which never shows the dialog, or `configure` which shows the dialog once and won't show it again until a set number of days defined by the user, if it's set to configure, you are required to add an additional property `days` which is the number of days to wait before showing the dialog again.
+<<<<<<< HEAD
 - `groupEnabled`: boolean, if set to true, all valid modes for the study get grouped together first, then the rest of the modes. If false, all modes are shown in the order they are defined in the configuration.
+=======
+- `groupEnabledModesFirst`: boolean, if set to true, all valid modes for the study get grouped together first, then the rest of the modes. If false, all modes are shown in the order they are defined in the configuration.
+- `disableConfirmationPrompts`: boolean, if set to true, it skips confirmation prompts for measurement tracking and hydration.
+- `showPatientInfo`: string, if set to 'visible', the patient info header will be shown and its initial state is expanded. If set to 'visibleCollapsed', the patient info header will be shown but it's initial state is collapsed. If set to 'disabled', the patient info header will never be shown, and if set to 'visibleReadOnly', the patient info header will be shown and always expanded.
+>>>>>>> origin/master
 - `requestTransferSyntaxUID` : Request a specific Transfer syntax from dicom web server ex: 1.2.840.10008.1.2.4.80  (applied only if acceptHeader is not set)
 - `omitQuotationForMultipartRequest`: Some servers (e.g., .NET) require the `multipart/related` request to be sent without quotation marks. Defaults to `false`. If your server doesn't require this, then setting this flag to `true` might improve performance (by removing the need for preflight requests). Also note that
 if auth headers are used, a preflight request is required.
@@ -145,7 +151,7 @@ if auth headers are used, a preflight request is required.
                   props: {
                     leftPanels: [tracked.thumbnailList],
                     rightPanels: [dicomSeg.panel, tracked.measurements],
-                    rightPanelDefaultClosed: true,
+                    rightPanelClosed: true,
                     viewports: [
                       {
                         namespace: tracked.viewport,
@@ -242,6 +248,7 @@ Example usage:<br/>
 This configuration would allow the user to build a dicomweb configuration from a GCP healthcare api path e.g. http://localhost:3000/projects/your-gcp-project/locations/us-central1/datasets/your-dataset/dicomStores/your-dicom-store/study/1.3.6.1.4.1.1234.5.2.1.1234.1234.123123123123123123123123123123
 
 
+<<<<<<< HEAD
 ### More on Accept Header Configuration
 In the previous section we showed that you can modify the `acceptHeader`
 configuration to request specific dicom transfer syntax. By default
@@ -252,6 +259,31 @@ reasons:
   the client is more likely to receive the image in a syntax that's well-suited for fast transmission
   and rendering. This might be the original syntax the image was stored in or another syntax that the server deems efficient.
 
+=======
+:::note
+You can stack multiple panel components on top of each other by providing an array of panel components in the `rightPanels` or `leftPanels` properties.
+
+For instance we can use
+
+```
+rightPanels: [[dicomSeg.panel, tracked.measurements], [dicomSeg.panel, tracked.measurements]]
+```
+
+This will result in two panels, one with `dicomSeg.panel` and `tracked.measurements` and the other with `dicomSeg.panel` and `tracked.measurements` stacked on top of each other.
+
+:::
+
+### More on Accept Header Configuration
+In the previous section we showed that you can modify the `acceptHeader`
+configuration to request specific dicom transfer syntax. By default
+we use `acceptHeader: ['multipart/related; type=application/octet-stream; transfer-syntax=*']` for the following
+reasons:
+
+- **Ensures Optimal Transfer Syntax**: By allowing the server to select the transfer syntax,
+  the client is more likely to receive the image in a syntax that's well-suited for fast transmission
+  and rendering. This might be the original syntax the image was stored in or another syntax that the server deems efficient.
+
+>>>>>>> origin/master
 - **Avoids Transcoding**: Transcoding (converting from one transfer syntax to another) can be a resource-intensive process.
  Since the OHIF Viewer supports all transfer syntaxes, it is fine to accept any transfer syntax (transfer-syntax=*).
  This allows the server to send the images in their stored syntax, avoiding the need for costly on-the-fly conversions.

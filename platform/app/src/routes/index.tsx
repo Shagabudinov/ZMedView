@@ -88,7 +88,7 @@ const createRoutes = ({
   hotkeysManager,
   routerBasename,
   showStudyList,
-}) => {
+}: withAppTypes) => {
   const routes =
     buildModeRoutes({
       modes,
@@ -149,7 +149,11 @@ const createRoutes = ({
             exact
             path={route.path}
             element={
+<<<<<<< HEAD
               <PrivateRoute handleUnauthenticated={userAuthenticationService.handleUnauthenticated}>
+=======
+              <PrivateRoute handleUnauthenticated={() => userAuthenticationService.handleUnauthenticated()}>
+>>>>>>> origin/master
                 <RouteWithErrorBoundary route={route} />
               </PrivateRoute>
             }

@@ -14,6 +14,10 @@ class CineService extends PubSubService {
   };
 
   serviceImplementation = {};
+<<<<<<< HEAD
+=======
+  startedClips = new Map();
+>>>>>>> origin/master
 
   constructor() {
     super(CineService.EVENTS);
@@ -34,11 +38,16 @@ class CineService extends PubSubService {
     // reducer state does not get updated right away and if we publish the
     // event and we use the cineService.getState() it will return the old state
     setTimeout(() => {
+<<<<<<< HEAD
       this._broadcastEvent(this.EVENTS.CINE_STATE_CHANGED, isCineEnabled);
+=======
+      this._broadcastEvent(this.EVENTS.CINE_STATE_CHANGED, { isCineEnabled });
+>>>>>>> origin/master
     }, 0);
   }
 
   public playClip(element, playClipOptions) {
+<<<<<<< HEAD
     return this.serviceImplementation._playClip(element, playClipOptions);
   }
 
@@ -48,6 +57,34 @@ class CineService extends PubSubService {
 
   public _onModeExit() {
     this.setIsCineEnabled(false);
+=======
+    const res = this.serviceImplementation._playClip(element, playClipOptions);
+
+    this.startedClips.set(element, playClipOptions);
+
+    this._broadcastEvent(this.EVENTS.CINE_STATE_CHANGED, { isPlaying: true });
+
+    return res;
+  }
+
+  public stopClip(element, stopClipOptions) {
+    const res = this.serviceImplementation._stopClip(element, stopClipOptions);
+
+    this._broadcastEvent(this.EVENTS.CINE_STATE_CHANGED, { isPlaying: false });
+
+    return res;
+  }
+
+  public onModeExit() {
+    this.setIsCineEnabled(false);
+    this.startedClips.forEach((value, key) => {
+      this.stopClip(key, value);
+    });
+  }
+
+  public getSyncedViewports(viewportId) {
+    return this.serviceImplementation._getSyncedViewports(viewportId);
+>>>>>>> origin/master
   }
 
   public setServiceImplementation({
@@ -56,7 +93,16 @@ class CineService extends PubSubService {
     setIsCineEnabled: setIsCineEnabledImplementation,
     playClip: playClipImplementation,
     stopClip: stopClipImplementation,
+<<<<<<< HEAD
   }) {
+=======
+    getSyncedViewports: getSyncedViewportsImplementation,
+  }) {
+    if (getSyncedViewportsImplementation) {
+      this.serviceImplementation._getSyncedViewports = getSyncedViewportsImplementation;
+    }
+
+>>>>>>> origin/master
     if (getStateImplementation) {
       this.serviceImplementation._getState = getStateImplementation;
     }

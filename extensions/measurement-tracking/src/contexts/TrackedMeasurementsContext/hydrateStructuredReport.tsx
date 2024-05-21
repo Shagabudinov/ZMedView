@@ -1,6 +1,14 @@
 import { hydrateStructuredReport as baseHydrateStructuredReport } from '@ohif/extension-cornerstone-dicom-sr';
 
+<<<<<<< HEAD
 function hydrateStructuredReport({ servicesManager, extensionManager, appConfig }, ctx, evt) {
+=======
+function hydrateStructuredReport(
+  { servicesManager, extensionManager, appConfig }: withAppTypes,
+  ctx,
+  evt
+) {
+>>>>>>> origin/master
   const { displaySetService } = servicesManager.services;
   const { viewportId, displaySetInstanceUID } = evt;
   const srDisplaySet = displaySetService.getDisplaySetByUID(displaySetInstanceUID);

@@ -322,7 +322,11 @@ export type Protocol = {
  * to the GUI when this is used, and it can be expensive to apply.
  * Alternatives include using the custom attributes where possible.
  */
+<<<<<<< HEAD
 export type ProtocolGenerator = ({ servicesManager: any, commandsManager: any }) => {
+=======
+export type ProtocolGenerator = ({ servicesManager, commandsManager }: withAppTypes) => {
+>>>>>>> origin/master
   protocol: Protocol;
 };
 

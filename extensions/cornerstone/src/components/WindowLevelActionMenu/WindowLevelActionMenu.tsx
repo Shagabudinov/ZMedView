@@ -2,7 +2,10 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { AllInOneMenu, useViewportGrid } from '@ohif/ui';
+<<<<<<< HEAD
 import { CommandsManager, ServicesManager } from '@ohif/core';
+=======
+>>>>>>> origin/master
 import { Colormap } from './Colormap';
 import { Colorbar } from './Colorbar';
 import { setViewportColorbar } from './Colorbar';
@@ -19,11 +22,17 @@ import { utilities } from '@cornerstonejs/core';
 export type WindowLevelActionMenuProps = {
   viewportId: string;
   element: HTMLElement;
+<<<<<<< HEAD
   presets: Record<string, Array<WindowLevelPreset>>;
   verticalDirection: AllInOneMenu.VerticalDirection;
   horizontalDirection: AllInOneMenu.HorizontalDirection;
   commandsManager: CommandsManager;
   serviceManager: ServicesManager;
+=======
+  presets: Array<Record<string, Array<WindowLevelPreset>>>;
+  verticalDirection: AllInOneMenu.VerticalDirection;
+  horizontalDirection: AllInOneMenu.HorizontalDirection;
+>>>>>>> origin/master
   colorbarProperties: ColorbarProperties;
   displaySets: Array<any>;
   volumeRenderingPresets: Array<ViewportPreset>;
@@ -37,12 +46,20 @@ export function WindowLevelActionMenu({
   verticalDirection,
   horizontalDirection,
   commandsManager,
+<<<<<<< HEAD
   serviceManager,
+=======
+  servicesManager,
+>>>>>>> origin/master
   colorbarProperties,
   displaySets,
   volumeRenderingPresets,
   volumeRenderingQualityRange,
+<<<<<<< HEAD
 }: WindowLevelActionMenuProps): ReactElement {
+=======
+}: withAppTypes<WindowLevelActionMenuProps>): ReactElement {
+>>>>>>> origin/master
   const {
     colormaps,
     colorbarContainerPosition,
@@ -50,8 +67,14 @@ export function WindowLevelActionMenu({
     colorbarTickPosition,
     width: colorbarWidth,
   } = colorbarProperties;
+<<<<<<< HEAD
   const { colorbarService, cornerstoneViewportService } = serviceManager.services;
   const viewportInfo = cornerstoneViewportService.getViewportInfo(viewportId);
+=======
+  const { colorbarService, cornerstoneViewportService } = servicesManager.services;
+  const viewportInfo = cornerstoneViewportService.getViewportInfo(viewportId);
+  const viewport = cornerstoneViewportService.getCornerstoneViewport(viewportId);
+>>>>>>> origin/master
   const backgroundColor = viewportInfo.getViewportOptions().background;
   const isLight = backgroundColor ? utilities.isEqual(backgroundColor, [1, 1, 1]) : false;
 
@@ -67,7 +90,11 @@ export function WindowLevelActionMenu({
   const [is3DVolume, setIs3DVolume] = useState(false);
 
   const onSetColorbar = useCallback(() => {
+<<<<<<< HEAD
     setViewportColorbar(viewportId, displaySets, commandsManager, serviceManager, {
+=======
+    setViewportColorbar(viewportId, displaySets, commandsManager, servicesManager, {
+>>>>>>> origin/master
       colormaps,
       ticks: {
         position: colorbarTickPosition,
@@ -93,6 +120,7 @@ export function WindowLevelActionMenu({
       colorbarService.removeColorbar(viewportId);
       onSetColorbar();
     }, 0);
+<<<<<<< HEAD
   }, [viewportId]);
 
   useEffect(() => {
@@ -100,6 +128,9 @@ export function WindowLevelActionMenu({
       colorbarService.removeColorbar(viewportId);
     }
   }, [displaySets]);
+=======
+  }, [viewportId, displaySets, viewport]);
+>>>>>>> origin/master
 
   useEffect(() => {
     setMenuKey(menuKey + 1);
@@ -128,10 +159,15 @@ export function WindowLevelActionMenu({
       iconClassName={classNames(
         // Visible on hover and for the active viewport
         activeViewportId === viewportId ? 'visible' : 'invisible group-hover:visible',
+<<<<<<< HEAD
         'flex shrink-0 cursor-pointer rounded active:text-white',
         isLight
           ? 'text-aqua-pale hover:bg-secondary-dark'
           : 'text-primary-light hover:bg-secondary-light/60'
+=======
+        'flex shrink-0 cursor-pointer rounded active:text-white text-primary-light',
+        isLight ? ' hover:bg-secondary-dark' : 'hover:bg-secondary-light/60'
+>>>>>>> origin/master
       )}
       menuStyle={{ maxHeight: vpHeight - 32, minWidth: 218 }}
       onVisibilityChange={() => {
@@ -145,7 +181,11 @@ export function WindowLevelActionMenu({
             viewportId={viewportId}
             displaySets={displaySets.filter(ds => !nonImageModalities.includes(ds.Modality))}
             commandsManager={commandsManager}
+<<<<<<< HEAD
             serviceManager={serviceManager}
+=======
+            servicesManager={servicesManager}
+>>>>>>> origin/master
             colorbarProperties={colorbarProperties}
           />
         )}
@@ -161,15 +201,26 @@ export function WindowLevelActionMenu({
               viewportId={viewportId}
               displaySets={displaySets.filter(ds => !nonImageModalities.includes(ds.Modality))}
               commandsManager={commandsManager}
+<<<<<<< HEAD
               serviceManager={serviceManager}
+=======
+              servicesManager={servicesManager}
+>>>>>>> origin/master
             />
           </AllInOneMenu.SubMenu>
         )}
 
+<<<<<<< HEAD
         {presets && !is3DVolume && (
           <AllInOneMenu.SubMenu
             key="windowLevelPresets"
             itemLabel={t('Modality Window Presets', { modality: Object.keys(presets)[0] })}
+=======
+        {presets && presets.length > 0 && !is3DVolume && (
+          <AllInOneMenu.SubMenu
+            key="windowLevelPresets"
+            itemLabel={t('Modality Window Presets')}
+>>>>>>> origin/master
             itemIcon="viewport-window-level"
           >
             <WindowLevel
@@ -182,7 +233,11 @@ export function WindowLevelActionMenu({
 
         {volumeRenderingPresets && is3DVolume && (
           <VolumeRenderingPresets
+<<<<<<< HEAD
             serviceManager={serviceManager}
+=======
+            servicesManager={servicesManager}
+>>>>>>> origin/master
             viewportId={viewportId}
             commandsManager={commandsManager}
             volumeRenderingPresets={volumeRenderingPresets}
@@ -195,7 +250,11 @@ export function WindowLevelActionMenu({
               viewportId={viewportId}
               commandsManager={commandsManager}
               volumeRenderingQualityRange={volumeRenderingQualityRange}
+<<<<<<< HEAD
               serviceManager={serviceManager}
+=======
+              servicesManager={servicesManager}
+>>>>>>> origin/master
             />
           </AllInOneMenu.SubMenu>
         )}

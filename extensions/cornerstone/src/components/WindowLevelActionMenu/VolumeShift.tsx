@@ -4,9 +4,15 @@ import { VolumeShiftProps } from '../../types/ViewportPresets';
 export function VolumeShift({
   viewportId,
   commandsManager,
+<<<<<<< HEAD
   serviceManager,
 }: VolumeShiftProps): ReactElement {
   const { cornerstoneViewportService } = serviceManager.services;
+=======
+  servicesManager,
+}: VolumeShiftProps): ReactElement {
+  const { cornerstoneViewportService } = servicesManager.services;
+>>>>>>> origin/master
   const [minShift, setMinShift] = useState<number | null>(null);
   const [maxShift, setMaxShift] = useState<number | null>(null);
   const [shift, setShift] = useState<number | null>(
@@ -82,6 +88,11 @@ export function VolumeShift({
             step={step}
             style={{
               background: calculateBackground((shift - minShift) / (maxShift - minShift)),
+<<<<<<< HEAD
+=======
+              '--thumb-inner-color': '#5acce6',
+              '--thumb-outer-color': '#090c29',
+>>>>>>> origin/master
             }}
           />
         )}

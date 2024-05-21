@@ -1,6 +1,25 @@
 const colormaps = [
   {
     ColorSpace: 'RGB',
+<<<<<<< HEAD
+=======
+    Name: 'Grayscale',
+    name: 'Grayscale',
+    NanColor: [1, 0, 0],
+    RGBPoints: [0, 0, 0, 0, 1, 1, 1, 1],
+    description: 'Grayscale',
+  },
+  {
+    ColorSpace: 'RGB',
+    Name: 'X Ray',
+    name: 'X Ray',
+    NanColor: [1, 0, 0],
+    RGBPoints: [0, 1, 1, 1, 1, 0, 0, 0],
+    description: 'X Ray',
+  },
+  {
+    ColorSpace: 'RGB',
+>>>>>>> origin/master
     Name: 'hsv',
     name: 'hsv',
     RGBPoints: [
@@ -1579,6 +1598,7 @@ const colormaps = [
     ],
     description: 'Siemens',
   },
+<<<<<<< HEAD
   {
     ColorSpace: 'RGB',
     Name: 'X Ray',
@@ -1595,6 +1615,8 @@ const colormaps = [
     RGBPoints: [0, 0, 0, 0, 1, 1, 1, 1],
     description: 'Grayscale',
   },
+=======
+>>>>>>> origin/master
 ];
 
 export { colormaps };

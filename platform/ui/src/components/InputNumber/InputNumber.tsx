@@ -4,6 +4,12 @@ import Icon from '../Icon';
 import './InputNumber.css';
 import Label from '../Label';
 import getMaxDigits from '../../utils/getMaxDigits';
+<<<<<<< HEAD
+=======
+
+const arrowHorizontalClassName =
+  'cursor-pointer text-primary-active active:text-primary-light hover:opacity-70 w-4 flex items-center justify-center';
+>>>>>>> origin/master
 
 /**
  *  React Number Input component'
@@ -16,6 +22,7 @@ import getMaxDigits from '../../utils/getMaxDigits';
 
 const sizesClasses = {
   sm: 'w-[45px] h-[28px]',
+  md: 'w-[58px] h-[28px]',
   lg: 'w-[206px] h-[35px]',
 };
 
@@ -25,11 +32,23 @@ const InputNumber: React.FC<{
   minValue?: number;
   maxValue?: number;
   step?: number;
+<<<<<<< HEAD
   size?: 'sm' | 'lg';
+=======
+  size?: 'sm' | 'lg' | 'md';
+>>>>>>> origin/master
   className?: string;
   labelClassName?: string;
   label?: string;
   showAdjustmentArrows?: boolean;
+<<<<<<< HEAD
+=======
+  arrowsDirection: 'vertical' | 'horizontal';
+  labelPosition?: 'left' | 'bottom' | 'right' | 'top';
+  inputClassName?: string;
+  sizeClassName?: string;
+  inputContainerClassName?: string;
+>>>>>>> origin/master
 }> = ({
   value,
   onChange,
@@ -38,19 +57,34 @@ const InputNumber: React.FC<{
   size = 'sm',
   minValue = 0,
   maxValue = 100,
-  labelClassName,
+  labelClassName = 'text-aqua-pale text-[11px] mx-auto',
   label,
   showAdjustmentArrows = true,
+<<<<<<< HEAD
+=======
+  arrowsDirection = 'vertical',
+  labelPosition = 'left',
+  inputClassName = 'text-white bg-primary-dark text-[14px]',
+  sizeClassName,
+  inputContainerClassName = 'bg-primary-dark border-secondary-light border rounded-[4px]',
+>>>>>>> origin/master
 }) => {
   const [numberValue, setNumberValue] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
 
   const maxDigits = getMaxDigits(maxValue, step);
   const inputWidth = Math.max(maxDigits * 10, showAdjustmentArrows ? 20 : 28);
+<<<<<<< HEAD
   const arrowWidth = showAdjustmentArrows ? 20 : 0;
   const containerWidth = `${inputWidth + arrowWidth}px`;
   const decimalPlaces = Number.isInteger(step) ? 0 : step.toString().split('.')[1].length;
 
+=======
+  const decimalPlaces = Number.isInteger(step) ? 0 : step.toString().split('.')[1].length;
+
+  const sizeToUse = sizeClassName ? sizeClassName : sizesClasses[size];
+
+>>>>>>> origin/master
   useEffect(() => {
     setNumberValue(value);
   }, [value]);
@@ -94,6 +128,7 @@ const InputNumber: React.FC<{
 
   const increment = () => updateValue(parseFloat(numberValue) + step);
   const decrement = () => updateValue(parseFloat(numberValue) - step);
+<<<<<<< HEAD
 
   return (
     <div className="flex flex-1 flex-col">
@@ -108,8 +143,34 @@ const InputNumber: React.FC<{
           sizesClasses[size]
         } ${className || ''}`}
         style={{ width: containerWidth }}
+=======
+
+  const labelElement = label && (
+    <Label
+      className={labelClassName}
+      text={label}
+    />
+  );
+
+  return (
+    <div
+      className={`flex overflow-hidden ${className} ${labelPosition === 'top' || labelPosition === 'bottom' ? 'flex-col' : 'flex-row'}`}
+    >
+      {label && labelPosition === 'left' && labelElement}
+      {label && labelPosition === 'top' && labelElement}
+      <div
+        className={`flex flex-grow items-center overflow-hidden ${sizeToUse} ${inputContainerClassName}`}
+>>>>>>> origin/master
       >
-        <div className="flex">
+        <div className="flex w-full">
+          {showAdjustmentArrows && arrowsDirection === 'horizontal' && (
+            <div
+              className={arrowHorizontalClassName}
+              onClick={() => decrement()}
+            >
+              <Icon name="arrow-left-small" />
+            </div>
+          )}
           <input
             type="number"
             value={isFocused ? numberValue : parseFloat(numberValue).toFixed(decimalPlaces)}
@@ -117,11 +178,27 @@ const InputNumber: React.FC<{
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChange={handleChange}
+<<<<<<< HEAD
             className={'input-number w-full bg-black text-center text-[12px] text-white'}
             style={{ width: inputWidth }}
           />
           {showAdjustmentArrows && (
             <div className="up-arrowsize flex flex-col items-center justify-around">
+=======
+            className={`input-number ${inputClassName} w-full flex-grow text-center`}
+            style={{ width: inputWidth }}
+          />
+          {showAdjustmentArrows && arrowsDirection === 'horizontal' && (
+            <div
+              className={arrowHorizontalClassName}
+              onClick={() => increment()}
+            >
+              <Icon name="arrow-right-small" />
+            </div>
+          )}
+          {showAdjustmentArrows && arrowsDirection === 'vertical' && (
+            <div className="up-arrowsize ml-auto flex flex-shrink-0 flex-col items-center justify-around pr-1">
+>>>>>>> origin/master
               <ArrowButton
                 onClick={increment}
                 rotate
@@ -131,6 +208,8 @@ const InputNumber: React.FC<{
           )}
         </div>
       </div>
+      {label && labelPosition === 'right' && labelElement}
+      {label && labelPosition === 'bottom' && labelElement}
     </div>
   );
 };

@@ -1,26 +1,39 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import ReactResizeDetector from 'react-resize-detector';
 import PropTypes from 'prop-types';
-import { ServicesManager, Types, MeasurementService } from '@ohif/core';
+import { Types, MeasurementService } from '@ohif/core';
 import { ViewportGrid, ViewportPane, useViewportGrid } from '@ohif/ui';
 import EmptyViewport from './EmptyViewport';
 import classNames from 'classnames';
 import { useAppConfig } from '@state';
 
+<<<<<<< HEAD
 function ViewerViewportGrid(props) {
+=======
+function ViewerViewportGrid(props: withAppTypes) {
+>>>>>>> origin/master
   const { servicesManager, viewportComponents, dataSource } = props;
   const [viewportGrid, viewportGridService] = useViewportGrid();
   const [appConfig] = useAppConfig();
 
+<<<<<<< HEAD
   const { layout, activeViewportId, viewports } = viewportGrid;
+=======
+  const { layout, activeViewportId, viewports, isHangingProtocolLayout } = viewportGrid;
+>>>>>>> origin/master
   const { numCols, numRows } = layout;
   const elementRef = useRef(null);
   const layoutHash = useRef(null);
 
   // TODO -> Need some way of selecting which displaySets hit the viewports.
+<<<<<<< HEAD
   const { displaySetService, measurementService, hangingProtocolService, uiNotificationService } = (
     servicesManager as ServicesManager
   ).services;
+=======
+  const { displaySetService, measurementService, hangingProtocolService, uiNotificationService } =
+    servicesManager.services;
+>>>>>>> origin/master
 
   const generateLayoutHash = () => `${numCols}-${numRows}`;
 
@@ -97,6 +110,7 @@ function ViewerViewportGrid(props) {
       layoutType,
       layoutOptions,
       findOrCreateViewport,
+      isHangingProtocolLayout: true,
     });
   };
 
@@ -106,7 +120,12 @@ function ViewerViewportGrid(props) {
       try {
         updatedViewports = hangingProtocolService.getViewportsRequireUpdate(
           viewportId,
+<<<<<<< HEAD
           displaySetInstanceUID
+=======
+          displaySetInstanceUID,
+          isHangingProtocolLayout
+>>>>>>> origin/master
         );
       } catch (error) {
         console.warn(error);
@@ -121,7 +140,7 @@ function ViewerViewportGrid(props) {
 
       return updatedViewports;
     },
-    [hangingProtocolService, uiNotificationService]
+    [hangingProtocolService, uiNotificationService, isHangingProtocolLayout]
   );
 
   // Using Hanging protocol engine to match the displaySets
@@ -340,7 +359,12 @@ function ViewerViewportGrid(props) {
               viewportOptions={viewportOptions}
               displaySetOptions={displaySetOptions}
               needsRerendering={displaySetsNeedsRerendering}
+<<<<<<< HEAD
               onReady={() => {
+=======
+              isHangingProtocolLayout={isHangingProtocolLayout}
+              onElementEnabled={() => {
+>>>>>>> origin/master
                 viewportGridService.setViewportIsReady(viewportId, true);
               }}
             />
@@ -384,7 +408,7 @@ function ViewerViewportGrid(props) {
 
 ViewerViewportGrid.propTypes = {
   viewportComponents: PropTypes.array.isRequired,
-  servicesManager: PropTypes.instanceOf(ServicesManager),
+  servicesManager: PropTypes.instanceOf(Object).isRequired,
 };
 
 ViewerViewportGrid.defaultProps = {

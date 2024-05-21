@@ -1,7 +1,131 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { LayoutSelector as OHIFLayoutSelector, ToolbarButton, LayoutPreset } from '@ohif/ui';
+<<<<<<< HEAD
 import { ServicesManager } from '@ohif/core';
+=======
+
+const defaultCommonPresets = [
+  {
+    icon: 'layout-common-1x1',
+    commandOptions: {
+      numRows: 1,
+      numCols: 1,
+    },
+  },
+  {
+    icon: 'layout-common-1x2',
+    commandOptions: {
+      numRows: 1,
+      numCols: 2,
+    },
+  },
+  {
+    icon: 'layout-common-2x2',
+    commandOptions: {
+      numRows: 2,
+      numCols: 2,
+    },
+  },
+  {
+    icon: 'layout-common-2x3',
+    commandOptions: {
+      numRows: 2,
+      numCols: 3,
+    },
+  },
+];
+
+const _areSelectorsValid = (hp, displaySets, hangingProtocolService) => {
+  if (!hp.displaySetSelectors || Object.values(hp.displaySetSelectors).length === 0) {
+    return true;
+  }
+
+  return hangingProtocolService.areRequiredSelectorsValid(
+    Object.values(hp.displaySetSelectors),
+    displaySets[0]
+  );
+};
+
+const generateAdvancedPresets = ({ servicesManager }: withAppTypes) => {
+  const { hangingProtocolService, viewportGridService, displaySetService } =
+    servicesManager.services;
+
+  const hangingProtocols = Array.from(hangingProtocolService.protocols.values());
+
+  const viewportId = viewportGridService.getActiveViewportId();
+
+  if (!viewportId) {
+    return [];
+  }
+  const displaySetInsaneUIDs = viewportGridService.getDisplaySetsUIDsForViewport(viewportId);
+
+  if (!displaySetInsaneUIDs) {
+    return [];
+  }
+
+  const displaySets = displaySetInsaneUIDs.map(uid => displaySetService.getDisplaySetByUID(uid));
+
+  return hangingProtocols
+    .map(hp => {
+      if (!hp.isPreset) {
+        return null;
+      }
+
+      const areValid = _areSelectorsValid(hp, displaySets, hangingProtocolService);
+
+      return {
+        icon: hp.icon,
+        title: hp.name,
+        commandOptions: {
+          protocolId: hp.id,
+        },
+        disabled: !areValid,
+      };
+    })
+    .filter(preset => preset !== null);
+};
+
+function ToolbarLayoutSelectorWithServices({
+  commandsManager,
+  servicesManager,
+  ...props
+}: withAppTypes) {
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsDisabled(false);
+  };
+
+  const onSelection = useCallback(props => {
+    commandsManager.run({
+      commandName: 'setViewportGridLayout',
+      commandOptions: { ...props },
+    });
+    setIsDisabled(true);
+  }, []);
+
+  const onSelectionPreset = useCallback(props => {
+    commandsManager.run({
+      commandName: 'setHangingProtocol',
+      commandOptions: { ...props },
+    });
+    setIsDisabled(true);
+  }, []);
+
+  return (
+    <div onMouseEnter={handleMouseEnter}>
+      <LayoutSelector
+        {...props}
+        onSelection={onSelection}
+        onSelectionPreset={onSelectionPreset}
+        servicesManager={servicesManager}
+        tooltipDisabled={isDisabled}
+      />
+    </div>
+  );
+}
+>>>>>>> origin/master
 
 const defaultCommonPresets = [
   {
@@ -97,13 +221,20 @@ function LayoutSelector({
   servicesManager,
   tooltipDisabled,
   ...rest
-}) {
+}: withAppTypes) {
   const [isOpen, setIsOpen] = useState(false);
 
+<<<<<<< HEAD
   const { customizationService, hangingProtocolService } = servicesManager.services;
   const commonPresets = customizationService.get('commonPresets') || defaultCommonPresets;
   const advancedPresets =
     customizationService.get('advancedPresets') || generateAdvancedPresets(hangingProtocolService);
+=======
+  const { customizationService } = servicesManager.services;
+  const commonPresets = customizationService.get('commonPresets') || defaultCommonPresets;
+  const advancedPresets =
+    customizationService.get('advancedPresets') || generateAdvancedPresets({ servicesManager });
+>>>>>>> origin/master
 
   const closeOnOutsideClick = () => {
     if (isOpen) {
@@ -161,6 +292,10 @@ function LayoutSelector({
                     classNames="hover:bg-primary-dark group flex gap-2 p-1 cursor-pointer"
                     icon={preset.icon}
                     title={preset.title}
+<<<<<<< HEAD
+=======
+                    disabled={preset.disabled}
+>>>>>>> origin/master
                     commandOptions={preset.commandOptions}
                     onSelection={onSelectionPreset}
                   />
@@ -192,7 +327,7 @@ LayoutSelector.propTypes = {
   rows: PropTypes.number,
   columns: PropTypes.number,
   onLayoutChange: PropTypes.func,
-  servicesManager: PropTypes.instanceOf(ServicesManager),
+  servicesManager: PropTypes.object.isRequired,
 };
 
 LayoutSelector.defaultProps = {

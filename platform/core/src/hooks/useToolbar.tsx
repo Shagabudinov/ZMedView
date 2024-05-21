@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 
+<<<<<<< HEAD
 export function useToolbar({ servicesManager, buttonSection = 'primary' }) {
+=======
+export function useToolbar({ servicesManager, buttonSection = 'primary' }: withAppTypes) {
+>>>>>>> origin/master
   const { toolbarService, viewportGridService } = servicesManager.services;
   const { EVENTS } = toolbarService;
 

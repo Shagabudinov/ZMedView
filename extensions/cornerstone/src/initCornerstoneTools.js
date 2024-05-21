@@ -8,6 +8,7 @@ import {
   MIPJumpToClickTool,
   LengthTool,
   RectangleROITool,
+  RectangleROIThresholdTool,
   EllipticalROITool,
   CircleROITool,
   BidirectionalTool,
@@ -16,18 +17,31 @@ import {
   ProbeTool,
   AngleTool,
   CobbAngleTool,
-  PlanarFreehandROITool,
   MagnifyTool,
   CrosshairsTool,
   SegmentationDisplayTool,
+  RectangleScissorsTool,
+  SphereScissorsTool,
+  CircleScissorsTool,
+  BrushTool,
+  PaintFillTool,
   init,
   addTool,
   annotation,
   ReferenceLinesTool,
   TrackballRotateTool,
+<<<<<<< HEAD
   CircleScissorsTool,
   RectangleScissorsTool,
   SphereScissorsTool,
+=======
+  AdvancedMagnifyTool,
+  UltrasoundDirectionalTool,
+  PlanarFreehandROITool,
+  SplineROITool,
+  LivewireContourTool,
+  OrientationMarkerTool,
+>>>>>>> origin/master
 } from '@cornerstonejs/tools';
 
 import CalibrationLineTool from './tools/CalibrationLineTool';
@@ -36,6 +50,7 @@ import ImageOverlayViewerTool from './tools/ImageOverlayViewerTool';
 export default function initCornerstoneTools(configuration = {}) {
   CrosshairsTool.isAnnotation = false;
   ReferenceLinesTool.isAnnotation = false;
+  AdvancedMagnifyTool.isAnnotation = false;
 
   init(configuration);
   addTool(PanTool);
@@ -48,6 +63,7 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(MIPJumpToClickTool);
   addTool(LengthTool);
   addTool(RectangleROITool);
+  addTool(RectangleROIThresholdTool);
   addTool(EllipticalROITool);
   addTool(CircleROITool);
   addTool(BidirectionalTool);
@@ -55,17 +71,31 @@ export default function initCornerstoneTools(configuration = {}) {
   addTool(DragProbeTool);
   addTool(AngleTool);
   addTool(CobbAngleTool);
-  addTool(PlanarFreehandROITool);
   addTool(MagnifyTool);
   addTool(CrosshairsTool);
   addTool(SegmentationDisplayTool);
+  addTool(RectangleScissorsTool);
+  addTool(SphereScissorsTool);
+  addTool(CircleScissorsTool);
+  addTool(BrushTool);
+  addTool(PaintFillTool);
   addTool(ReferenceLinesTool);
   addTool(CalibrationLineTool);
   addTool(TrackballRotateTool);
+<<<<<<< HEAD
   addTool(CircleScissorsTool);
   addTool(RectangleScissorsTool);
   addTool(SphereScissorsTool);
   addTool(ImageOverlayViewerTool);
+=======
+  addTool(ImageOverlayViewerTool);
+  addTool(AdvancedMagnifyTool);
+  addTool(UltrasoundDirectionalTool);
+  addTool(PlanarFreehandROITool);
+  addTool(SplineROITool);
+  addTool(LivewireContourTool);
+  addTool(OrientationMarkerTool);
+>>>>>>> origin/master
 
   // Modify annotation tools to use dashed lines on SR
   const annotationStyle = {
@@ -95,15 +125,17 @@ const toolNames = {
   DragProbe: DragProbeTool.toolName,
   Probe: ProbeTool.toolName,
   RectangleROI: RectangleROITool.toolName,
+  RectangleROIThreshold: RectangleROIThresholdTool.toolName,
   EllipticalROI: EllipticalROITool.toolName,
   CircleROI: CircleROITool.toolName,
   Bidirectional: BidirectionalTool.toolName,
   Angle: AngleTool.toolName,
   CobbAngle: CobbAngleTool.toolName,
-  PlanarFreehandROI: PlanarFreehandROITool.toolName,
   Magnify: MagnifyTool.toolName,
   Crosshairs: CrosshairsTool.toolName,
   SegmentationDisplay: SegmentationDisplayTool.toolName,
+  Brush: BrushTool.toolName,
+  PaintFill: PaintFillTool.toolName,
   ReferenceLines: ReferenceLinesTool.toolName,
   CalibrationLine: CalibrationLineTool.toolName,
   TrackballRotateTool: TrackballRotateTool.toolName,
@@ -111,6 +143,15 @@ const toolNames = {
   RectangleScissors: RectangleScissorsTool.toolName,
   SphereScissors: SphereScissorsTool.toolName,
   ImageOverlayViewer: ImageOverlayViewerTool.toolName,
+<<<<<<< HEAD
+=======
+  AdvancedMagnify: AdvancedMagnifyTool.toolName,
+  UltrasoundDirectional: UltrasoundDirectionalTool.toolName,
+  SplineROI: SplineROITool.toolName,
+  LivewireContour: LivewireContourTool.toolName,
+  PlanarFreehandROI: PlanarFreehandROITool.toolName,
+  OrientationMarker: OrientationMarkerTool.toolName,
+>>>>>>> origin/master
 };
 
 export { toolNames };

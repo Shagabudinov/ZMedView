@@ -16,7 +16,11 @@ function PanelStudyBrowser({
   getStudiesForPatientByMRN,
   requestDisplaySetCreationForStudy,
   dataSource,
+<<<<<<< HEAD
 }) {
+=======
+}: withAppTypes) {
+>>>>>>> origin/master
   const { hangingProtocolService, displaySetService, uiNotificationService } =
     servicesManager.services;
   const navigate = useNavigate();
@@ -25,7 +29,12 @@ function PanelStudyBrowser({
   // doesn't have to have such an intense shape. This works well enough for now.
   // Tabs --> Studies --> DisplaySets --> Thumbnails
   const { StudyInstanceUIDs } = useImageViewer();
+<<<<<<< HEAD
   const [{ activeViewportId, viewports }, viewportGridService] = useViewportGrid();
+=======
+  const [{ activeViewportId, viewports, isHangingProtocolLayout }, viewportGridService] =
+    useViewportGrid();
+>>>>>>> origin/master
   const [activeTabName, setActiveTabName] = useState('primary');
   const [expandedStudyInstanceUIDs, setExpandedStudyInstanceUIDs] = useState([
     ...StudyInstanceUIDs,
@@ -40,7 +49,12 @@ function PanelStudyBrowser({
     try {
       updatedViewports = hangingProtocolService.getViewportsRequireUpdate(
         viewportId,
+<<<<<<< HEAD
         displaySetInstanceUID
+=======
+        displaySetInstanceUID,
+        isHangingProtocolLayout
+>>>>>>> origin/master
       );
     } catch (error) {
       console.warn(error);

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 export function getToolbarModule({ commandsManager, servicesManager }) {
   const { segmentationService, toolGroupService } = servicesManager.services;
+=======
+export function getToolbarModule({ servicesManager }: withAppTypes) {
+  const { segmentationService, toolbarService, toolGroupService } = servicesManager.services;
+>>>>>>> origin/master
   return [
     {
       name: 'evaluate.cornerstone.segmentation',
@@ -20,12 +25,25 @@ export function getToolbarModule({ commandsManager, servicesManager }) {
         const toolGroup = toolGroupService.getToolGroupForViewport(viewportId);
 
         if (!toolGroup) {
+<<<<<<< HEAD
           return;
         }
 
         const toolName = getToolNameForButton(button);
 
         if (!toolGroup || !toolGroup.hasTool(toolName)) {
+=======
+          return {
+            disabled: true,
+            className: '!text-common-bright ohif-disabled',
+            disabledText: disabledText ?? 'Not available on the current viewport',
+          };
+        }
+
+        const toolName = toolbarService.getToolNameForButton(button);
+
+        if (!toolGroup.hasTool(toolName) && !toolNames) {
+>>>>>>> origin/master
           return {
             disabled: true,
             className: '!text-common-bright ohif-disabled',
@@ -51,6 +69,7 @@ export function getToolbarModule({ commandsManager, servicesManager }) {
     },
   ];
 }
+<<<<<<< HEAD
 
 function getToolNameForButton(button) {
   const { props } = button;
@@ -65,3 +84,5 @@ function getToolNameForButton(button) {
   }
   return null;
 }
+=======
+>>>>>>> origin/master

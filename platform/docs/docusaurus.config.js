@@ -270,7 +270,11 @@ module.exports = {
       announcementBar: {
         id: 'healthimaging',
         content:
+<<<<<<< HEAD
           '🚀 The latest version of OHIF, v3.7, has been released. You can find the release notes by following this <a target="_blank" rel="noopener noreferrer" href="https://ohif.org/release-notes/3p7/">Link!</a> 🌟',
+=======
+          '🎉 OHIF 3.8 has landed! Explore 4D and volume rendering, enhanced layout menus, streamlined visualization controls, workflow steps, and more. You can find the release notes by following this <a target="_blank" rel="noopener noreferrer" href="https://ohif.org/release-notes/3p8/">Link!</a> 🌟',
+>>>>>>> origin/master
       },
       prism: {
         theme: require('prism-react-renderer/themes/github'),

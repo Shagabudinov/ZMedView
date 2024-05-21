@@ -28,7 +28,6 @@ export default function getPixelSpacingInformation(instance) {
     PixelSpacingCalibrationType,
     PixelSpacingCalibrationDescription,
     EstimatedRadiographicMagnificationFactor,
-    SequenceOfUltrasoundRegions,
   } = instance;
   const isProjection = projectionRadiographSOPClassUIDs.includes(SOPClassUID);
 
@@ -90,6 +89,7 @@ export default function getPixelSpacingInformation(instance) {
       PixelSpacing: CorrectedImagerPixelSpacing,
       isProjection,
     };
+<<<<<<< HEAD
   } else if (SequenceOfUltrasoundRegions && typeof SequenceOfUltrasoundRegions === 'object') {
     const { PhysicalDeltaX, PhysicalDeltaY } = SequenceOfUltrasoundRegions;
     const USPixelSpacing = [PhysicalDeltaX * 10, PhysicalDeltaY * 10];
@@ -105,6 +105,8 @@ export default function getPixelSpacingInformation(instance) {
     log.warn(
       'Sequence of Ultrasound Regions > one entry. This is not yet implemented, all measurements will be shown in pixels.'
     );
+=======
+>>>>>>> origin/master
   } else if (isProjection === false && !ImagerPixelSpacing) {
     // If only Pixel Spacing is present, and this is not a projection radiograph,
     // we can stop here

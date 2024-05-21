@@ -67,7 +67,11 @@ const classes = {
   Content: ({ isExpanded }) => classNames(baseClasses.Content, isExpanded ? 'block' : 'hidden'),
 };
 
+<<<<<<< HEAD
 const SplitButton = ({
+=======
+const LegacySplitButton = ({
+>>>>>>> origin/master
   groupId,
   primary,
   secondary,
@@ -103,7 +107,11 @@ const SplitButton = ({
       disabled={!state.isExpanded}
     >
       <div
+<<<<<<< HEAD
         id="SplitButton"
+=======
+        id="LegacySplitButton"
+>>>>>>> origin/master
         className="relative"
       >
         <div
@@ -148,7 +156,11 @@ const SplitButton = ({
   );
 };
 
+<<<<<<< HEAD
 SplitButton.propTypes = {
+=======
+LegacySplitButton.propTypes = {
+>>>>>>> origin/master
   isToggle: PropTypes.bool,
   groupId: PropTypes.string.isRequired,
   primary: PropTypes.object.isRequired,
@@ -160,11 +172,19 @@ SplitButton.propTypes = {
   Component: PropTypes.elementType,
 };
 
+<<<<<<< HEAD
 SplitButton.defaultProps = {
+=======
+LegacySplitButton.defaultProps = {
+>>>>>>> origin/master
   isToggle: false,
   renderer: null,
   isActive: false,
   Component: null,
 };
 
+<<<<<<< HEAD
 export default SplitButton;
+=======
+export default LegacySplitButton;
+>>>>>>> origin/master

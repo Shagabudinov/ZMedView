@@ -13,30 +13,56 @@ function promptHydrateRT({
   toolGroupId = 'default',
   preHydrateCallbacks,
   hydrateRTDisplaySet,
+<<<<<<< HEAD
 }) {
   const { uiViewportDialogService } = servicesManager.services;
 
   return new Promise(async function (resolve, reject) {
     const promptResult = await _askHydrate(uiViewportDialogService, viewportId);
+=======
+}: withAppTypes) {
+  const { uiViewportDialogService } = servicesManager.services;
+  const extensionManager = servicesManager._extensionManager;
+  const appConfig = extensionManager._appConfig;
+  return new Promise(async function (resolve, reject) {
+    const promptResult = appConfig?.disableConfirmationPrompts
+      ? RESPONSE.HYDRATE_SEG
+      : await _askHydrate(uiViewportDialogService, viewportId);
+>>>>>>> origin/master
 
     if (promptResult === RESPONSE.HYDRATE_SEG) {
       preHydrateCallbacks?.forEach(callback => {
         callback();
       });
 
+<<<<<<< HEAD
       const isHydrated = await hydrateRTDisplaySet({
         rtDisplaySet,
         viewportId,
         toolGroupId,
         servicesManager,
       });
+=======
+      window.setTimeout(async () => {
+        const isHydrated = await hydrateRTDisplaySet({
+          rtDisplaySet,
+          viewportId,
+          toolGroupId,
+          servicesManager,
+        });
+>>>>>>> origin/master
 
-      resolve(isHydrated);
+        resolve(isHydrated);
+      }, 0);
     }
   });
 }
 
+<<<<<<< HEAD
 function _askHydrate(uiViewportDialogService, viewportId) {
+=======
+function _askHydrate(uiViewportDialogService: AppTypes.UIViewportDialogService, viewportId) {
+>>>>>>> origin/master
   return new Promise(function (resolve, reject) {
     const message = 'Do you want to open this Segmentation?';
     const actions = [
@@ -57,6 +83,10 @@ function _askHydrate(uiViewportDialogService, viewportId) {
     };
 
     uiViewportDialogService.show({
+<<<<<<< HEAD
+=======
+      id: 'promptHydrateRT',
+>>>>>>> origin/master
       viewportId,
       type: 'info',
       message,
@@ -65,6 +95,11 @@ function _askHydrate(uiViewportDialogService, viewportId) {
       onOutsideClick: () => {
         uiViewportDialogService.hide();
         resolve(RESPONSE.CANCEL);
+      },
+      onKeyPress: event => {
+        if (event.key === 'Enter') {
+          onSubmit(RESPONSE.HYDRATE_SEG);
+        }
       },
     });
   });

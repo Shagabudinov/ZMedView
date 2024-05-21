@@ -5,6 +5,10 @@ import SegmentationService from '../services/SegmentationService';
 import CornerstoneCacheService from '../services/CornerstoneCacheService';
 import CornerstoneViewportService from '../services/ViewportService/CornerstoneViewportService';
 import ViewportActionCornersService from '../services/ViewportActionCornersService/ViewportActionCornersService';
+<<<<<<< HEAD
+=======
+import ColorbarService from '../services/ColorbarService';
+>>>>>>> origin/master
 
 interface CornerstoneServices extends Types.Services {
   cornerstoneViewportService: CornerstoneViewportService;
@@ -13,6 +17,10 @@ interface CornerstoneServices extends Types.Services {
   segmentationService: SegmentationService;
   cornerstoneCacheService: CornerstoneCacheService;
   viewportActionCornersService: ViewportActionCornersService;
+<<<<<<< HEAD
+=======
+  colorbarService: ColorbarService;
+>>>>>>> origin/master
 }
 
 export default CornerstoneServices;

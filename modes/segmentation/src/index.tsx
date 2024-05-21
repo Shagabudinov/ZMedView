@@ -53,7 +53,11 @@ function modeFactory({ modeConfiguration }) {
      * Runs when the Mode Route is mounted to the DOM. Usually used to initialize
      * Services and other resources.
      */
+<<<<<<< HEAD
     onModeEnter: ({ servicesManager, extensionManager, commandsManager }) => {
+=======
+    onModeEnter: ({ servicesManager, extensionManager, commandsManager }: withAppTypes) => {
+>>>>>>> origin/master
       const { measurementService, toolbarService, toolGroupService } = servicesManager.services;
 
       measurementService.clearMeasurements();
@@ -76,7 +80,11 @@ function modeFactory({ modeConfiguration }) {
       ]);
       toolbarService.createButtonSection('segmentationToolbox', ['BrushTools', 'Shapes']);
     },
+<<<<<<< HEAD
     onModeExit: ({ servicesManager }) => {
+=======
+    onModeExit: ({ servicesManager }: withAppTypes) => {
+>>>>>>> origin/master
       const {
         toolGroupService,
         syncGroupService,

@@ -12,23 +12,44 @@ function promptHydrateSEG({
   viewportId,
   preHydrateCallbacks,
   hydrateSEGDisplaySet,
+<<<<<<< HEAD
 }) {
+=======
+}: withAppTypes) {
+>>>>>>> origin/master
   const { uiViewportDialogService } = servicesManager.services;
+  const extensionManager = servicesManager._extensionManager;
+  const appConfig = extensionManager._appConfig;
 
   return new Promise(async function (resolve, reject) {
+<<<<<<< HEAD
     const promptResult = await _askHydrate(uiViewportDialogService, viewportId);
+=======
+    const promptResult = appConfig?.disableConfirmationPrompts
+      ? RESPONSE.HYDRATE_SEG
+      : await _askHydrate(uiViewportDialogService, viewportId);
+>>>>>>> origin/master
 
     if (promptResult === RESPONSE.HYDRATE_SEG) {
       preHydrateCallbacks?.forEach(callback => {
         callback();
       });
 
+<<<<<<< HEAD
       const isHydrated = await hydrateSEGDisplaySet({
         segDisplaySet,
         viewportId,
       });
+=======
+      window.setTimeout(async () => {
+        const isHydrated = await hydrateSEGDisplaySet({
+          segDisplaySet,
+          viewportId,
+        });
+>>>>>>> origin/master
 
-      resolve(isHydrated);
+        resolve(isHydrated);
+      }, 0);
     }
   });
 }
@@ -62,6 +83,11 @@ function _askHydrate(uiViewportDialogService, viewportId) {
       onOutsideClick: () => {
         uiViewportDialogService.hide();
         resolve(RESPONSE.CANCEL);
+      },
+      onKeyPress: event => {
+        if (event.key === 'Enter') {
+          onSubmit(RESPONSE.HYDRATE_SEG);
+        }
       },
     });
   });

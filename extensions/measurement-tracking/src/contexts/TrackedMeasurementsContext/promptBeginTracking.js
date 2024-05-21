@@ -11,10 +11,22 @@ const RESPONSE = {
 
 function promptBeginTracking({ servicesManager, extensionManager }, ctx, evt) {
   const { uiViewportDialogService } = servicesManager.services;
+<<<<<<< HEAD
   const { viewportId, StudyInstanceUID, SeriesInstanceUID } = evt;
 
   return new Promise(async function (resolve, reject) {
     let promptResult = await _askTrackMeasurements(uiViewportDialogService, viewportId);
+=======
+  const appConfig = extensionManager._appConfig;
+  // When the state change happens after a promise, the state machine sends the retult in evt.data;
+  // In case of direct transition to the state, the state machine sends the data in evt;
+  const { viewportId, StudyInstanceUID, SeriesInstanceUID } = evt.data || evt;
+
+  return new Promise(async function (resolve, reject) {
+    let promptResult = appConfig?.disableConfirmationPrompts
+      ? RESPONSE.SET_STUDY_AND_SERIES
+      : await _askTrackMeasurements(uiViewportDialogService, viewportId);
+>>>>>>> origin/master
 
     resolve({
       userResponse: promptResult,
@@ -63,6 +75,12 @@ function _askTrackMeasurements(uiViewportDialogService, viewportId) {
       onOutsideClick: () => {
         uiViewportDialogService.hide();
         resolve(RESPONSE.CANCEL);
+      },
+      onKeyPress: event => {
+        if (event.key === 'Enter') {
+          const action = actions.find(action => action.id === 'prompt-begin-tracking-yes');
+          onSubmit(action.value);
+        }
       },
     });
   });

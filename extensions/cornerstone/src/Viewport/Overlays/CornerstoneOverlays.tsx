@@ -5,7 +5,11 @@ import CustomizableViewportOverlay from './CustomizableViewportOverlay';
 import ViewportOrientationMarkers from './ViewportOrientationMarkers';
 import ViewportImageSliceLoadingIndicator from './ViewportImageSliceLoadingIndicator';
 
+<<<<<<< HEAD
 function CornerstoneOverlays(props) {
+=======
+function CornerstoneOverlays(props: withAppTypes) {
+>>>>>>> origin/master
   const { viewportId, element, scrollbarHeight, servicesManager } = props;
   const { cornerstoneViewportService } = servicesManager.services;
   const [imageSliceData, setImageSliceData] = useState({

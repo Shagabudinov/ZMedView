@@ -15,7 +15,14 @@ import {
   utilities as csUtilities,
   Enums as csEnums,
 } from '@cornerstonejs/core';
+<<<<<<< HEAD
 import { cornerstoneStreamingImageVolumeLoader } from '@cornerstonejs/streaming-image-volume-loader';
+=======
+import {
+  cornerstoneStreamingImageVolumeLoader,
+  cornerstoneStreamingDynamicImageVolumeLoader,
+} from '@cornerstonejs/streaming-image-volume-loader';
+>>>>>>> origin/master
 
 import initWADOImageLoader from './initWADOImageLoader';
 import initCornerstoneTools from './initCornerstoneTools';
@@ -27,12 +34,19 @@ import nthLoader from './utils/nthLoader';
 import interleaveTopToBottom from './utils/interleaveTopToBottom';
 import initContextMenu from './initContextMenu';
 import initDoubleClick from './initDoubleClick';
+<<<<<<< HEAD
 import { CornerstoneServices } from './types';
 import initViewTiming from './utils/initViewTiming';
 import { utilities } from '@cornerstonejs/core';
 import { colormaps } from './utils/colormaps';
 
 const { registerColormap } = utilities.colormap;
+=======
+import initViewTiming from './utils/initViewTiming';
+import { colormaps } from './utils/colormaps';
+
+const { registerColormap } = csUtilities.colormap;
+>>>>>>> origin/master
 
 // TODO: Cypress tests are currently grabbing this from the window?
 window.cornerstone = cornerstone;
@@ -93,14 +107,19 @@ export default async function init({
     customizationService,
     uiModalService,
     uiNotificationService,
-    cineService,
     cornerstoneViewportService,
     hangingProtocolService,
+<<<<<<< HEAD
     toolbarService,
     viewportGridService,
     stateSyncService,
     segmentationService,
   } = servicesManager.services as CornerstoneServices;
+=======
+    viewportGridService,
+    stateSyncService,
+  } = servicesManager.services;
+>>>>>>> origin/master
 
   toolbarService.registerEventForToolbarUpdate(cornerstoneViewportService, [
     cornerstoneViewportService.EVENTS.VIEWPORT_DATA_CHANGED,
@@ -157,9 +176,14 @@ export default async function init({
   });
 
   const labelmapRepresentation = cornerstoneTools.Enums.SegmentationRepresentations.Labelmap;
+<<<<<<< HEAD
 
   cornerstoneTools.segmentation.config.setGlobalRepresentationConfig(labelmapRepresentation, {
     fillAlpha: 0.3,
+=======
+  cornerstoneTools.segmentation.config.setGlobalRepresentationConfig(labelmapRepresentation, {
+    fillAlpha: 0.5,
+>>>>>>> origin/master
     fillAlphaInactive: 0.2,
     outlineOpacity: 1,
     outlineOpacityInactive: 0.65,
@@ -172,6 +196,14 @@ export default async function init({
     cornerstoneStreamingImageVolumeLoader
   );
 
+<<<<<<< HEAD
+=======
+  volumeLoader.registerVolumeLoader(
+    'cornerstoneStreamingDynamicImageVolume',
+    cornerstoneStreamingDynamicImageVolumeLoader
+  );
+
+>>>>>>> origin/master
   hangingProtocolService.registerImageLoadStrategy('interleaveCenter', interleaveCenterLoader);
   hangingProtocolService.registerImageLoadStrategy('interleaveTopToBottom', interleaveTopToBottom);
   hangingProtocolService.registerImageLoadStrategy('nth', nthLoader);
@@ -195,7 +227,7 @@ export default async function init({
   /* Measurement Service */
   this.measurementServiceSource = connectToolsToMeasurementService(servicesManager);
 
-  initCineService(cineService);
+  initCineService(servicesManager);
 
   // When a custom image load is performed, update the relevant viewports
   hangingProtocolService.subscribe(
@@ -285,8 +317,25 @@ export default async function init({
   eventTarget.addEventListener(EVENTS.ELEMENT_ENABLED, elementEnabledHandler.bind(null));
 
   eventTarget.addEventListener(EVENTS.ELEMENT_DISABLED, elementDisabledHandler.bind(null));
+<<<<<<< HEAD
 
   colormaps.forEach(registerColormap);
+=======
+  colormaps.forEach(registerColormap);
+
+  // Event listener
+  eventTarget.addEventListenerDebounced(
+    EVENTS.ERROR_EVENT,
+    ({ detail }) => {
+      uiNotificationService.show({
+        title: detail.type,
+        message: detail.message,
+        type: 'error',
+      });
+    },
+    1000
+  );
+>>>>>>> origin/master
 }
 
 function CPUModal() {

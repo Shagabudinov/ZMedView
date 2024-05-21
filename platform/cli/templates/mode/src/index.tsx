@@ -1,5 +1,9 @@
 import { hotkeys } from '@ohif/core';
+<<<<<<< HEAD
 import { initToolGroups, moreTools, toolbarButtons } from '@ohif/mode-longitudinal';
+=======
+import { initToolGroups, toolbarButtons } from '@ohif/mode-longitudinal';
+>>>>>>> origin/master
 import { id } from './id';
 
 const ohif = {
@@ -40,7 +44,11 @@ function modeFactory({ modeConfiguration }) {
      * Runs when the Mode Route is mounted to the DOM. Usually used to initialize
      * Services and other resources.
      */
+<<<<<<< HEAD
     onModeEnter: ({ servicesManager, extensionManager, commandsManager }) => {
+=======
+    onModeEnter: ({ servicesManager, extensionManager, commandsManager }: withAppTypes) => {
+>>>>>>> origin/master
       const { measurementService, toolbarService, toolGroupService } = servicesManager.services;
 
       measurementService.clearMeasurements();
@@ -60,11 +68,10 @@ function modeFactory({ modeConfiguration }) {
         'MoreTools',
       ]);
     },
-    onModeExit: ({ servicesManager }) => {
+    onModeExit: ({ servicesManager }: withAppTypes) => {
       const {
         toolGroupService,
         syncGroupService,
-        toolbarService,
         segmentationService,
         cornerstoneViewportService,
         uiDialogService,
@@ -87,7 +94,9 @@ function modeFactory({ modeConfiguration }) {
      * A boolean return value that indicates whether the mode is valid for the
      * modalities of the selected studies. For instance a PET/CT mode should be
      */
-    isValidMode: ({ modalities }) => true,
+    isValidMode: ({ modalities }) => {
+      return { valid: true };
+    },
     /**
      * Mode Routes are used to define the mode's behavior. A list of Mode Route
      * that includes the mode's path and the layout to be used. The layout will

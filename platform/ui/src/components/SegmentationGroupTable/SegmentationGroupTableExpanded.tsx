@@ -91,14 +91,22 @@ const SegmentationGroupTableExpanded = ({
             segmentationConfig={segmentationConfig}
           />
         )}
+<<<<<<< HEAD
         <div className="bg-primary-dark">
+=======
+        <div className="bg-primary-dark flex flex-1 flex-col overflow-hidden">
+>>>>>>> origin/master
           <div className="select-none bg-black pt-[5px] pb-[5px]">
             {showAddSegmentation && !disableEditing && (
               <NoSegmentationRow onSegmentationAdd={onSegmentationAdd} />
             )}
           </div>
           {segmentations?.length > 0 && (
+<<<<<<< HEAD
             <div className="ohif-scrollbar flex max-h-[500px] select-none flex-col gap-[5px] overflow-auto bg-black">
+=======
+            <div className="ohif-scrollbar flex flex-1 select-none flex-col gap-[5px] overflow-auto bg-black">
+>>>>>>> origin/master
               {segmentations?.map(segmentation => {
                 return (
                   <div key={segmentation.id}>
