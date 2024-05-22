@@ -1,21 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { PanelSection, ToolSettings } from '../../components';
+import React from 'react';
+import { PanelSection, ToolSettings, Tooltip } from '../../components';
 import classnames from 'classnames';
 
 const ItemsPerRow = 4;
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 /**
  * Just refactoring from the toolbox component to make it more readable
  */
-function ToolboxUI(props: withAppTypes) {
+function ToolboxUI(props) {
   const {
     toolbarButtons,
     handleToolSelect,
@@ -25,27 +17,6 @@ function ToolboxUI(props: withAppTypes) {
     title,
     useCollapsedPanel = true,
   } = props;
-
-  const prevToolOptions = usePrevious(activeToolOptions);
-
-  useEffect(() => {
-    if (!activeToolOptions) {
-      return;
-    }
-
-    activeToolOptions.forEach((option, index) => {
-      const prevOption = prevToolOptions ? prevToolOptions[index] : undefined;
-      if (!prevOption || option.value !== prevOption.value) {
-        const isOptionValid = option.condition
-          ? option.condition({ options: activeToolOptions })
-          : true;
-        if (isOptionValid) {
-          const { commands } = option;
-          commands(option.value);
-        }
-      }
-    });
-  }, [activeToolOptions]);
 
   const render = () => {
     return (
@@ -63,8 +34,7 @@ function ToolboxUI(props: withAppTypes) {
               const toolClasses = `ml-1 ${isLastRow ? '' : 'mb-2'}`;
 
               const onInteraction = ({ itemId, id, commands }) => {
-                const idToUse = itemId || id;
-                handleToolSelect(idToUse);
+                handleToolSelect(itemId || id);
                 props.onInteraction({
                   itemId,
                   commands,
@@ -76,20 +46,38 @@ function ToolboxUI(props: withAppTypes) {
                   key={id}
                   className={classnames({
                     [toolClasses]: true,
-                    'border-secondary-light flex flex-col items-center justify-center rounded-md border':
-                      true,
+                    'flex flex-col items-center justify-center': true,
                   })}
                 >
-                  <div className="flex rounded-md bg-black">
-                    <Component
-                      {...componentProps}
-                      {...props}
-                      id={id}
-                      servicesManager={servicesManager}
-                      onInteraction={onInteraction}
-                      size="toolbox"
-                    />
-                  </div>
+                  {componentProps.disabled ? (
+                    <Tooltip
+                      position="bottom"
+                      content={componentProps.label}
+                      secondaryContent={componentProps.disabledText}
+                    >
+                      <div className="border-secondary-light rounded border bg-black">
+                        <Component
+                          {...componentProps}
+                          {...props}
+                          id={id}
+                          servicesManager={servicesManager}
+                          onInteraction={onInteraction}
+                          size="toolbox"
+                        />
+                      </div>
+                    </Tooltip>
+                  ) : (
+                    <div className="border-secondary-light rounded border bg-black">
+                      <Component
+                        {...componentProps}
+                        {...props}
+                        id={id}
+                        servicesManager={servicesManager}
+                        onInteraction={onInteraction}
+                        size="toolbox"
+                      />
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -102,16 +90,7 @@ function ToolboxUI(props: withAppTypes) {
     );
   };
 
-  return useCollapsedPanel ? (
-    <PanelSection
-      childrenClassName="flex-shrink-0"
-      title={title}
-    >
-      {render()}
-    </PanelSection>
-  ) : (
-    render()
-  );
+  return useCollapsedPanel ? <PanelSection title={title}>{render()}</PanelSection> : render();
 }
 
 export { ToolboxUI };

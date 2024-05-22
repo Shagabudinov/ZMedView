@@ -17,19 +17,12 @@ export default function PanelSegmentation({
   commandsManager,
   extensionManager,
   configuration,
-}: withAppTypes) {
-  const {
-    segmentationService,
-    viewportGridService,
-    uiDialogService,
-    displaySetService,
-    cornerstoneViewportService,
-  } = servicesManager.services;
+}) {
+  const { segmentationService, viewportGridService, uiDialogService } = servicesManager.services;
 
   const { t } = useTranslation('PanelSegmentation');
 
   const [selectedSegmentationId, setSelectedSegmentationId] = useState(null);
-  const [addSegmentationClassName, setAddSegmentationClassName] = useState('');
   const [segmentationConfiguration, setSegmentationConfiguration] = useState(
     segmentationService.getConfiguration()
   );
@@ -59,64 +52,6 @@ export default function PanelSegmentation({
     };
   }, []);
 
-  // temporary measure to not allow add segmentation when the selected viewport
-  // is stack viewport
-  useEffect(() => {
-    const handleActiveViewportChange = viewportId => {
-      const displaySetUIDs = viewportGridService.getDisplaySetsUIDsForViewport(
-        viewportId || viewportGridService.getActiveViewportId()
-      );
-
-      if (!displaySetUIDs) {
-        return;
-      }
-
-      const isReconstructable =
-        displaySetUIDs?.some(displaySetUID => {
-          const displaySet = displaySetService.getDisplaySetByUID(displaySetUID);
-          return displaySet?.isReconstructable;
-        }) || false;
-
-      if (isReconstructable) {
-        setAddSegmentationClassName('');
-      } else {
-        setAddSegmentationClassName('ohif-disabled');
-      }
-    };
-
-    // Handle initial state
-    handleActiveViewportChange();
-
-    const changedGrid = viewportGridService.EVENTS.ACTIVE_VIEWPORT_ID_CHANGED;
-    const ready = viewportGridService.EVENTS.VIEWPORTS_READY;
-
-    const subsGrid = [];
-    [ready, changedGrid].forEach(evt => {
-      const { unsubscribe } = viewportGridService.subscribe(evt, ({ viewportId }) => {
-        handleActiveViewportChange(viewportId);
-      });
-
-      subsGrid.push(unsubscribe);
-    });
-
-    const changedData = cornerstoneViewportService.EVENTS.VIEWPORT_DATA_CHANGED;
-
-    const subsData = [];
-    [changedData].forEach(evt => {
-      const { unsubscribe } = cornerstoneViewportService.subscribe(evt, () => {
-        handleActiveViewportChange();
-      });
-
-      subsData.push(unsubscribe);
-    });
-
-    // Clean up
-    return () => {
-      subsGrid.forEach(unsub => unsub());
-      subsData.forEach(unsub => unsub());
-    };
-  }, []);
-
   const getToolGroupIds = segmentationId => {
     const toolGroupIds = segmentationService.getToolGroupIdsWithSegmentation(segmentationId);
 
@@ -124,9 +59,7 @@ export default function PanelSegmentation({
   };
 
   const onSegmentationAdd = async () => {
-    commandsManager.runCommand('createEmptySegmentationForViewport', {
-      viewportId: viewportGridService.getActiveViewportId(),
-    });
+    commandsManager.runCommand('createEmptySegmentationForViewport');
   };
 
   const onSegmentationClick = (segmentationId: string) => {
@@ -219,7 +152,6 @@ export default function PanelSegmentation({
     segmentationService.removeSegment(segmentationId, segmentIndex);
   };
 
-  // segment hide
   const onToggleSegmentVisibility = (segmentationId, segmentIndex) => {
     const segmentation = segmentationService.getSegmentation(segmentationId);
     const segmentInfo = segmentation.segments[segmentIndex];
@@ -310,13 +242,7 @@ export default function PanelSegmentation({
     });
   };
 
-  const SegmentationGroupTableComponent =
-    components[configuration?.segmentationPanelMode] || SegmentationGroupTable;
-  const allowAddSegment = configuration?.addSegment;
-  const onSegmentationAddWrapper =
-    configuration?.onSegmentationAdd && typeof configuration?.onSegmentationAdd === 'function'
-      ? configuration?.onSegmentationAdd
-      : onSegmentationAdd;
+  const SegmentationGroupTableComponent = components[configuration?.segmentationPanelMode];
 
   return (
     <SegmentationGroupTableComponent
@@ -324,9 +250,7 @@ export default function PanelSegmentation({
       segmentations={segmentations}
       disableEditing={configuration.disableEditing}
       activeSegmentationId={selectedSegmentationId || ''}
-      onSegmentationAdd={onSegmentationAddWrapper}
-      addSegmentationClassName={addSegmentationClassName}
-      showAddSegment={allowAddSegment}
+      onSegmentationAdd={onSegmentationAdd}
       onSegmentationClick={onSegmentationClick}
       onSegmentationDelete={onSegmentationDelete}
       onSegmentationDownload={onSegmentationDownload}

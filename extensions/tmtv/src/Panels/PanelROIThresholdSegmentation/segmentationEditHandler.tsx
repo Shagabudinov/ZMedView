@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Dialog, ButtonEnums } from '@ohif/ui';
 
-function segmentationItemEditHandler({ id, servicesManager }: withAppTypes) {
+function segmentationItemEditHandler({ id, servicesManager }) {
   const { segmentationService, uiDialogService } = servicesManager.services;
 
   const segmentation = segmentationService.getSegmentation(id);

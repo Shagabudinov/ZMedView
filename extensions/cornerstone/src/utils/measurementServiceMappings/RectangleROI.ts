@@ -2,7 +2,6 @@ import SUPPORTED_TOOLS from './constants/supportedTools';
 import { getDisplayUnit } from './utils';
 import getSOPInstanceAttributes from './utils/getSOPInstanceAttributes';
 import { utils } from '@ohif/core';
-import { getStatisticDisplayString } from './utils/getValueDisplayString';
 
 const RectangleROI = {
   toAnnotation: measurement => {},
@@ -10,8 +9,7 @@ const RectangleROI = {
     csToolsEventDetail,
     DisplaySetService,
     CornerstoneViewportService,
-    getValueTypeFromToolType,
-    customizationService
+    getValueTypeFromToolType
   ) => {
     const { annotation, viewportId } = csToolsEventDetail;
     const { metadata, data, annotationUID } = annotation;
@@ -49,9 +47,8 @@ const RectangleROI = {
 
     const mappedAnnotations = getMappedAnnotations(annotation, DisplaySetService);
 
-    const displayText = getDisplayText(mappedAnnotations, displaySet, customizationService);
-    const getReport = () =>
-      _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizationService);
+    const displayText = getDisplayText(mappedAnnotations, displaySet);
+    const getReport = () => _getReport(mappedAnnotations, points, FrameOfReferenceUID);
 
     return {
       uid: annotationUID,
@@ -114,7 +111,6 @@ function getMappedAnnotations(annotation, DisplaySetService) {
       unit: modalityUnit,
       mean,
       stdDev,
-      metadata,
       max,
       area,
       areaUnit,
@@ -129,7 +125,7 @@ This function is used to convert the measurement data to a format that is
 suitable for the report generation (e.g. for the csv report). The report
 returns a list of columns and corresponding values.
 */
-function _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizationService) {
+function _getReport(mappedAnnotations, points, FrameOfReferenceUID) {
   const columns = [];
   const values = [];
 
@@ -167,7 +163,7 @@ function _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizatio
   };
 }
 
-function getDisplayText(mappedAnnotations, displaySet, customizationService) {
+function getDisplayText(mappedAnnotations, displaySet) {
   if (!mappedAnnotations || !mappedAnnotations.length) {
     return '';
   }
@@ -195,7 +191,11 @@ function getDisplayText(mappedAnnotations, displaySet, customizationService) {
   mappedAnnotations.forEach(mappedAnnotation => {
     const { unit, max, SeriesNumber } = mappedAnnotation;
 
-    const maxStr = getStatisticDisplayString(max, unit, 'max');
+    let maxStr = '';
+    if (max) {
+      const roundedMax = utils.roundNumber(max, 2);
+      maxStr = `Max: ${roundedMax} <small>${getDisplayUnit(unit)}</small> `;
+    }
 
     const str = `${maxStr}(S:${SeriesNumber}${instanceText}${frameText})`;
     if (!displayText.includes(str)) {

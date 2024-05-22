@@ -16,8 +16,7 @@ const CobbAngle = {
     csToolsEventDetail,
     displaySetService,
     CornerstoneViewportService,
-    getValueTypeFromToolType,
-    customizationService
+    getValueTypeFromToolType
   ) => {
     const { annotation, viewportId } = csToolsEventDetail;
     const { metadata, data, annotationUID } = annotation;
@@ -55,9 +54,8 @@ const CobbAngle = {
 
     const mappedAnnotations = getMappedAnnotations(annotation, displaySetService);
 
-    const displayText = getDisplayText(mappedAnnotations, displaySet, customizationService);
-    const getReport = () =>
-      _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizationService);
+    const displayText = getDisplayText(mappedAnnotations, displaySet);
+    const getReport = () => _getReport(mappedAnnotations, points, FrameOfReferenceUID);
 
     return {
       uid: annotationUID,
@@ -129,7 +127,7 @@ This function is used to convert the measurement data to a format that is
 suitable for the report generation (e.g. for the csv report). The report
 returns a list of columns and corresponding values.
 */
-function _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizationService) {
+function _getReport(mappedAnnotations, points, FrameOfReferenceUID) {
   const columns = [];
   const values = [];
 
@@ -162,7 +160,7 @@ function _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizatio
   };
 }
 
-function getDisplayText(mappedAnnotations, displaySet, customizationService) {
+function getDisplayText(mappedAnnotations, displaySet) {
   if (!mappedAnnotations || !mappedAnnotations.length) {
     return '';
   }

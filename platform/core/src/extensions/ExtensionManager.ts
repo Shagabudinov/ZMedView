@@ -1,7 +1,7 @@
 import MODULE_TYPES from './MODULE_TYPES';
 import log from '../log';
 import { AppConfig } from '../types/AppConfig';
-import { PubSubService, ServiceProvidersManager } from '../services';
+import { PubSubService, ServiceProvidersManager, ServicesManager } from '../services';
 import { HotkeysManager, CommandsManager } from '../classes';
 import { DataSourceDefinition } from '../types';
 
@@ -9,7 +9,7 @@ import { DataSourceDefinition } from '../types';
  * This is the arguments given to create the extension.
  */
 export interface ExtensionConstructor {
-  servicesManager: AppTypes.ServicesManager;
+  servicesManager: ServicesManager;
   serviceProvidersManager: ServiceProvidersManager;
   commandsManager: CommandsManager;
   hotkeysManager: HotkeysManager;
@@ -28,7 +28,7 @@ export type ExtensionConfiguration = Record<string, unknown>;
  */
 export interface ExtensionParams extends ExtensionConstructor {
   extensionManager: ExtensionManager;
-  servicesManager: AppTypes.ServicesManager;
+  servicesManager: ServicesManager;
   serviceProvidersManager: ServiceProvidersManager;
   configuration?: ExtensionConfiguration;
 }
@@ -48,7 +48,6 @@ export interface Extension {
   getCustomizationModule?: (p: ExtensionParams) => unknown;
   getSopClassHandlerModule?: (p: ExtensionParams) => unknown;
   getToolbarModule?: (p: ExtensionParams) => unknown;
-  getPanelModule?: (p: ExtensionParams) => unknown;
   onModeEnter?: () => void;
   onModeExit?: () => void;
 }
@@ -72,7 +71,7 @@ export default class ExtensionManager extends PubSubService {
   public static readonly MODULE_TYPES = MODULE_TYPES;
 
   private _commandsManager: CommandsManager;
-  private _servicesManager: AppTypes.ServicesManager;
+  private _servicesManager: ServicesManager;
   private _hotkeysManager: HotkeysManager;
   private _serviceProvidersManager: ServiceProvidersManager;
   private modulesMap: Record<string, unknown>;

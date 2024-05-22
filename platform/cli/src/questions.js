@@ -18,9 +18,7 @@ function getPathQuestions(packageType) {
     {
       type: 'input',
       name: 'baseDir',
-      message: `What is the target path to create your ${packageType}?`,
-      suffix: `\n(we recommend you do not use the OHIF ${packageType} folder (./${packageType}s) unless you are developing a core ${packageType})`,
-      maxLength: 40,
+      message: `What is the target path to create your ${packageType} (we recommend you do not use the OHIF ${packageType} folder (./${packageType}s) unless you are developing a core ${packageType}):`,
       validate: input => {
         if (!input) {
           console.log('Please provide a valid target directory path');

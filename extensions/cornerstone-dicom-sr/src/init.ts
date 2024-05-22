@@ -1,4 +1,5 @@
 import {
+  addTool,
   AngleTool,
   annotation,
   ArrowAnnotateTool,
@@ -8,7 +9,6 @@ import {
   CircleROITool,
   LengthTool,
   PlanarFreehandROITool,
-  RectangleROITool,
 } from '@cornerstonejs/tools';
 import DICOMSRDisplayTool from './tools/DICOMSRDisplayTool';
 import addToolInstance from './utils/addToolInstance';
@@ -19,25 +19,24 @@ import toolNames from './tools/toolNames';
  * @param {object} configuration
  */
 export default function init({ configuration = {} }: Types.Extensions.ExtensionParams): void {
-  addToolInstance(toolNames.DICOMSRDisplay, DICOMSRDisplayTool);
-  addToolInstance(toolNames.SRLength, LengthTool);
+  addTool(DICOMSRDisplayTool);
+  addToolInstance(toolNames.SRLength, LengthTool, {});
   addToolInstance(toolNames.SRBidirectional, BidirectionalTool);
   addToolInstance(toolNames.SREllipticalROI, EllipticalROITool);
   addToolInstance(toolNames.SRCircleROI, CircleROITool);
   addToolInstance(toolNames.SRArrowAnnotate, ArrowAnnotateTool);
   addToolInstance(toolNames.SRAngle, AngleTool);
-  addToolInstance(toolNames.SRPlanarFreehandROI, PlanarFreehandROITool);
-  addToolInstance(toolNames.SRRectangleROI, RectangleROITool);
-
   // TODO - fix the SR display of Cobb Angle, as it joins the two lines
   addToolInstance(toolNames.SRCobbAngle, CobbAngleTool);
+  // TODO - fix the rehydration of Freehand, as it throws an exception
+  // on a missing polyline. The fix is probably in CS3D
+  addToolInstance(toolNames.SRPlanarFreehandROI, PlanarFreehandROITool);
 
   // Modify annotation tools to use dashed lines on SR
   const dashedLine = {
     lineDash: '4,4',
   };
   annotation.config.style.setToolGroupToolStyles('SRToolGroup', {
-    [toolNames.DICOMSRDisplay]: dashedLine,
     SRLength: dashedLine,
     SRBidirectional: dashedLine,
     SREllipticalROI: dashedLine,
@@ -46,7 +45,6 @@ export default function init({ configuration = {} }: Types.Extensions.ExtensionP
     SRCobbAngle: dashedLine,
     SRAngle: dashedLine,
     SRPlanarFreehandROI: dashedLine,
-    SRRectangleROI: dashedLine,
     global: {},
   });
 }

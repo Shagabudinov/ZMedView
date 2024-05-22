@@ -5,11 +5,11 @@ import { VolumeRenderingPresetsContent } from './VolumeRenderingPresetsContent';
 
 export function VolumeRenderingPresets({
   viewportId,
-  servicesManager,
+  serviceManager,
   commandsManager,
   volumeRenderingPresets,
 }: VolumeRenderingPresetsProps): ReactElement {
-  const { uiModalService } = servicesManager.services;
+  const { uiModalService } = serviceManager.services;
 
   const onClickPresets = () => {
     uiModalService.show({
@@ -23,7 +23,7 @@ export function VolumeRenderingPresets({
         commandsManager,
       },
       containerDimensions: 'h-[543px] w-[460px]',
-      contentDimensions: 'h-[493px] w-[460px]  pl-[12px] pr-[12px]',
+      contentDimensions: 'h-[493px] w-[460px]  pl-[12px]',
     });
   };
 

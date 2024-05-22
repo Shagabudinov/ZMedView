@@ -13,35 +13,30 @@ function promptHydrateRT({
   toolGroupId = 'default',
   preHydrateCallbacks,
   hydrateRTDisplaySet,
-}: withAppTypes) {
+}) {
   const { uiViewportDialogService } = servicesManager.services;
-  const extensionManager = servicesManager._extensionManager;
-  const appConfig = extensionManager._appConfig;
+
   return new Promise(async function (resolve, reject) {
-    const promptResult = appConfig?.disableConfirmationPrompts
-      ? RESPONSE.HYDRATE_SEG
-      : await _askHydrate(uiViewportDialogService, viewportId);
+    const promptResult = await _askHydrate(uiViewportDialogService, viewportId);
 
     if (promptResult === RESPONSE.HYDRATE_SEG) {
       preHydrateCallbacks?.forEach(callback => {
         callback();
       });
 
-      window.setTimeout(async () => {
-        const isHydrated = await hydrateRTDisplaySet({
-          rtDisplaySet,
-          viewportId,
-          toolGroupId,
-          servicesManager,
-        });
+      const isHydrated = await hydrateRTDisplaySet({
+        rtDisplaySet,
+        viewportId,
+        toolGroupId,
+        servicesManager,
+      });
 
-        resolve(isHydrated);
-      }, 0);
+      resolve(isHydrated);
     }
   });
 }
 
-function _askHydrate(uiViewportDialogService: AppTypes.UIViewportDialogService, viewportId) {
+function _askHydrate(uiViewportDialogService, viewportId) {
   return new Promise(function (resolve, reject) {
     const message = 'Do you want to open this Segmentation?';
     const actions = [
@@ -62,7 +57,6 @@ function _askHydrate(uiViewportDialogService: AppTypes.UIViewportDialogService, 
     };
 
     uiViewportDialogService.show({
-      id: 'promptHydrateRT',
       viewportId,
       type: 'info',
       message,
@@ -71,11 +65,6 @@ function _askHydrate(uiViewportDialogService: AppTypes.UIViewportDialogService, 
       onOutsideClick: () => {
         uiViewportDialogService.hide();
         resolve(RESPONSE.CANCEL);
-      },
-      onKeyPress: event => {
-        if (event.key === 'Enter') {
-          onSubmit(RESPONSE.HYDRATE_SEG);
-        }
       },
     });
   });

@@ -5,11 +5,7 @@ import { DicomMetadataStore } from '@ohif/core';
  *
  * @param {*} servicesManager
  */
-async function createReportAsync({
-  servicesManager,
-  getReport,
-  reportType = 'measurement',
-}: withAppTypes) {
+async function createReportAsync({ servicesManager, getReport, reportType = 'measurement' }) {
   const { displaySetService, uiNotificationService, uiDialogService } = servicesManager.services;
   const loadingDialogId = uiDialogService.create({
     showOverlay: true,
@@ -43,7 +39,6 @@ async function createReportAsync({
       message: error.message || `Failed to store ${reportType}`,
       type: 'error',
     });
-    throw new Error(`Failed to store ${reportType}. Error: ${error.message || 'Unknown error'}`);
   } finally {
     uiDialogService.dismiss({ id: loadingDialogId });
   }

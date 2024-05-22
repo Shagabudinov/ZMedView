@@ -8,13 +8,13 @@ import {
   processResults,
   processSeriesResults,
 } from './qido.js';
-import dcm4cheeReject from './dcm4cheeReject.js';
+import dcm4cheeReject from './dcm4cheeReject';
 
-import getImageId from './utils/getImageId.js';
+import getImageId from './utils/getImageId';
 import dcmjs from 'dcmjs';
 import { retrieveStudyMetadata, deleteStudyMetadataPromise } from './retrieveStudyMetadata.js';
 import StaticWadoClient from './utils/StaticWadoClient';
-import getDirectURL from '../utils/getDirectURL.js';
+import getDirectURL from '../utils/getDirectURL';
 import { fixBulkDataURI } from './utils/fixBulkDataURI';
 
 const { DicomMetaDictionary, DicomDict } = dcmjs.data;
@@ -89,9 +89,9 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
       };
 
       generateWadoHeader = () => {
-        const authorizationHeader = getAuthrorizationHeader();
+        let authorizationHeader = getAuthrorizationHeader();
         //Generate accept header depending on config params
-        const formattedAcceptHeader = utils.generateAcceptHeader(
+        let formattedAcceptHeader = utils.generateAcceptHeader(
           dicomWebConfig.acceptHeader,
           dicomWebConfig.requestTransferSyntaxUID,
           dicomWebConfig.omitQuotationForMultipartRequest

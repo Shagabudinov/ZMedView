@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { LayoutSelector as OHIFLayoutSelector, ToolbarButton, LayoutPreset } from '@ohif/ui';
+import { ServicesManager } from '@ohif/core';
 
 const defaultCommonPresets = [
   {
@@ -33,61 +34,25 @@ const defaultCommonPresets = [
   },
 ];
 
-const _areSelectorsValid = (hp, displaySets, hangingProtocolService) => {
-  if (!hp.displaySetSelectors || Object.values(hp.displaySetSelectors).length === 0) {
-    return true;
-  }
-
-  return hangingProtocolService.areRequiredSelectorsValid(
-    Object.values(hp.displaySetSelectors),
-    displaySets[0]
-  );
-};
-
-const generateAdvancedPresets = ({ servicesManager }: withAppTypes) => {
-  const { hangingProtocolService, viewportGridService, displaySetService } =
-    servicesManager.services;
-
+const generateAdvancedPresets = hangingProtocolService => {
   const hangingProtocols = Array.from(hangingProtocolService.protocols.values());
-
-  const viewportId = viewportGridService.getActiveViewportId();
-
-  if (!viewportId) {
-    return [];
-  }
-  const displaySetInsaneUIDs = viewportGridService.getDisplaySetsUIDsForViewport(viewportId);
-
-  if (!displaySetInsaneUIDs) {
-    return [];
-  }
-
-  const displaySets = displaySetInsaneUIDs.map(uid => displaySetService.getDisplaySetByUID(uid));
-
   return hangingProtocols
     .map(hp => {
       if (!hp.isPreset) {
         return null;
       }
-
-      const areValid = _areSelectorsValid(hp, displaySets, hangingProtocolService);
-
       return {
         icon: hp.icon,
         title: hp.name,
         commandOptions: {
           protocolId: hp.id,
         },
-        disabled: !areValid,
       };
     })
     .filter(preset => preset !== null);
 };
 
-function ToolbarLayoutSelectorWithServices({
-  commandsManager,
-  servicesManager,
-  ...props
-}: withAppTypes) {
+function ToolbarLayoutSelectorWithServices({ commandsManager, servicesManager, ...props }) {
   const [isDisabled, setIsDisabled] = useState(false);
 
   const handleMouseEnter = () => {
@@ -132,13 +97,13 @@ function LayoutSelector({
   servicesManager,
   tooltipDisabled,
   ...rest
-}: withAppTypes) {
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { customizationService } = servicesManager.services;
+  const { customizationService, hangingProtocolService } = servicesManager.services;
   const commonPresets = customizationService.get('commonPresets') || defaultCommonPresets;
   const advancedPresets =
-    customizationService.get('advancedPresets') || generateAdvancedPresets({ servicesManager });
+    customizationService.get('advancedPresets') || generateAdvancedPresets(hangingProtocolService);
 
   const closeOnOutsideClick = () => {
     if (isOpen) {
@@ -196,7 +161,6 @@ function LayoutSelector({
                     classNames="hover:bg-primary-dark group flex gap-2 p-1 cursor-pointer"
                     icon={preset.icon}
                     title={preset.title}
-                    disabled={preset.disabled}
                     commandOptions={preset.commandOptions}
                     onSelection={onSelectionPreset}
                   />
@@ -228,7 +192,7 @@ LayoutSelector.propTypes = {
   rows: PropTypes.number,
   columns: PropTypes.number,
   onLayoutChange: PropTypes.func,
-  servicesManager: PropTypes.object.isRequired,
+  servicesManager: PropTypes.instanceOf(ServicesManager),
 };
 
 LayoutSelector.defaultProps = {

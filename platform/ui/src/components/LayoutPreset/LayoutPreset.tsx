@@ -1,19 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Icon from '../Icon/Icon';
 
-function LayoutPreset({
-  onSelection,
-  title,
-  icon,
-  commandOptions,
-  classNames: classNameProps,
-  disabled,
-}) {
+function LayoutPreset({ onSelection, title, icon, commandOptions, classNames }) {
   return (
     <div
-      className={classNames(classNameProps, disabled && 'ohif-disabled')}
+      className={classNames}
       onClick={() => {
         onSelection(commandOptions);
       }}
@@ -37,7 +29,6 @@ LayoutPreset.propTypes = {
   icon: PropTypes.string.isRequired,
   commandOptions: PropTypes.object.isRequired,
   classNames: PropTypes.string,
-  disabled: PropTypes.bool,
 };
 
 export default LayoutPreset;

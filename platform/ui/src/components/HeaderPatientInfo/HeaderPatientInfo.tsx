@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@ohif/ui';
 import { utils } from '@ohif/core';
-import { PatientInfoVisibility } from '../../types';
+import { useAppConfig } from '@state';
 
 const { formatDate, formatPN } = utils;
 
 const formatWithEllipsis = (str, maxLength) => {
-  if (str?.length > maxLength) {
+  if (str.length > maxLength) {
     return str.substring(0, maxLength) + '...';
   }
   return str;
 };
 
-function usePatientInfo(servicesManager: AppTypes.ServicesManager) {
+function usePatientInfo(servicesManager) {
   const { displaySetService } = servicesManager.services;
 
   const [patientInfo, setPatientInfo] = useState({
@@ -47,12 +47,12 @@ function usePatientInfo(servicesManager: AppTypes.ServicesManager) {
       return;
     }
     setPatientInfo({
-      PatientID: instance.PatientID || null,
-      PatientName: instance.PatientName ? formatPN(instance.PatientName.Alphabetic) : null,
-      PatientSex: instance.PatientSex || null,
-      PatientDOB: formatDate(instance.PatientBirthDate) || null,
+      PatientID: instance.PatientID || '',
+      PatientName: instance.PatientName ? formatPN(instance.PatientName.Alphabetic) : '',
+      PatientSex: instance.PatientSex || '',
+      PatientDOB: formatDate(instance.PatientBirthDate) || '',
     });
-    checkMixedPatients(instance.PatientID || null);
+    checkMixedPatients(instance.PatientID || '');
   };
 
   useEffect(() => {
@@ -70,10 +70,9 @@ function usePatientInfo(servicesManager: AppTypes.ServicesManager) {
   return { patientInfo, isMixedPatients };
 }
 
-function HeaderPatientInfo({ servicesManager, appConfig }: withAppTypes) {
-  const initialExpandedState =
-    appConfig.showPatientInfo === PatientInfoVisibility.VISIBLE ||
-    appConfig.showPatientInfo === PatientInfoVisibility.VISIBLE_READONLY;
+function HeaderPatientInfo({ servicesManager }) {
+  const [appConfig] = useAppConfig();
+  const initialExpandedState = appConfig.showPatientInfo === 'visible';
   const [expanded, setExpanded] = useState(initialExpandedState);
   const { patientInfo, isMixedPatients } = usePatientInfo(servicesManager);
 
@@ -84,7 +83,7 @@ function HeaderPatientInfo({ servicesManager, appConfig }: withAppTypes) {
   }, [isMixedPatients, expanded]);
 
   const handleOnClick = () => {
-    if (!isMixedPatients && appConfig.showPatientInfo !== PatientInfoVisibility.VISIBLE_READONLY) {
+    if (!isMixedPatients) {
       setExpanded(!expanded);
     }
   };
@@ -94,7 +93,7 @@ function HeaderPatientInfo({ servicesManager, appConfig }: withAppTypes) {
 
   return (
     <div
-      className="hover:bg-primary-dark flex cursor-pointer items-center justify-center gap-1 rounded-lg"
+      className="align-items-center hover:bg-primary-dark flex cursor-pointer justify-center gap-1 rounded-lg"
       onClick={handleOnClick}
     >
       <Icon

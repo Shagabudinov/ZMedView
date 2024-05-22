@@ -1,7 +1,6 @@
 import { CustomizationService } from '@ohif/core';
 import React from 'react';
 import DataSourceSelector from './Panels/DataSourceSelector';
-import ProgressDropdownWithService from './components/ProgressDropdownWithService';
 import DataSourceConfigurationComponent from './Components/DataSourceConfigurationComponent';
 import { GoogleCloudDataSourceConfigurationAPI } from './DataSourceConfigurationAPI/GoogleCloudDataSourceConfigurationAPI';
 
@@ -154,11 +153,6 @@ export default function getCustomizationModule({ servicesManager, extensionManag
               servicesManager,
               extensionManager
             ),
-        },
-
-        {
-          id: 'progressDropdownWithServiceComponent',
-          component: ProgressDropdownWithService,
         },
       ],
     },

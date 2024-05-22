@@ -6,16 +6,13 @@ import { useLocation } from 'react-router';
 import { ErrorBoundary, UserPreferences, AboutModal, Header, useModal } from '@ohif/ui';
 import i18n from '@ohif/i18n';
 import { hotkeys } from '@ohif/core';
+import { useAppConfig } from '@state';
 import { Toolbar } from '../Toolbar/Toolbar';
 
 const { availableLanguages, defaultLanguage, currentLanguage } = i18n;
 
-function ViewerHeader({
-  hotkeysManager,
-  extensionManager,
-  servicesManager,
-  appConfig,
-}: withAppTypes) {
+function ViewerHeader({ hotkeysManager, extensionManager, servicesManager }) {
+  const [appConfig] = useAppConfig();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -58,7 +55,6 @@ function ViewerHeader({
           content: AboutModal,
           title: t('AboutModal:About OHIF Viewer'),
           contentProps: { versionNumber, commitHash },
-          containerDimensions: 'max-w-4xl max-h-4xl',
         }),
     },
     {
@@ -68,7 +64,6 @@ function ViewerHeader({
         show({
           title: t('UserPreferencesModal:User preferences'),
           content: UserPreferences,
-          containerDimensions: 'w-[70%] max-w-[900px]',
           contentProps: {
             hotkeyDefaults: hotkeysManager.getValidHotkeyDefinitions(hotkeyDefaults),
             hotkeyDefinitions,
@@ -112,16 +107,9 @@ function ViewerHeader({
       WhiteLabeling={appConfig.whiteLabeling}
       showPatientInfo={appConfig.showPatientInfo}
       servicesManager={servicesManager}
-      Secondary={
-        <Toolbar
-          servicesManager={servicesManager}
-          buttonSection="secondary"
-        />
-      }
-      appConfig={appConfig}
     >
       <ErrorBoundary context="Primary Toolbar">
-        <div className="relative flex justify-center gap-[4px]">
+        <div className="relative flex justify-center">
           <Toolbar servicesManager={servicesManager} />
         </div>
       </ErrorBoundary>

@@ -51,7 +51,7 @@ const _getDisplaySetsFromSeries = (instances, servicesManager, extensionManager)
     })
     .map(instance => {
       const { Modality, SOPInstanceUID, SeriesDescription = 'VIDEO' } = instance;
-      const { SeriesNumber, SeriesDate, SeriesInstanceUID, StudyInstanceUID, NumberOfFrames, url } =
+      const { SeriesNumber, SeriesDate, SeriesInstanceUID, StudyInstanceUID, NumberOfFrames } =
         instance;
       const displaySet = {
         //plugin: id,
@@ -70,7 +70,6 @@ const _getDisplaySetsFromSeries = (instances, servicesManager, extensionManager)
           instance,
           singlepart: 'video',
           tag: 'PixelData',
-          url,
         }),
         instances: [instance],
         thumbnailSrc: dataSource.retrieve.directURL({

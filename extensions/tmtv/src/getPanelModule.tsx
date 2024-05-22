@@ -1,5 +1,5 @@
 import React from 'react';
-import { PanelPetSUV, PanelROIThresholdExport } from './Panels';
+import { PanelPetSUV, PanelROIThresholdSegmentation } from './Panels';
 import { Toolbox } from '@ohif/ui';
 
 // TODO:
@@ -17,26 +17,20 @@ function getPanelModule({ commandsManager, extensionManager, servicesManager }) 
     );
   };
 
-  const wrappedROIThresholdToolbox = () => {
+  const wrappedROIThresholdSeg = () => {
     return (
       <>
         <Toolbox
           commandsManager={commandsManager}
           servicesManager={servicesManager}
           extensionManager={extensionManager}
-          buttonSectionId="ROIThresholdToolbox"
+          buttonSectionId="tmtvToolbox"
           title="Threshold Tools"
         />
-      </>
-    );
-  };
-
-  const wrappedROIThresholdExport = () => {
-    return (
-      <>
-        <PanelROIThresholdExport
+        <PanelROIThresholdSegmentation
           commandsManager={commandsManager}
           servicesManager={servicesManager}
+          extensionManager={extensionManager}
         />
       </>
     );
@@ -51,18 +45,11 @@ function getPanelModule({ commandsManager, extensionManager, servicesManager }) 
       component: wrappedPanelPetSuv,
     },
     {
-      name: 'tmtvBox',
+      name: 'ROIThresholdSeg',
       iconName: 'tab-segmentation',
       iconLabel: 'Segmentation',
-      label: 'Segmentation Toolbox',
-      component: wrappedROIThresholdToolbox,
-    },
-    {
-      name: 'tmtvExport',
-      iconName: 'tab-segmentation',
-      iconLabel: 'Segmentation',
-      label: 'Segmentation Export',
-      component: wrappedROIThresholdExport,
+      label: 'Segmentation',
+      component: wrappedROIThresholdSeg,
     },
   ];
 }

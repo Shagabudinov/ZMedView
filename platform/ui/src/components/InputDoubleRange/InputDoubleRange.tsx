@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { InputNumber } from '../../components'; // Import InputNumber component
 import './InputDoubleRange.css';
@@ -19,7 +19,6 @@ type InputDoubleRangeProps = {
   trackColor?: string;
   allowNumberEdit?: boolean;
   showAdjustmentArrows?: boolean;
-  allowOutOfRange?: boolean;
 };
 
 const InputDoubleRange: React.FC<InputDoubleRangeProps> = ({
@@ -37,7 +36,6 @@ const InputDoubleRange: React.FC<InputDoubleRangeProps> = ({
   labelPosition,
   trackColor,
   allowNumberEdit,
-  allowOutOfRange = false,
   showAdjustmentArrows,
 }) => {
   // Set initial thumb positions as percentages
@@ -57,15 +55,7 @@ const InputDoubleRange: React.FC<InputDoubleRangeProps> = ({
       updatedRangeValue[index] = newValues;
     }
 
-    const calculatePercentage = value => {
-      if (value < minValue) {
-        return 0;
-      }
-      if (value > maxValue) {
-        return 100;
-      }
-      return ((value - minValue) / (maxValue - minValue)) * 100;
-    };
+    const calculatePercentage = value => ((value - minValue) / (maxValue - minValue)) * 100;
 
     const newPercentageStart = calculatePercentage(updatedRangeValue[0]);
     const newPercentageEnd = calculatePercentage(updatedRangeValue[1]);
@@ -83,22 +73,17 @@ const InputDoubleRange: React.FC<InputDoubleRangeProps> = ({
 
   const LabelOrEditableNumber = (val, index) => {
     return allowNumberEdit ? (
-      // the pl-[2px] class is used to align the thumb so that it doesn't
-      // go over the label when the value is full, not sure what is wrong
-      // with the implementation, we need to fix it properly
-      <div className={index === 1 && 'pl-[2px]'}>
-        <InputNumber
-          minValue={minValue}
-          maxValue={maxValue}
-          value={val}
-          onChange={newValue => {
-            updateRangeValues(newValue, index);
-          }}
-          step={step}
-          labelClassName={classNames(labelClassName ?? 'text-white')}
-          showAdjustmentArrows={showAdjustmentArrows}
-        />
-      </div>
+      <InputNumber
+        minValue={minValue}
+        maxValue={maxValue}
+        value={val}
+        onChange={newValue => {
+          updateRangeValues(newValue, index);
+        }}
+        step={step}
+        labelClassName="text-white"
+        showAdjustmentArrows={showAdjustmentArrows}
+      />
     ) : (
       <span className={classNames(labelClassName ?? 'text-white')}>
         {val}
@@ -153,52 +138,31 @@ const InputDoubleRange: React.FC<InputDoubleRangeProps> = ({
     const newValue =
       Math.round(((x / rect.width) * (maxValue - minValue) + minValue) / step) * step;
 
-    if (!allowOutOfRange) {
-      const clampedValue = Math.min(Math.max(newValue, minValue), maxValue);
+    // Make sure newValue is within [minValue, maxValue]
+    const clampedValue = Math.min(Math.max(newValue, minValue), maxValue);
 
-      const updatedRangeValue = [...rangeValue];
-      updatedRangeValue[selectedThumbValue] = clampedValue;
-      setRangeValue(updatedRangeValue);
-
-      onChange(updatedRangeValue);
-
-      const percentage = Math.round(((clampedValue - minValue) / (maxValue - minValue)) * 100);
-      if (selectedThumbValue === 0) {
-        setPercentageStart(percentage);
-      } else {
-        setPercentageEnd(percentage);
-      }
-    } else {
-      const updatedRangeValue = [...rangeValue];
-      updatedRangeValue[selectedThumbValue] = newValue;
-      setRangeValue(updatedRangeValue);
-
-      onChange(updatedRangeValue);
-
-      // Update the thumb position
-      const percentage = Math.round(((newValue - minValue) / (maxValue - minValue)) * 100);
-      if (percentage < 0) {
-        if (selectedThumbValue === 0) {
-          setPercentageStart(0);
-        } else {
-          setPercentageEnd(0);
-        }
-      } else if (percentage > 100) {
-        if (selectedThumbValue === 0) {
-          setPercentageStart(100);
-        } else {
-          setPercentageEnd(100);
-        }
-      } else {
-        if (selectedThumbValue === 0) {
-          setPercentageStart(percentage);
-        } else {
-          setPercentageEnd(percentage);
-        }
-      }
+    // Ensure that left and right thumbs don't switch positions
+    if (selectedThumbValue === 0 && clampedValue >= rangeValue[1]) {
+      return;
+    }
+    if (selectedThumbValue === 1 && clampedValue <= rangeValue[0]) {
+      return;
     }
 
     // Update the correct values in the rangeValue array
+    const updatedRangeValue = [...rangeValue];
+    updatedRangeValue[selectedThumbValue] = clampedValue;
+    setRangeValue(updatedRangeValue);
+
+    onChange(updatedRangeValue);
+
+    // Update the thumb position
+    const percentage = Math.round(((clampedValue - minValue) / (maxValue - minValue)) * 100);
+    if (selectedThumbValue === 0) {
+      setPercentageStart(percentage);
+    } else {
+      setPercentageEnd(percentage);
+    }
   };
 
   // Calculate the range values percentages for gradient background

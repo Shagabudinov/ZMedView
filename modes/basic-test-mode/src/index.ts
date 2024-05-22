@@ -64,7 +64,7 @@ function modeFactory() {
     /**
      * Lifecycle hooks
      */
-    onModeEnter: ({ servicesManager, extensionManager, commandsManager }: withAppTypes) => {
+    onModeEnter: ({ servicesManager, extensionManager, commandsManager }) => {
       const { measurementService, toolbarService, toolGroupService, customizationService } =
         servicesManager.services;
 
@@ -91,7 +91,7 @@ function modeFactory() {
         'MoreTools',
       ]);
     },
-    onModeExit: ({ servicesManager }: withAppTypes) => {
+    onModeExit: ({ servicesManager }) => {
       const {
         toolGroupService,
         syncGroupService,
@@ -136,7 +136,7 @@ function modeFactory() {
             props: {
               leftPanels: [tracked.thumbnailList],
               rightPanels: [dicomSeg.panel, tracked.measurements],
-              // rightPanelClosed: true, // optional prop to start with collapse panels
+              // rightPanelDefaultClosed: true, // optional prop to start with collapse panels
               viewports: [
                 {
                   namespace: tracked.viewport,

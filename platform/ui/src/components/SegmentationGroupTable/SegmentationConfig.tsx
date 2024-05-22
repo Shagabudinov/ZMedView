@@ -20,21 +20,20 @@ const ActiveSegmentationConfig = ({
 }) => {
   const { t } = useTranslation('SegmentationTable');
   return (
-    <div className="flex justify-between gap-[5px] px-2 pt-[13px] text-[12px]">
-      <div className="flex h-[89px] flex-col items-start">
+    <div className="flex justify-between px-3 pt-[13px] text-[12px]">
+      <div className="flex flex-col items-start">
         <div className="mb-[12px] text-white">{t('Active')}</div>
         <CheckBox
           label={t('Outline')}
           checked={config.renderOutline}
-          labelClassName="text-[12px]"
+          labelClassName="text-[12px] pl-1 pt-1"
           className="mb-[9px]"
           onChange={setRenderOutline}
         />
-        <div className="mt-2"></div>
         <CheckBox
           label={t('Fill')}
           checked={config.renderFill}
-          labelClassName="text-[12px]"
+          labelClassName="text-[12px] pl-1 pt-1"
           className="mb-[9px]"
           onChange={setRenderFill}
         />
@@ -48,20 +47,20 @@ const ActiveSegmentationConfig = ({
           value={getRoundedValue(config.outlineOpacity * 100)}
           onChange={setOutlineOpacityActive}
           step={1}
-          containerClassName="mt-[4px] mb-[9px] w-[100px]"
+          containerClassName="mt-[4px] mb-[9px]"
           inputClassName="w-[64px]"
-          labelClassName="text-white text-[12px] whitespace-nowrap"
+          labelClassName="text-white text-[12px]"
           unit="%"
         />
         <InputRange
-          minValue={0}
+          minValue={4}
           maxValue={100}
           value={getRoundedValue(config.fillAlpha * 100)}
           onChange={setFillAlpha}
           step={1}
-          containerClassName="mt-[4px] mb-[9px] w-[100px]"
+          containerClassName="mt-[4px] mb-[9px]"
           inputClassName="w-[64px]"
-          labelClassName="text-white text-[12px] whitespace-nowrap"
+          labelClassName="text-white text-[12px]"
           unit="%"
         />
       </div>
@@ -149,9 +148,7 @@ const SegmentationConfig = ({
               'rotate-90 transform': !isMinimized,
             })}
           />
-          <span className="text-[12px] font-[300] text-[#d8d8d8]">
-            {t('Inactive segmentations')}
-          </span>
+          <span className="text-[12px] font-[300] text-[#d8d8d8]">{t('Inactive segmentations')}</span>
         </div>
         {!isMinimized && (
           <InactiveSegmentationConfig

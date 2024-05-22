@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { utils } from '@ohif/core';
-import {
-  MeasurementTable,
-  Dialog,
-  Input,
-  useViewportGrid,
-  ButtonEnums,
-  ActionButtons,
-} from '@ohif/ui';
+import { utils, ServicesManager } from '@ohif/core';
+import { MeasurementTable, Dialog, Input, useViewportGrid, ButtonEnums } from '@ohif/ui';
+import ActionButtons from './ActionButtons';
 import debounce from 'lodash.debounce';
 
 import createReportDialogPrompt, {
@@ -24,13 +18,14 @@ export default function PanelMeasurementTable({
   servicesManager,
   commandsManager,
   extensionManager,
-}: withAppTypes): React.FunctionComponent {
+}): React.FunctionComponent {
   const { t } = useTranslation('MeasurementTable');
 
   const [viewportGrid, viewportGridService] = useViewportGrid();
   const { activeViewportId, viewports } = viewportGrid;
-  const { measurementService, uiDialogService, uiNotificationService, displaySetService } =
-    servicesManager.services;
+  const { measurementService, uiDialogService, uiNotificationService, displaySetService } = (
+    servicesManager as ServicesManager
+  ).services;
   const [displayMeasurements, setDisplayMeasurements] = useState([]);
 
   useEffect(() => {
@@ -217,7 +212,7 @@ export default function PanelMeasurementTable({
         data-cy={'measurements-panel'}
       >
         <MeasurementTable
-          title={t('Measurements')}
+          title={t("Measurements")}
           servicesManager={servicesManager}
           data={displayMeasurements}
           onClick={jumpToImage}
@@ -226,17 +221,9 @@ export default function PanelMeasurementTable({
       </div>
       <div className="flex justify-center p-4">
         <ActionButtons
-          t={t}
-          actions={[
-            {
-              label: 'Export',
-              onClick: exportReport,
-            },
-            {
-              label: 'Create Report',
-              onClick: createReport,
-            },
-          ]}
+          onExportClick={exportReport}
+          onClearMeasurementsClick={clearMeasurements}
+          onCreateReportClick={createReport}
         />
       </div>
     </>
@@ -244,7 +231,7 @@ export default function PanelMeasurementTable({
 }
 
 PanelMeasurementTable.propTypes = {
-  servicesManager: PropTypes.object.isRequired,
+  servicesManager: PropTypes.instanceOf(ServicesManager).isRequired,
 };
 
 function _getMappedMeasurements(measurementService) {

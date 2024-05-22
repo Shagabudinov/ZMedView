@@ -1,13 +1,18 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon, useModal } from '@ohif/ui';
-import { Types } from '@ohif/core';
+import { ExtensionManager, ServicesManager, Types } from '@ohif/core';
 import DataSourceConfigurationModalComponent from './DataSourceConfigurationModalComponent';
+
+type DataSourceConfigurationComponentProps = {
+  servicesManager: ServicesManager;
+  extensionManager: ExtensionManager;
+};
 
 function DataSourceConfigurationComponent({
   servicesManager,
   extensionManager,
-}: withAppTypes): ReactElement {
+}: DataSourceConfigurationComponentProps): ReactElement {
   const { t } = useTranslation('DataSourceConfiguration');
   const { show, hide } = useModal();
 

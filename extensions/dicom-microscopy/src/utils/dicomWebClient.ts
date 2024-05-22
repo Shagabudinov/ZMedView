@@ -1,5 +1,11 @@
+import { api } from 'dicomweb-client';
 import { errorHandler, DicomMetadataStore } from '@ohif/core';
-import { StaticWadoClient } from '@ohif/extension-default';
+
+const { DICOMwebClient } = api;
+
+DICOMwebClient._buildMultipartAcceptHeaderFieldValue = () => {
+  return '*/*';
+};
 
 /**
  * create a DICOMwebClient object to be used by Dicom Microscopy Viewer
@@ -9,7 +15,7 @@ import { StaticWadoClient } from '@ohif/extension-default';
  * @param param0
  * @returns
  */
-export default function getDicomWebClient({ extensionManager, servicesManager }: withAppTypes) {
+export default function getDicomWebClient({ extensionManager, servicesManager }) {
   const dataSourceConfig = window.config.dataSources.find(
     ds => ds.sourceName === extensionManager.activeDataSource
   );
@@ -25,7 +31,7 @@ export default function getDicomWebClient({ extensionManager, servicesManager }:
     errorInterceptor: errorHandler.getHTTPErrorHandler(),
   };
 
-  const client = new StaticWadoClient(wadoConfig);
+  const client = new api.DICOMwebClient(wadoConfig);
   client.wadoURL = wadoConfig.url;
 
   if (extensionManager.activeDataSource === 'dicomlocal') {

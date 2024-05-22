@@ -1,4 +1,4 @@
-import { CommandsManager } from '@ohif/core';
+import { ServicesManager, CommandsManager } from '@ohif/core';
 
 export type ViewportPreset = {
   name: string;
@@ -15,7 +15,7 @@ export type ViewportPreset = {
 
 export type VolumeRenderingPresetsProps = {
   viewportId: string;
-  servicesManager: AppTypes.ServicesManager;
+  serviceManager: ServicesManager;
   commandsManager: CommandsManager;
   volumeRenderingPresets: ViewportPreset[];
 };
@@ -30,7 +30,7 @@ export type VolumeRenderingPresetsContentProps = {
 export type VolumeRenderingOptionsProps = {
   viewportId: string;
   commandsManager: CommandsManager;
-  servicesManager: AppTypes.ServicesManager;
+  serviceManager: ServicesManager;
   volumeRenderingQualityRange: VolumeRenderingQualityRange;
 };
 
@@ -43,24 +43,24 @@ export type VolumeRenderingQualityRange = {
 export type VolumeRenderingQualityProps = {
   viewportId: string;
   commandsManager: CommandsManager;
-  servicesManager: AppTypes.ServicesManager;
+  serviceManager: ServicesManager;
   volumeRenderingQualityRange: VolumeRenderingQualityRange;
 };
 
 export type VolumeShiftProps = {
   viewportId: string;
   commandsManager: CommandsManager;
-  servicesManager: AppTypes.ServicesManager;
+  serviceManager: ServicesManager;
 };
 
 export type VolumeShadeProps = {
   viewportId: string;
   commandsManager: CommandsManager;
-  servicesManager: AppTypes.ServicesManager;
+  serviceManager: ServicesManager;
 };
 
 export type VolumeLightingProps = {
   viewportId: string;
   commandsManager: CommandsManager;
-  servicesManager: AppTypes.ServicesManager;
+  serviceManager: ServicesManager;
 };

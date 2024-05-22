@@ -9,7 +9,7 @@ export function getWindowLevelActionMenu({
   commandsManager,
   verticalDirection,
   horizontalDirection,
-}: withAppTypes): ReactNode {
+}): ReactNode {
   const { customizationService } = servicesManager.services;
 
   const { presets } = customizationService.get('cornerstone.windowLevelPresets');
@@ -24,19 +24,21 @@ export function getWindowLevelActionMenu({
       return { [displaySet.Modality]: presets[displaySet.Modality] };
     });
 
-  return (
+  const hasMenu = displaySetPresets.length > 0;
+
+  return hasMenu ? (
     <WindowLevelActionMenu
       viewportId={viewportId}
       element={element}
-      presets={displaySetPresets}
+      presets={displaySetPresets[0]}
       verticalDirection={verticalDirection}
       horizontalDirection={horizontalDirection}
       commandsManager={commandsManager}
-      servicesManager={servicesManager}
+      serviceManager={servicesManager}
       colorbarProperties={colorbarProperties}
       displaySets={displaySets}
       volumeRenderingPresets={volumeRenderingPresets}
       volumeRenderingQualityRange={volumeRenderingQualityRange}
     />
-  );
+  ) : null;
 }

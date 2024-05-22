@@ -17,9 +17,6 @@ const DEFAULT_STATE = {
   onDismiss: () => {
     console.log('dismiss? -1');
   },
-  onKeyPress: () => {
-    console.log('key pressed?');
-  },
 };
 
 const ViewportDialogContext = createContext(null);

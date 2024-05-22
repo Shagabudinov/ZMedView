@@ -3,6 +3,7 @@ import React from 'react';
 import { useAppConfig } from '@state';
 import { Toolbox } from '@ohif/ui';
 import PanelSegmentation from './panels/PanelSegmentation';
+import { SegmentationPanelMode } from './types/segmentation';
 
 const getPanelModule = ({
   commandsManager,
@@ -10,11 +11,16 @@ const getPanelModule = ({
   extensionManager,
   configuration,
   title,
-}: withAppTypes) => {
+}) => {
   const { customizationService } = servicesManager.services;
 
   const wrappedPanelSegmentation = configuration => {
     const [appConfig] = useAppConfig();
+
+    const disableEditingForMode = customizationService.get('segmentation.disableEditing');
+    const segmentationPanelMode =
+      customizationService.get('segmentation.segmentationPanelMode')?.value ||
+      SegmentationPanelMode.Dropdown;
 
     return (
       <PanelSegmentation
@@ -23,8 +29,8 @@ const getPanelModule = ({
         extensionManager={extensionManager}
         configuration={{
           ...configuration,
-          disableEditing: appConfig.disableEditing,
-          ...customizationService.get('segmentation.panel'),
+          disableEditing: appConfig.disableEditing || disableEditingForMode?.value,
+          segmentationPanelMode: segmentationPanelMode,
         }}
       />
     );
@@ -32,6 +38,9 @@ const getPanelModule = ({
 
   const wrappedPanelSegmentationWithTools = configuration => {
     const [appConfig] = useAppConfig();
+    const segmentationPanelMode =
+      customizationService.get('segmentation.segmentationPanelMode')?.value ||
+      SegmentationPanelMode.Dropdown;
 
     return (
       <>
@@ -51,8 +60,7 @@ const getPanelModule = ({
           extensionManager={extensionManager}
           configuration={{
             ...configuration,
-            disableEditing: appConfig.disableEditing,
-            ...customizationService.get('segmentation.panel'),
+            segmentationPanelMode: segmentationPanelMode,
           }}
         />
       </>

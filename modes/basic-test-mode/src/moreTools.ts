@@ -80,7 +80,13 @@ const moreTools = [
           icon: 'tool-referenceLines',
           label: 'Reference Lines',
           tooltip: 'Show Reference Lines',
-          commands: 'toggleEnabledDisabledToolbar',
+          commands: {
+            commandName: 'setToolEnabled',
+            commandOptions: {
+              toolName: 'ReferenceLines',
+              toggle: true,
+            },
+          },
           listeners: {
             [ViewportGridService.EVENTS.ACTIVE_VIEWPORT_ID_CHANGED]: ReferenceLinesListeners,
             [ViewportGridService.EVENTS.VIEWPORTS_READY]: ReferenceLinesListeners,
@@ -88,11 +94,17 @@ const moreTools = [
           evaluate: 'evaluate.cornerstoneTool.toggle',
         }),
         createButton({
-          id: 'ImageOverlayViewer',
+          id: 'ImageOverlay',
           icon: 'toggle-dicom-overlay',
           label: 'Image Overlay',
           tooltip: 'Toggle Image Overlay',
-          commands: 'toggleEnabledDisabledToolbar',
+          commands: {
+            commandName: 'setToolEnabled',
+            commandOptions: {
+              toolName: 'ImageOverlayViewer',
+              toggle: true,
+            },
+          },
           evaluate: 'evaluate.cornerstoneTool.toggle',
         }),
         createButton({
@@ -136,18 +148,10 @@ const moreTools = [
           evaluate: 'evaluate.cornerstoneTool',
         }),
         createButton({
-          id: 'CobbAngle',
-          icon: 'tool-angle',
-          label: 'Cobb Angle',
-          tooltip: 'Cobb Angle',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
           id: 'Magnify',
           icon: 'tool-magnify',
-          label: 'Zoom-in',
-          tooltip: 'Zoom-in',
+          label: 'Magnify',
+          tooltip: 'Magnify',
           commands: setToolActiveToolbar,
           evaluate: 'evaluate.cornerstoneTool',
         }),
@@ -169,26 +173,10 @@ const moreTools = [
         }),
         createButton({
           id: 'TagBrowser',
-          icon: 'dicom-tag-browser',
+          icon: 'list-bullets',
           label: 'Dicom Tag Browser',
           tooltip: 'Dicom Tag Browser',
           commands: 'openDICOMTagViewer',
-        }),
-        createButton({
-          id: 'AdvancedMagnify',
-          icon: 'icon-tool-loupe',
-          label: 'Magnify Probe',
-          tooltip: 'Magnify Probe',
-          commands: 'toggleActiveDisabledToolbar',
-          evaluate: 'evaluate.cornerstoneTool.toggle.ifStrictlyDisabled',
-        }),
-        createButton({
-          id: 'UltrasoundDirectionalTool',
-          icon: 'icon-tool-ultrasound-bidirectional',
-          label: 'Ultrasound Directional',
-          tooltip: 'Ultrasound Directional',
-          commands: setToolActiveToolbar,
-          evaluate: ['evaluate.cornerstoneTool', 'evaluate.isUS'],
         }),
       ],
     },

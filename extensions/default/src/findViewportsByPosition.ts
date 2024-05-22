@@ -16,7 +16,6 @@ import { StateSyncService } from '@ohif/core';
  */
 export const findOrCreateViewport = (
   hangingProtocolService,
-  isHangingProtocolLayout,
   viewportsByPosition,
   position: number,
   positionId: string,
@@ -32,13 +31,8 @@ export const findOrCreateViewport = (
   if (!options.inDisplay) {
     options.inDisplay = [...viewportsByPosition.initialInDisplay];
   }
-
-  // See if there is a default viewport for new views
-  const missing = hangingProtocolService.getMissingViewport(
-    isHangingProtocolLayout ? protocolId : 'default',
-    stageIndex,
-    options
-  );
+  // See if there is a default viewport for new views.
+  const missing = hangingProtocolService.getMissingViewport(protocolId, stageIndex, options);
   if (missing) {
     const displaySetInstanceUIDs = missing.displaySetsInfo.map(it => it.displaySetInstanceUID);
     options.inDisplay.push(...displaySetInstanceUIDs);

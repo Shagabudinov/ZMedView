@@ -1,5 +1,5 @@
 import React from 'react';
-import { CommandsManager, ExtensionManager } from '@ohif/core';
+import { ServicesManager, CommandsManager, ExtensionManager } from '@ohif/core';
 import { useViewportGrid } from '@ohif/ui';
 import MicroscopyPanel from './components/MicroscopyPanel/MicroscopyPanel';
 
@@ -13,7 +13,7 @@ export default function getPanelModule({
   extensionManager,
   servicesManager,
 }: {
-  servicesManager: AppTypes.ServicesManager;
+  servicesManager: ServicesManager;
   commandsManager: CommandsManager;
   extensionManager: ExtensionManager;
 }) {

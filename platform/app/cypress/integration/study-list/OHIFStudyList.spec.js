@@ -3,7 +3,6 @@
 describe('OHIF Study List', function () {
   context('Desktop resolution', function () {
     beforeEach(function () {
-      Cypress.on('uncaught:exception', () => false);
       cy.window().then(win => win.sessionStorage.clear());
       cy.openStudyList();
 
@@ -48,8 +47,6 @@ describe('OHIF Study List', function () {
         '[data-cy="mode-basic-test-1.3.6.1.4.1.25403.345050719074.3824.20170125113417.1"]'
       ).click();
       cy.get('[data-cy="return-to-work-list"]').click();
-      cy.wait(2000);
-
       cy.get('@searchResult2').should($list => {
         expect($list.length).to.be.eq(1);
         expect($list).to.contain('Juno');
@@ -75,8 +72,6 @@ describe('OHIF Study List', function () {
         '[data-cy="mode-basic-test-1.3.6.1.4.1.25403.345050719074.3824.20170125113417.1"]'
       ).click();
       cy.get('[data-cy="return-to-work-list"]').click();
-      cy.wait(2000);
-
       cy.get('@searchResult2').should($list => {
         expect($list.length).to.be.eq(1);
         expect($list).to.contain('0000003');
@@ -87,7 +82,6 @@ describe('OHIF Study List', function () {
       cy.get('@AccessionNumber').type('321');
       //Wait result list to be displayed
       cy.waitStudyList();
-      cy.wait(2000);
       cy.get('@searchResult2').should($list => {
         expect($list.length).to.be.eq(1);
         expect($list).to.contain('321');
@@ -98,15 +92,11 @@ describe('OHIF Study List', function () {
       cy.get('@AccessionNumber').type('0000155811');
       //Wait result list to be displayed
       cy.waitStudyList();
-      cy.wait(2000);
-
       cy.get('[data-cy="studyRow-1.3.6.1.4.1.25403.345050719074.3824.20170125113417.1"]').click();
       cy.get(
         '[data-cy="mode-basic-test-1.3.6.1.4.1.25403.345050719074.3824.20170125113417.1"]'
       ).click();
       cy.get('[data-cy="return-to-work-list"]').click();
-      cy.wait(2000);
-
       cy.get('@searchResult2').should($list => {
         expect($list.length).to.be.eq(1);
         expect($list).to.contain('0000155811');
@@ -117,8 +107,6 @@ describe('OHIF Study List', function () {
       cy.get('@StudyDescription').type('PETCT');
       //Wait result list to be displayed
       cy.waitStudyList();
-      cy.wait(2000);
-
       cy.get('@searchResult2').should($list => {
         expect($list.length).to.be.eq(1);
         expect($list).to.contain('PETCT');
@@ -129,15 +117,11 @@ describe('OHIF Study List', function () {
       cy.get('@StudyDescription').type('PETCT');
       //Wait result list to be displayed
       cy.waitStudyList();
-      cy.wait(2000);
-
       cy.get('[data-cy="studyRow-1.3.6.1.4.1.25403.345050719074.3824.20170125113417.1"]').click();
       cy.get(
         '[data-cy="mode-basic-test-1.3.6.1.4.1.25403.345050719074.3824.20170125113417.1"]'
       ).click();
       cy.get('[data-cy="return-to-work-list"]').click();
-      cy.wait(2000);
-
       cy.get('@searchResult2').should($list => {
         expect($list.length).to.be.eq(1);
         expect($list).to.contain('PETCT');

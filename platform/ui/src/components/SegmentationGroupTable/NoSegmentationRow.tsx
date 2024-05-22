@@ -2,11 +2,11 @@ import React from 'react';
 import Icon from '../Icon';
 import { useTranslation } from 'react-i18next';
 
-function NoSegmentationRow({ onSegmentationAdd, addSegmentationClassName }) {
+function NoSegmentationRow({ onSegmentationAdd }) {
   const { t } = useTranslation('SegmentationTable');
   return (
     <div
-      className={`group ${addSegmentationClassName}`}
+      className="group"
       onClick={onSegmentationAdd}
     >
       <div className="text-primary-active group-hover:bg-secondary-dark flex items-center rounded-[4px] group-hover:cursor-pointer">

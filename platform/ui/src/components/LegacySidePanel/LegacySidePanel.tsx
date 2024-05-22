@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import SwiperCore, { A11y, Controller, Navigation, Pagination, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { Types } from '@ohif/core';
+import { PanelService, ServicesManager, Types } from '@ohif/core';
 
 import LegacyButton from '../LegacyButton';
 import Icon from '../Icon';
@@ -71,8 +71,8 @@ const LegacySidePanel = ({
   className,
   activeTabIndex: activeTabIndexProp,
   tabs,
-}: withAppTypes) => {
-  const panelService = servicesManager?.services?.panelService;
+}) => {
+  const panelService: PanelService = servicesManager?.services?.panelService;
 
   const { t } = useTranslation('LegacySidePanel');
 
@@ -288,7 +288,7 @@ LegacySidePanel.defaultProps = {
 };
 
 LegacySidePanel.propTypes = {
-  servicesManager: PropTypes.object.isRequired,
+  servicesManager: PropTypes.instanceOf(ServicesManager),
   side: PropTypes.oneOf(['left', 'right']).isRequired,
   className: PropTypes.string,
   activeTabIndex: PropTypes.number,

@@ -12,7 +12,7 @@ function getImageSrcFromImageId(cornerstone, imageId) {
     canvas.height = 128 / window.devicePixelRatio;
 
     cornerstone.utilities
-      .loadImageToCanvas({ canvas, imageId, thumbnail: true })
+      .loadImageToCanvas({ canvas, imageId })
       .then(imageId => {
         resolve(canvas.toDataURL());
       })

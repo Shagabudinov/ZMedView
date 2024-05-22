@@ -16,9 +16,6 @@ import UserAuthenticationService from './UserAuthenticationService';
 import CustomizationService from './CustomizationService';
 import StateSyncService from './StateSyncService';
 import PanelService from './PanelService';
-import WorkflowStepsService from './WorkflowStepsService';
-
-import type Services from '../types/Services';
 
 import type Services from '../types/Services';
 
@@ -43,5 +40,4 @@ export {
   PubSubService,
   UserAuthenticationService,
   PanelService,
-  WorkflowStepsService,
 };

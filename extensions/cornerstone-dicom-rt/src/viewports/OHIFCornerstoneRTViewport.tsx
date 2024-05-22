@@ -8,7 +8,7 @@ import createRTToolGroupAndAddTools from '../utils/initRTToolGroup';
 
 const RT_TOOLGROUP_BASE_NAME = 'RTToolGroup';
 
-function OHIFCornerstoneRTViewport(props: withAppTypes) {
+function OHIFCornerstoneRTViewport(props) {
   const {
     children,
     displaySets,
@@ -116,10 +116,7 @@ function OHIFCornerstoneRTViewport(props: withAppTypes) {
           orientation: viewportOptions.orientation,
           viewportId: viewportOptions.viewportId,
         }}
-        onElementEnabled={evt => {
-          props.onElementEnabled?.(evt);
-          onElementEnabled(evt);
-        }}
+        onElementEnabled={onElementEnabled}
         onElementDisabled={onElementDisabled}
       ></Component>
     );

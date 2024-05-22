@@ -15,8 +15,7 @@ const Length = {
     csToolsEventDetail,
     displaySetService,
     cornerstoneViewportService,
-    getValueTypeFromToolType,
-    customizationService
+    getValueTypeFromToolType
   ) => {
     const { annotation, viewportId } = csToolsEventDetail;
     const { metadata, data, annotationUID } = annotation;
@@ -33,7 +32,11 @@ const Length = {
       throw new Error('Tool not supported');
     }
 
-    const { SOPInstanceUID, SeriesInstanceUID, StudyInstanceUID } = getSOPInstanceAttributes(
+    const {
+      SOPInstanceUID,
+      SeriesInstanceUID,
+      StudyInstanceUID,
+    } = getSOPInstanceAttributes(
       referencedImageId,
       cornerstoneViewportService,
       viewportId
@@ -54,9 +57,8 @@ const Length = {
 
     const mappedAnnotations = getMappedAnnotations(annotation, displaySetService);
 
-    const displayText = getDisplayText(mappedAnnotations, displaySet, customizationService);
-    const getReport = () =>
-      _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizationService);
+    const displayText = getDisplayText(mappedAnnotations, displaySet);
+    const getReport = () => _getReport(mappedAnnotations, points, FrameOfReferenceUID);
 
     return {
       uid: annotationUID,
@@ -97,8 +99,11 @@ function getMappedAnnotations(annotation, displaySetService) {
       throw new Error('Non-acquisition plane measurement mapping not supported');
     }
 
-    const { SOPInstanceUID, SeriesInstanceUID, frameNumber } =
-      getSOPInstanceAttributes(referencedImageId);
+    const {
+      SOPInstanceUID,
+      SeriesInstanceUID,
+      frameNumber,
+    } = getSOPInstanceAttributes(referencedImageId);
 
     const displaySet = displaySetService.getDisplaySetForSOPInstanceUID(
       SOPInstanceUID,
@@ -127,7 +132,7 @@ This function is used to convert the measurement data to a format that is
 suitable for the report generation (e.g. for the csv report). The report
 returns a list of columns and corresponding values.
 */
-function _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizationService) {
+function _getReport(mappedAnnotations, points, FrameOfReferenceUID) {
   const columns = [];
   const values = [];
 
@@ -162,7 +167,7 @@ function _getReport(mappedAnnotations, points, FrameOfReferenceUID, customizatio
   };
 }
 
-function getDisplayText(mappedAnnotations, displaySet, customizationService) {
+function getDisplayText(mappedAnnotations, displaySet) {
   if (!mappedAnnotations || !mappedAnnotations.length) {
     return '';
   }
@@ -170,7 +175,13 @@ function getDisplayText(mappedAnnotations, displaySet, customizationService) {
   const displayText = [];
 
   // Area is the same for all series
-  const { length, SeriesNumber, SOPInstanceUID, frameNumber, unit } = mappedAnnotations[0];
+  const {
+    length,
+    SeriesNumber,
+    SOPInstanceUID,
+    frameNumber,
+    unit,
+  } = mappedAnnotations[0];
 
   const instance = displaySet.images.find(image => image.SOPInstanceUID === SOPInstanceUID);
 
@@ -186,7 +197,9 @@ function getDisplayText(mappedAnnotations, displaySet, customizationService) {
     return displayText;
   }
   const roundedLength = utils.roundNumber(length, 2);
-  displayText.push(`${roundedLength} ${unit} (S: ${SeriesNumber}${instanceText}${frameText})`);
+  displayText.push(
+    `${roundedLength} ${unit} (S: ${SeriesNumber}${instanceText}${frameText})`
+  );
 
   return displayText;
 }

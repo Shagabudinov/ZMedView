@@ -1,6 +1,6 @@
 import dcmjs from 'dcmjs';
 import { createReportDialogPrompt } from '@ohif/extension-default';
-import { Types } from '@ohif/core';
+import { ServicesManager, Types } from '@ohif/core';
 import { cache, metaData } from '@cornerstonejs/core';
 import {
   segmentation as cornerstoneToolsSegmentation,
@@ -48,7 +48,7 @@ const commandsModule = ({
     displaySetService,
     viewportGridService,
     toolGroupService,
-  } = servicesManager.services;
+  } = (servicesManager as ServicesManager).services;
 
   const actions = {
     /**
@@ -258,12 +258,9 @@ const commandsModule = ({
       labelmapObj.metadata = [];
 
       const segmentationInOHIF = segmentationService.getSegmentation(segmentationId);
-      segmentationInOHIF.segments.forEach(segment => {
+      labelmapObj.segmentsOnLabelmap.forEach(segmentIndex => {
         // segmentation service already has a color for each segment
-        if (!segment) {
-          return;
-        }
-        const segmentIndex = segment.segmentIndex;
+        const segment = segmentationInOHIF?.segments[segmentIndex];
         const { label, color } = segment;
 
         const RecommendedDisplayCIELabValue = dcmjs.data.Colors.rgb2DICOMLAB(
@@ -437,6 +434,30 @@ const commandsModule = ({
         });
       });
     },
+    toggleThresholdRangeAndDynamic() {
+      const toolGroupIds = toolGroupService.getToolGroupIds();
+
+      if (!toolGroupIds) {
+        return;
+      }
+
+      toolGroupIds.forEach(toolGroupId => {
+        const toolGroup = toolGroupService.getToolGroup(toolGroupId);
+        const brushInstances = segmentationUtils.getBrushToolInstances(toolGroup.id);
+
+        brushInstances.forEach(({ configuration }) => {
+          const { activeStrategy, strategySpecificConfiguration } = configuration;
+
+          if (activeStrategy.startsWith('THRESHOLD')) {
+            const thresholdConfig = strategySpecificConfiguration.THRESHOLD;
+
+            if (thresholdConfig) {
+              thresholdConfig.isDynamic = !thresholdConfig.isDynamic;
+            }
+          }
+        });
+      });
+    },
   };
 
   const definitions = {
@@ -469,6 +490,9 @@ const commandsModule = ({
     },
     setThresholdRange: {
       commandFn: actions.setThresholdRange,
+    },
+    toggleThresholdRangeAndDynamic: {
+      commandFn: actions.toggleThresholdRangeAndDynamic,
     },
   };
 

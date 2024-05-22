@@ -116,10 +116,6 @@ const getPresentationIds = (viewport, viewports): PresentationIds => {
     positionPresentationArr.push(id);
   }
 
-  if (displaySetOptions.some(ds => ds.options?.blendMode || ds.options?.displayPreset)) {
-    positionPresentationArr.push(`custom`);
-  }
-
   for (const uid of displaySetInstanceUIDs) {
     positionPresentationArr.push(uid);
     lutPresentationArr.push(uid);
@@ -128,7 +124,7 @@ const getPresentationIds = (viewport, viewports): PresentationIds => {
   // only add unique index if the viewport is getting inserted and not updated
   const isUpdatingSameViewport = Array.from(viewports.values()).some(v => {
     return (
-      v.displaySetInstanceUIDs?.toString() === viewport.displaySetInstanceUIDs?.toString() &&
+      v.displaySetInstanceUIDs.toString() === viewport.displaySetInstanceUIDs.toString() &&
       v.viewportId === viewport.viewportId
     );
   });

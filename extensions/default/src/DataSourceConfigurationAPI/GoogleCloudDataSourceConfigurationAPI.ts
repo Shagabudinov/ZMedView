@@ -42,7 +42,7 @@ class GoogleCloudDataSourceConfigurationAPI implements Types.BaseDataSourceConfi
   private _fetchOptions: { method: string; headers: unknown };
   private _dataSourceName: string;
 
-  constructor(dataSourceName, servicesManager: AppTypes.ServicesManager, extensionManager) {
+  constructor(dataSourceName, servicesManager, extensionManager) {
     this._dataSourceName = dataSourceName;
     this._extensionManager = extensionManager;
     const userAuthenticationService = servicesManager.services.userAuthenticationService;

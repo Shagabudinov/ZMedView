@@ -10,7 +10,8 @@ import ListMenu from '../ListMenu';
 
 const baseClasses = {
   Button: 'flex items-center rounded-md border-transparent group/button',
-  Primary: 'h-full rounded-tl-md rounded-bl-md group/primary',
+  Primary:
+    'h-full border-l-2 border-t-2 border-b-2 rounded-tl-md rounded-bl-md group/primary !pl-2 !py-2',
   Secondary:
     'h-full flex items-center justify-center rounded-tr-md rounded-br-md w-4 border-2 border-transparent group/secondary',
   SecondaryIcon: 'w-4 h-full stroke-1',
@@ -31,7 +32,7 @@ const classes = {
       isActive
         ? isExpanded
           ? 'border-primary-dark !bg-primary-dark hover:border-primary-dark !text-primary-light'
-          : 'border-primary-light bg-primary-light rounded-md'
+          : 'border-primary-light bg-primary-light border-2 rounded-md !p-2'
         : `focus:!text-black focus:!rounded-md focus:!border-primary-light focus:!bg-primary-light ${isExpanded ? 'border-primary-dark bg-primary-dark !text-primary-light' : 'border-secondary-dark bg-secondary-dark group-hover/button:border-primary-dark group-hover/button:text-primary-light hover:!bg-primary-dark hover:border-primary-dark focus:!text-black'}`
     ),
   Secondary: ({ isExpanded, primary }) =>
@@ -63,7 +64,7 @@ const DefaultListItemRenderer = props => {
   return (
     <div
       className={classNames(
-        'flex h-8 w-full select-none flex-row items-center p-3',
+        'flex h-8 w-full flex-row items-center p-3',
         'whitespace-pre text-base',
         className,
         `${isActive ? 'hover:opacity-80' : 'hover:bg-primary-dark '}`
@@ -73,7 +74,7 @@ const DefaultListItemRenderer = props => {
         <span className="mr-4">
           <Icon
             name={icon}
-            className="h-[28px] w-[28px]"
+            className="h-5 w-5"
           />
         </span>
       )}

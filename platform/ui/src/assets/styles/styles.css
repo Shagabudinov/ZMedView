@@ -4,10 +4,6 @@
   overflow-y: auto;
 }
 
-.ohif-scrollbar-stable-gutter {
-  scrollbar-gutter: stable;
-}
-
 .study-min-height {
   min-height: 450px;
 }

@@ -33,7 +33,6 @@ import {
   CustomizationService,
   StateSyncService,
   PanelService,
-  WorkflowStepsService,
 } from './services';
 
 import { DisplaySetMessage, DisplaySetMessageList } from './services/DisplaySetService';
@@ -85,7 +84,6 @@ const OHIF = {
   PubSubService,
   PanelService,
   useToolbar,
-  WorkflowStepsService,
 };
 
 export {
@@ -130,7 +128,6 @@ export {
   Enums,
   Types,
   PanelService,
-  WorkflowStepsService,
   useToolbar,
 };
 

@@ -21,11 +21,6 @@ const reuseCachedLayout = (
 ): ReturnType => {
   const { activeViewportId } = state;
   const { protocol } = hangingProtocolService.getActiveProtocol();
-
-  if (!protocol) {
-    return;
-  }
-
   const hpInfo = hangingProtocolService.getState();
   const { protocolId, stageIndex, activeStudyUID } = hpInfo;
 

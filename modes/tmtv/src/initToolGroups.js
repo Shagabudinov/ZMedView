@@ -4,9 +4,10 @@ export const toolGroupIds = {
   Fusion: 'fusionToolGroup',
   MIP: 'mipToolGroup',
   default: 'default',
+  // MPR: 'mpr',
 };
 
-function _initToolGroups(toolNames, Enums, toolGroupService, commandsManager, modeLabelConfig) {
+function _initToolGroups(toolNames, Enums, toolGroupService, commandsManager) {
   const tools = {
     active: [
       {
@@ -29,24 +30,18 @@ function _initToolGroups(toolNames, Enums, toolGroupService, commandsManager, mo
         toolName: toolNames.ArrowAnnotate,
         configuration: {
           getTextCallback: (callback, eventDetails) => {
-            if (modeLabelConfig) {
-              callback(' ');
-            } else {
-              commandsManager.runCommand('arrowTextCallback', {
-                callback,
-                eventDetails,
-              });
-            }
+            commandsManager.runCommand('arrowTextCallback', {
+              callback,
+              eventDetails,
+            });
           },
-          changeTextCallback: (data, eventDetails, callback) => {
-            if (modeLabelConfig === undefined) {
-              commandsManager.runCommand('arrowTextCallback', {
-                callback,
-                data,
-                eventDetails,
-              });
-            }
-          },
+
+          changeTextCallback: (data, eventDetails, callback) =>
+            commandsManager.runCommand('arrowTextCallback', {
+              callback,
+              data,
+              eventDetails,
+            }),
         },
       },
       { toolName: toolNames.Bidirectional },
@@ -58,67 +53,6 @@ function _initToolGroups(toolNames, Enums, toolGroupService, commandsManager, mo
       { toolName: toolNames.Angle },
       { toolName: toolNames.CobbAngle },
       { toolName: toolNames.Magnify },
-      {
-        toolName: 'CircularBrush',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'FILL_INSIDE_CIRCLE',
-        },
-      },
-      {
-        toolName: 'CircularEraser',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'ERASE_INSIDE_CIRCLE',
-        },
-      },
-      {
-        toolName: 'SphereBrush',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'FILL_INSIDE_SPHERE',
-        },
-      },
-      {
-        toolName: 'SphereEraser',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'ERASE_INSIDE_SPHERE',
-        },
-      },
-      {
-        toolName: 'ThresholdCircularBrush',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'THRESHOLD_INSIDE_CIRCLE',
-        },
-      },
-      {
-        toolName: 'ThresholdSphereBrush',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'THRESHOLD_INSIDE_SPHERE',
-        },
-      },
-      {
-        toolName: 'ThresholdCircularBrushDynamic',
-        parentTool: 'Brush',
-        configuration: {
-          activeStrategy: 'THRESHOLD_INSIDE_CIRCLE',
-          // preview: {
-          //   enabled: true,
-          // },
-          strategySpecificConfiguration: {
-            // to use the use the center segment index to determine
-            // if inside -> same segment, if outside -> eraser
-            // useCenterSegmentIndex: true,
-            THRESHOLD: {
-              isDynamic: true,
-              dynamicRadius: 3,
-            },
-          },
-        },
-      },
     ],
     enabled: [{ toolName: toolNames.SegmentationDisplay }],
     disabled: [
@@ -162,24 +96,14 @@ function _initToolGroups(toolNames, Enums, toolGroupService, commandsManager, mo
         bindings: [{ mouseButton: Enums.MouseBindings.Primary }],
       },
     ],
-    enabled: [
-      { toolName: toolNames.SegmentationDisplay },
-      {
-        toolName: toolNames.OrientationMarker,
-        configuration: {
-          orientationWidget: {
-            viewportCorner: 'BOTTOM_LEFT',
-          },
-        },
-      },
-    ],
+    enabled: [{ toolName: toolNames.SegmentationDisplay }],
   };
 
   toolGroupService.createToolGroupAndAddTools(toolGroupIds.MIP, mipTools);
 }
 
-function initToolGroups(toolNames, Enums, toolGroupService, commandsManager, modeLabelConfig) {
-  _initToolGroups(toolNames, Enums, toolGroupService, commandsManager, modeLabelConfig);
+function initToolGroups(toolNames, Enums, toolGroupService, commandsManager) {
+  _initToolGroups(toolNames, Enums, toolGroupService, commandsManager);
 }
 
 export default initToolGroups;

@@ -13,13 +13,7 @@ import { useToolbox } from '../../contextProviders';
  * role in enhancing the app with a toolbox by providing a way to integrate
  * and display various tools and their corresponding options
  */
-function Toolbox({
-  servicesManager,
-  buttonSectionId,
-  commandsManager,
-  title,
-  ...props
-}: withAppTypes) {
+function Toolbox({ servicesManager, buttonSectionId, commandsManager, title, ...props }) {
   const { state: toolboxState, api } = useToolbox(buttonSectionId);
   const { onInteraction, toolbarButtons } = useToolbar({
     servicesManager,
@@ -27,7 +21,6 @@ function Toolbox({
   });
 
   const prevButtonIdsRef = useRef();
-  const prevToolboxStateRef = useRef();
 
   useEffect(() => {
     const currentButtonIdsStr = JSON.stringify(
@@ -40,24 +33,11 @@ function Toolbox({
       })
     );
 
-    const currentToolBoxStateStr = JSON.stringify(
-      Object.keys(toolboxState.toolOptions).map(tool => {
-        const options = toolboxState.toolOptions[tool];
-        if (Array.isArray(options)) {
-          return options?.map(option => `${option.id}-${option.value}`);
-        }
-      })
-    );
-
-    if (
-      prevButtonIdsRef.current === currentButtonIdsStr &&
-      prevToolboxStateRef.current === currentToolBoxStateStr
-    ) {
+    if (prevButtonIdsRef.current === currentButtonIdsStr) {
       return;
     }
 
     prevButtonIdsRef.current = currentButtonIdsStr;
-    prevToolboxStateRef.current = currentToolBoxStateStr;
 
     const initializeOptionsWithEnhancements = toolbarButtons.reduce(
       (accumulator, toolbarButton) => {
@@ -71,15 +51,11 @@ function Toolbox({
               return option;
             }
 
-            const value =
-              toolboxState.toolOptions?.[parentId]?.find(prop => prop.id === option.id)?.value ??
-              option.value;
-
-            const updatedOptions = toolboxState.toolOptions?.[parentId];
-
             return {
               ...option,
-              value,
+              value:
+                toolboxState.toolOptions?.[parentId]?.find(prop => prop.id === option.id)?.value ??
+                option.value,
               commands: value => {
                 api.handleToolOptionChange(parentId, option.id, value);
 
@@ -89,22 +65,14 @@ function Toolbox({
                 cmds.forEach(command => {
                   const isString = typeof command === 'string';
                   const isObject = typeof command === 'object';
-                  const isFunction = typeof command === 'function';
 
                   if (isString) {
                     commandsManager.run(command, { value });
                   } else if (isObject) {
                     commandsManager.run({
                       ...command,
-                      commandOptions: {
-                        ...command.commandOptions,
-                        ...option,
-                        value,
-                        options: updatedOptions,
-                      },
+                      commandOptions: { ...command.commandOptions, ...option, value },
                     });
-                  } else if (isFunction) {
-                    command({ value, commandsManager, servicesManager, options: updatedOptions });
                   }
                 });
               },
@@ -130,17 +98,11 @@ function Toolbox({
     );
 
     api.initializeToolOptions(initializeOptionsWithEnhancements);
-  }, [toolbarButtons, api, toolboxState]);
+  }, [toolbarButtons, api]);
 
   const handleToolOptionChange = (toolName, optionName, newValue) => {
     api.handleToolOptionChange(toolName, optionName, newValue);
   };
-
-  useEffect(() => {
-    return () => {
-      api.handleToolSelect(null);
-    };
-  }, []);
 
   return (
     <ToolboxUI
