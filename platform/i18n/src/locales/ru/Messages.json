@@ -1,5 +1,7 @@
 {
   "1": "No valid instances found in series.",
+  "One or more of the requested studies are not available at this time.Return to the study list to select a different study to view.": "Одно или несколько исследований сейчас не доступны. Вернитесь на главную страницу для выбора другого исследования.",
+  "Unable to query for studies at this time. Check your data source configuration or network connection": "Не удалось загрузить исследования. Проверьте ваше интернет-соединение.",
   "2": "DisplaySet has missing position information.",
   "3": "DisplaySet is not a reconstructable 3D volume.",
   "4": "Multi frame displaySet don't have pixel measurement information.",

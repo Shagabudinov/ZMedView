@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import filtersMeta from './filtersMeta.js';
 import { useAppConfig } from '@state';
 import { useDebounce, useSearchParams } from '@hooks';
-import { utils, hotkeys, ServicesManager } from '@ohif/core';
+import { utils, hotkeys, ServicesManager, Types as CoreTypes } from '@ohif/core';
 
 import {
   ConfirmContent,
@@ -99,8 +99,7 @@ function WorkSheet({
     shouldUseDefaultSort && canSort
       ? { sortBy: 'studyDate', sortDirection: 'ascending' }
       : {};
-  const sortedStudies = studies;
-
+  const sortedStudies: CoreTypes.StudiesMetadata[] = studies;
   if (canSort) {
     studies.sort((s1, s2) => {
       if (shouldUseDefaultSort) {
