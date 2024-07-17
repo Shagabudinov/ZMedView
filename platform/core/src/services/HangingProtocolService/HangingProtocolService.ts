@@ -1138,6 +1138,44 @@ export default class HangingProtocolService extends PubSubService {
     };
   }
 
+  public getZmedDisplaySetSortFunction(): (
+    displaySetA: IDisplaySet,
+    displaySetB: IDisplaySet
+  ) => number {
+    return (a, b) => {
+      const aModality = a.Modality;
+      const bModality = b.Modality;
+      const aDate = a.SeriesDate !== undefined ? Number(a.SeriesDate) : -Infinity;
+      const aTime = a.SeriesTime !== undefined ? Number(a.SeriesTime) : -Infinity;
+      const bDate = b.SeriesDate !== undefined ? Number(b.SeriesDate) : -Infinity;
+      const bTime = b.SeriesTime !== undefined ? Number(b.SeriesTime) : -Infinity;
+
+      // 1. Сортировка по модальности: 'OT' и 'SR' в конец
+      if (aModality !== 'OT' && aModality !== 'SR') {
+        return -1;
+      } else if (bModality !== 'OT' && bModality !== 'SR') {
+        return 1;
+      }
+
+      // 2. Сортировка по дате
+      if (aDate < bDate) {
+        return 1;
+      } else if (aDate > bDate) {
+        return -1;
+      }
+
+      // 3. Сортировка по времени
+      if (aTime < bTime) {
+        return 1;
+      } else if (aTime > bTime) {
+        return -1;
+      }
+
+      // 4. Сортировка по описанию
+      return b.SeriesDescription.localeCompare(a.SeriesDescription);
+    };
+  }
+
   /**
    * Updates the viewports with the selected protocol stage.
    */

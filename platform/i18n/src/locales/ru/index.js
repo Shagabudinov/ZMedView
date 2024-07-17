@@ -11,6 +11,7 @@ import SidePanel from './SidePanel.json';
 import StudyBrowser from './StudyBrowser.json';
 import StudyList from './StudyList.json';
 import PatientInfo from './PatientInfo.json';
+import ToolbarLayoutSelector from './ToolbarLayoutSelector.json';
 import SegmentationTable from './SegmentationTable.json';
 import StudyItem from './StudyItem.json';
 import UserPreferencesModal from './UserPreferencesModal.json';
@@ -34,6 +35,7 @@ export default {
     StudyBrowser,
     StudyList,
     PatientInfo,
+    ToolbarLayoutSelector,
     SegmentationTable,
     StudyItem,
     UserPreferencesModal,

@@ -81,8 +81,9 @@ const makeDisplaySet = instances => {
   imageSet.setAttributes({
     volumeLoaderSchema,
     displaySetInstanceUID: imageSet.uid, // create a local alias for the imageSet UID
-    SeriesDate: instance.SeriesDate,
-    SeriesTime: instance.SeriesTime,
+    PhotometricInterpretation: instance.PhotometricInterpretation,
+    SeriesDate: instance.SeriesDate || instance.ContentDate,
+    SeriesTime: instance.SeriesTime || instance.ContentTime,
     SeriesInstanceUID: instance.SeriesInstanceUID,
     StudyInstanceUID: instance.StudyInstanceUID,
     SeriesNumber: instance.SeriesNumber || 0,

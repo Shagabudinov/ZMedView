@@ -12,7 +12,6 @@ import NotFound from './NotFound';
 import buildModeRoutes from './buildModeRoutes';
 import PrivateRoute from './PrivateRoute';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 const NotFoundServer = ({
   message = 'Unable to query for studies at this time. Check your data source configuration or network connection',
@@ -26,15 +25,15 @@ const NotFoundServer = ({
         className="grid h-full w-full grid-cols-2"
         style={{ 'grid-template-columns': '1fr 6fr' }}
       >
-        <Link
-          to={'/'}
+        <a
+          href={'/'}
           className="bg-primary-dark hover:bg-primary-light flex h-full items-center rounded py-4 hover:opacity-30"
         >
           <Icon
             name="arrow-right"
             className="scale-x-[-1] transform"
           ></Icon>
-        </Link>
+        </a>
         <div className="flex w-full items-center justify-center px-4 text-white">
           <h4>{t(message)}</h4>
         </div>
@@ -59,15 +58,15 @@ const NotFoundStudy = ({
         className="grid h-full w-full grid-cols-2"
         style={{ 'grid-template-columns': '1fr 6fr' }}
       >
-        <Link
-          to={'/'}
+        <a
+          href={'/'}
           className="bg-primary-dark hover:bg-primary-light flex h-full items-center rounded py-4 hover:opacity-30"
         >
           <Icon
             name="arrow-right"
             className="scale-x-[-1] transform"
           ></Icon>
-        </Link>
+        </a>
         <div className="flex w-full items-center justify-center px-4 text-white">
           <h4>{t(message)}</h4>
         </div>
