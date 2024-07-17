@@ -15,6 +15,7 @@ import isDicomUid from './isDicomUid';
 import formatDate from './formatDate';
 import formatDateRu from './formatDateRu';
 import formatPN from './formatPN';
+import getDateWithTimezone from './getDateWithTimezone';
 import generateAcceptHeader from './generateAcceptHeader';
 import resolveObjectPath from './resolveObjectPath';
 import hierarchicalListUtils from './hierarchicalListUtils';
@@ -82,6 +83,7 @@ const utils = {
   splitComma,
   getSplitParam,
   generateAcceptHeader,
+  getDateWithTimezone,
 };
 
 export {
@@ -115,6 +117,7 @@ export {
   splitComma,
   getSplitParam,
   generateAcceptHeader,
+  getDateWithTimezone,
 };
 
 export default utils;

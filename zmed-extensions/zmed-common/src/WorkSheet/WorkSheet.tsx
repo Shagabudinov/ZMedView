@@ -35,7 +35,7 @@ import i18n from '@ohif/i18n';
 
 import { Types } from '@ohif/ui';
 
-const { sortBySeriesDate } = utils;
+const { sortBySeriesDate, getDateWithTimezone } = utils;
 
 const { availableLanguages, defaultLanguage, currentLanguage } = i18n;
 
@@ -256,28 +256,9 @@ function WorkSheet({
       time,
       uploadedAt
     } = study;
-    const studyDate =
-      date &&
-      moment(date, ['YYYYMMDD', 'YYYY.MM.DD'], true).isValid() &&
-      moment(date, ['YYYYMMDD', 'YYYY.MM.DD']).format('DD.MM.YYYY');
-    const studyTime =
-      time &&
-      moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).isValid() &&
-      moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).format('HH:MM');
 
-    let [uploadDate, uploadTime] = uploadedAt.split('T');
-
-    uploadDate = uploadDate &&
-    moment(uploadDate, ['YYYYMMDD', 'YYYY-MM-DD'], true).isValid() &&
-    moment(uploadDate, ['YYYYMMDD', 'YYYY-MM-DD']).format('DD.MM.YYYY');
-
-    uploadTime = uploadTime &&
-    moment(uploadTime, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).isValid() &&
-    moment(uploadTime, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).format('HH:mm');
-
-    let timezoneOffset = new Date().getTimezoneOffset();
-    let momentTime = moment.utc(uploadTime, 'HH:mm');
-    uploadTime = momentTime.subtract(timezoneOffset, 'minutes').format('HH:mm'); // Отображение времени с учетом timeZone
+    const [studyDate, studyTime] = getDateWithTimezone(date, time);
+    const [uploadDate, uploadTime] = getDateWithTimezone(uploadedAt);
 
     const handleClickYes = async (e) => {
       e.preventDefault();
@@ -311,8 +292,8 @@ function WorkSheet({
           key: 'studyUploadedAt',
           content: (
             <>
-              {studyDate && <span className="mr-4">{uploadDate}</span>}
-              {studyTime && <span>{uploadTime}</span>}
+              {uploadDate && <span className="mr-4">{uploadDate}</span>}
+              {uploadTime && <span>{uploadTime}</span>}
             </>
           ),
           title: `${uploadDate || ''} ${uploadTime || ''}`,
