@@ -257,8 +257,8 @@ function WorkSheet({
       uploadedAt
     } = study;
 
-    const [studyDate, studyTime] = getDateWithTimezone(date, time);
-    const [uploadDate, uploadTime] = getDateWithTimezone(uploadedAt);
+    const [studyDate, studyTime] = i18n.formatFullDateWithTimezone(date, time);
+    const [uploadDate, uploadTime] = i18n.formatFullDateWithTimezone(uploadedAt);
 
     const handleClickYes = async (e) => {
       e.preventDefault();

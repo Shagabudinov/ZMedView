@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Icon } from '@ohif/ui';
 import { utils } from '@ohif/core';
 import { useTranslation } from 'react-i18next';
+import i18n from '@ohif/i18n';
 import { PatientInfoVisibility } from '../../types';
 
-const { formatDateRu, formatPN } = utils;
+const { formatPN } = utils;
 
 const formatWithEllipsis = (str, maxLength) => {
   if (str?.length > maxLength) {
@@ -51,7 +52,7 @@ function usePatientInfo(servicesManager: AppTypes.ServicesManager) {
       PatientID: instance.PatientID || null,
       PatientName: instance.PatientName ? formatPN(instance.PatientName.Alphabetic) : null,
       PatientSex: instance.PatientSex || null,
-      PatientDOB: formatDateRu(instance.PatientBirthDate) || null,
+      PatientDOB: i18n.formatDate(instance.PatientBirthDate) || null,
     });
     checkMixedPatients(instance.PatientID || null);
   };

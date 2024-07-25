@@ -7,8 +7,9 @@ import {
   utils,
   errorHandler,
   classes,
-  Types,
 } from '@ohif/core';
+
+import * as Types from '../Types';
 
 import {
   mapParams,

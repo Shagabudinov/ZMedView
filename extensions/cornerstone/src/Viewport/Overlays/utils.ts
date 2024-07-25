@@ -1,4 +1,5 @@
 import moment from 'moment';
+import i18n from '@ohif/i18n';
 import { metaData } from '@cornerstonejs/core';
 
 /**
@@ -31,7 +32,7 @@ export function formatNumberPrecision(number, precision = 0) {
  * @param {string} strFormat
  * @returns {string} formatted date.
  */
-export function formatDICOMDate(date, strFormat = 'DD.MM.YYYY') {
+export function formatDICOMDate(date, strFormat = i18n.t('Common:localDateFormat', 'MMM D, YYYY')) {
   return moment(date, 'YYYYMMDD').format(strFormat);
 }
 

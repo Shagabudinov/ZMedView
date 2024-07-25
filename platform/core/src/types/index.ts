@@ -18,7 +18,6 @@ export type * from './StudyMetadata';
 export type * from './PanelModule';
 export type * from './IPubSub';
 export type * from './Color';
-export type * from './StudyList';
 
 /**
  * Export the types used within the various services and managers, but
