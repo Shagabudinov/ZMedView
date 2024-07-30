@@ -36,8 +36,12 @@ const ThumbnailList = ({
           messages,
           imageAltText,
           isHydratedForDerivedDisplaySet,
+          PhotometricInterpretation,
         }) => {
           const isActive = activeDisplaySetInstanceUIDs.includes(displaySetInstanceUID);
+          if (PhotometricInterpretation === 'RGB' && description === '') {
+            description = 'Study';
+          }
           switch (componentType) {
             case 'thumbnail':
               return (
@@ -117,6 +121,7 @@ ThumbnailList.propTypes = {
       description: PropTypes.string,
       componentType: Types.ThumbnailType.isRequired,
       isTracked: PropTypes.bool,
+      PhotometricInterpretation: PropTypes.string,
       /**
        * Data the thumbnail should expose to a receiving drop target. Use a matching
        * `dragData.type` to identify which targets can receive this draggable item.

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { ErrorBoundary } from '@ohif/ui';
+import { ErrorBoundary, Icon } from '@ohif/ui';
+import { useTranslation } from 'react-i18next';
 
 // Route Components
 import DataSourceWrapper from './DataSourceWrapper';
@@ -11,15 +12,31 @@ import NotFound from './NotFound';
 import buildModeRoutes from './buildModeRoutes';
 import PrivateRoute from './PrivateRoute';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 const NotFoundServer = ({
   message = 'Unable to query for studies at this time. Check your data source configuration or network connection',
+}: {
+  message?: string;
 }) => {
+  const { t } = useTranslation('Messages');
   return (
-    <div className="absolute flex h-full w-full items-center justify-center text-white">
-      <div>
-        <h4>{message}</h4>
+    <div className="absolute flex h-full w-full items-center justify-center">
+      <div
+        className="grid h-full w-full grid-cols-2"
+        style={{ 'grid-template-columns': '1fr 6fr' }}
+      >
+        <a
+          href={'/'}
+          className="bg-primary-dark hover:bg-primary-light flex h-full items-center rounded py-4 hover:opacity-30"
+        >
+          <Icon
+            name="arrow-right"
+            className="scale-x-[-1] transform"
+          ></Icon>
+        </a>
+        <div className="flex w-full items-center justify-center px-4 text-white">
+          <h4>{t(message)}</h4>
+        </div>
       </div>
     </div>
   );
@@ -29,20 +46,30 @@ NotFoundServer.propTypes = {
   message: PropTypes.string,
 };
 
-const NotFoundStudy = () => {
+const NotFoundStudy = ({
+  message = 'One or more of the requested studies are not available at this time.Return to the study list to select a different study to view.',
+}: {
+  message?: string;
+}) => {
+  const { t } = useTranslation('Messages');
   return (
-    <div className="absolute flex h-full w-full items-center justify-center text-white">
-      <div>
-        <h4>
-          One or more of the requested studies are not available at this time. Return to the{' '}
-          <Link
-            className="text-primary-light"
-            to={'/'}
-          >
-            study list
-          </Link>{' '}
-          to select a different study to view.
-        </h4>
+    <div className="absolute flex h-full w-full items-center justify-center">
+      <div
+        className="grid h-full w-full grid-cols-2"
+        style={{ 'grid-template-columns': '1fr 6fr' }}
+      >
+        <a
+          href={'/'}
+          className="bg-primary-dark hover:bg-primary-light flex h-full items-center rounded py-4 hover:opacity-30"
+        >
+          <Icon
+            name="arrow-right"
+            className="scale-x-[-1] transform"
+          ></Icon>
+        </a>
+        <div className="flex w-full items-center justify-center px-4 text-white">
+          <h4>{t(message)}</h4>
+        </div>
       </div>
     </div>
   );
@@ -149,7 +176,9 @@ const createRoutes = ({
             exact
             path={route.path}
             element={
-              <PrivateRoute handleUnauthenticated={() => userAuthenticationService.handleUnauthenticated()}>
+              <PrivateRoute
+                handleUnauthenticated={() => userAuthenticationService.handleUnauthenticated()}
+              >
                 <RouteWithErrorBoundary route={route} />
               </PrivateRoute>
             }

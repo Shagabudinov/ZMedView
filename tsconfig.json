@@ -26,7 +26,8 @@
     "extensions/**/src/**/*",
     "modes/**/src/**/*",
     "custom.d.ts",
-    "zmed-extensions/zmed-common/src/hooks/useToolbar.tsx"
+    "zmed-extensions/zmed-common/src/hooks/useToolbar.tsx",
+    "zmed-extensions/**/src/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }

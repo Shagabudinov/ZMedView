@@ -1,5 +1,6 @@
 {
   "Close": "Закрыть",
+  "Confirm the action": "Подтвердите действие",
   "Image": "Изображение",
   "Layout": "Разметка",
   "LOAD": "Загрузить",
@@ -8,6 +9,7 @@
   "Next": "Вперед",
   "No": "Нет",
   "NoStudyDate": "Нет даты исследования",
+  "localDateFormat": "DD.MM.YYYY",
   "Play": "Воспроизведение",
   "Previous": "Назад",
   "Reset": "Сброс",
@@ -15,6 +17,7 @@
   "Series": "Серия",
   "Show": "Показать",
   "Stop": "Стоп",
+  "Study": "Исследование",
   "StudyDate": "Дата исследования",
   "Study report ENG": "Отчет на английском",
   "Study report RU": "Отчет на русском",

@@ -44,6 +44,8 @@ function ViewerViewportGrid(props: withAppTypes) {
   ) => {
     const availableDisplaySets = displaySetService.getActiveDisplaySets();
 
+    availableDisplaySets.sort(appConfig?.sortDisplaySets?.getZmedDisplaySetSortFunction());
+
     if (!availableDisplaySets.length) {
       console.log('No available display sets', availableDisplaySets);
       return;

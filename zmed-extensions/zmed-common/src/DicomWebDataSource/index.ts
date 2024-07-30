@@ -1,5 +1,6 @@
+import { StudyList } from './../../../../platform/core/src/types/StudyList';
 import { api } from 'dicomweb-client';
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import {
   DicomMetadataStore,
   IWebApiDataSource,
@@ -7,6 +8,8 @@ import {
   errorHandler,
   classes,
 } from '@ohif/core';
+
+import * as Types from '../Types';
 
 import {
   mapParams,
@@ -52,7 +55,8 @@ const metadataProvider = classes.MetadataProvider;
  * @param {string|bool} singlepart - indicates of the retrieves can fetch singlepart.  Options are bulkdata, video, image or boolean true
  */
 function createDicomWebApi(dicomWebConfig, servicesManager) {
-  const { userAuthenticationService, customizationService } = servicesManager.services;
+  const { userAuthenticationService, customizationService } =
+    servicesManager.services;
   let dicomWebConfigCopy,
     qidoConfig,
     wadoConfig,
@@ -128,34 +132,36 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
     query: {
       studies: {
         mapParams: mapParams.bind(),
-        search: async function (origParams) {
+        search: async function (
+          origParams: Types.SearchParams
+        ): Promise<Types.SearchStudies> {
           const headers = getAuthrorizationHeader();
-
-          // headers['Content-Type'] = 'application/json';
-
-          var results = [];
-          let response = null;
-
           qidoDicomWebClient.headers = headers;
 
+          let results = [];
+          let response: AxiosResponse<Types.StudyListWithPaginationQuery>;
+          const date = new Map();
+
           if (origParams.me) {
-            var head = headers;
+            const head = headers;
             head['Content-Type'] = 'application/json';
             const params = {
-              page: origParams.pageNumber, 
-              size: origParams.resultsPerPage, 
+              page: origParams.pageNumber,
+              size: origParams.resultsPerPage,
             };
-            var config = {
+            const config: AxiosRequestConfig = {
               method: 'get',
-              url: dicomWebConfig.personalAccountUri + '/me/studies/',
+              url: dicomWebConfig.personalAccountUri + '/api/v2/study/',
               headers: head,
-              params
+              params,
             };
 
+            let studies: string[];
             response = await axios(config);
             if (response.status == 200) {
-              const studies = response.data.items.map(el => {
-                return el.study_id;
+              studies = response.data.items.map((el) => {
+                date.set(el.study_instance_uid, el.uploaded_at);
+                return el.study_instance_uid;
               });
               if (studies.length > 0) {
                 origParams.studyInstanceUid = studies;
@@ -165,7 +171,6 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
                     supportsFuzzyMatching: dicomWebConfig.supportsFuzzyMatching,
                     supportsWildcard: dicomWebConfig.supportsWildcard,
                   }) || {};
-                console.log(mappedParams);
                 results = await qidoSearch(
                   qidoDicomWebClient,
                   undefined,
@@ -187,15 +192,47 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
               undefined,
               mappedParams
             );
-            return processResults(results);
+            const currentStudy: Types.StudiesMetadata[] =
+              processResults(results);
+            return currentStudy;
           }
+          const finalStudies: Types.StudiesMetadata[] = processResults(results);
+
+          finalStudies.forEach((el) => {
+            el['uploadedAt'] = date.get(el['studyInstanceUid']);
+          });
 
           return {
-            studies: processResults(results),
+            studies: finalStudies,
             pages: response.data.pages,
             size: response.data.size,
             total: response.data.total,
           };
+        },
+        delete: async function (studyInstanceUid: string) {
+          const headers = getAuthrorizationHeader();
+
+          qidoDicomWebClient.headers = headers;
+
+          const head = {
+            ...headers,
+            'Content-Type': 'application/json',
+          };
+
+          const body = JSON.stringify([
+            {
+              study_instance_uid: studyInstanceUid,
+            },
+          ]);
+
+          let config: AxiosRequestConfig = {
+            method: 'delete',
+            url: dicomWebConfig.personalAccountUri + '/api/v2/study/',
+            headers: head,
+            data: body,
+          };
+
+          await axios(config);
         },
         processResults: processResults.bind(),
       },
@@ -237,7 +274,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
        * @returns an absolute URL to the resource, if the absolute URL can be retrieved as singlepart,
        *    or is already retrieved, or a promise to a URL for such use if a BulkDataURI
        */
-      directURL: params => {
+      directURL: (params) => {
         return getDirectURL(
           {
             wadoRoot: dicomWebConfig.wadoRoot,
@@ -253,7 +290,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
           BulkDataURI,
           StudyInstanceUID,
         };
-        return qidoDicomWebClient.retrieveBulkData(options).then(val => {
+        return qidoDicomWebClient.retrieveBulkData(options).then((val) => {
           const ret = (val && val[0]) || undefined;
           return ret;
         });
@@ -297,32 +334,25 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
 
     store: {
       dicom: async (dataset, request) => {
+        const blob = new Blob([dataset], { type: 'application/dicom' });
+        const formData = new FormData();
+        formData.append('files', blob, 'filename.dcm');
         wadoDicomWebClient.headers = getAuthrorizationHeader();
         if (dataset instanceof ArrayBuffer) {
           const options = {
             datasets: [dataset],
             request,
           };
-          return await wadoDicomWebClient.storeInstances(options)
-            .then(function (response) {
-              console.log("@@@@@@@@@@@@@ upload array to me");
-              console.log(typeof response);
-              console.log(response);
-              let dicomJSON = JSON.parse(response);
-              console.log(dicomJSON);
-              console.log(dicomJSON["00081199"]);
-              const headers = getAuthrorizationHeader();
-
-              let instanceUrl = dicomJSON["00081190"].Value[0]
-              let instanceUid = instanceUrl.substring(instanceUrl.lastIndexOf('/') + 1);
-
-              headers['Content-Type'] = 'application/json';
-              const json = JSON.stringify({
-                study_id: instanceUid,
-              });
+          return await wadoDicomWebClient
+            .storeInstances(options)
+            .then(function () {
+              const headers = {
+                ...getAuthrorizationHeader(),
+                'Content-Type': 'application/json',
+              };
               return axios.post(
-                dicomWebConfig.personalAccountUri + '/study/',
-                json,
+                dicomWebConfig.personalAccountUri + '/api/v2/study/',
+                formData,
                 { headers }
               );
             });
@@ -351,18 +381,20 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
 
           // await wadoDicomWebClient.storeInstances(options);
 
-          return wadoDicomWebClient.storeInstances(options)
+          return wadoDicomWebClient
+            .storeInstances(options)
             .then(function (response) {
-              console.log("@@@@@@@@@@@@@ upload to me");
+              console.log('@@@@@@@@@@@@@ upload to me');
               console.log(response);
               const headers = getAuthrorizationHeader();
 
               headers['Content-Type'] = 'application/json';
               const json = JSON.stringify({
-                study_id: studyInfo.data.MainDicomTags.StudyInstanceUID,
+                study_instance_uid:
+                  studyInfo.data.MainDicomTags.StudyInstanceUID,
               });
               return axios.post(
-                dicomWebConfig.personalAccountUri + '/study/',
+                dicomWebConfig.personalAccountUri + '/api/v2/study/',
                 json,
                 { headers }
               );
@@ -396,7 +428,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
       const seriesSummaryMetadata = {};
       const instancesPerSeries = {};
 
-      naturalizedInstancesMetadata.forEach(instance => {
+      naturalizedInstancesMetadata.forEach((instance) => {
         if (!seriesSummaryMetadata[instance.SeriesInstanceUID]) {
           seriesSummaryMetadata[instance.SeriesInstanceUID] = {
             StudyInstanceUID: instance.StudyInstanceUID,
@@ -434,7 +466,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
       const seriesMetadata = Object.values(seriesSummaryMetadata);
       DicomMetadataStore.addSeriesMetadata(seriesMetadata, madeInClient);
 
-      Object.keys(instancesPerSeries).forEach(seriesInstanceUID =>
+      Object.keys(instancesPerSeries).forEach((seriesInstanceUID) =>
         DicomMetadataStore.addInstances(
           instancesPerSeries[seriesInstanceUID],
           madeInClient
@@ -453,18 +485,16 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
       const enableStudyLazyLoad = true;
       wadoDicomWebClient.headers = generateWadoHeader();
       // Get Series
-      const {
-        preLoadData: seriesSummaryMetadata,
-        promises: seriesPromises,
-      } = await retrieveStudyMetadata(
-        wadoDicomWebClient,
-        StudyInstanceUID,
-        enableStudyLazyLoad,
-        filters,
-        sortCriteria,
-        sortFunction,
-        getMetadataFromServer
-      );
+      const { preLoadData: seriesSummaryMetadata, promises: seriesPromises } =
+        await retrieveStudyMetadata(
+          wadoDicomWebClient,
+          StudyInstanceUID,
+          enableStudyLazyLoad,
+          filters,
+          sortCriteria,
+          sortFunction,
+          getMetadataFromServer
+        );
 
       /**
        * naturalizes the dataset, and adds a retrieve bulkdata method
@@ -472,7 +502,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
        * @param {*} instance
        * @returns naturalized dataset, with retrieveBulkData methods
        */
-      const addRetrieveBulkData = instance => {
+      const addRetrieveBulkData = (instance) => {
         const naturalized = naturalizeDataset(instance);
 
         // if we konw the server doesn't use bulkDataURI, then don't
@@ -480,7 +510,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
           return naturalized;
         }
 
-        Object.keys(naturalized).forEach(key => {
+        Object.keys(naturalized).forEach((key) => {
           const value = naturalized[key];
 
           // The value.Value will be set with the bulkdata read value
@@ -504,17 +534,19 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
                 StudyInstanceUID: naturalized.StudyInstanceUID,
               };
               // Todo: this needs to be from wado dicom web client
-              return qidoDicomWebClient.retrieveBulkData(options).then(val => {
-                // There are DICOM PDF cases where the first ArrayBuffer in the array is
-                // the bulk data and DICOM video cases where the second ArrayBuffer is
-                // the bulk data. Here we play it safe and do a find.
-                const ret =
-                  (val instanceof Array &&
-                    val.find(arrayBuffer => arrayBuffer?.byteLength)) ||
-                  undefined;
-                value.Value = ret;
-                return ret;
-              });
+              return qidoDicomWebClient
+                .retrieveBulkData(options)
+                .then((val) => {
+                  // There are DICOM PDF cases where the first ArrayBuffer in the array is
+                  // the bulk data and DICOM video cases where the second ArrayBuffer is
+                  // the bulk data. Here we play it safe and do a find.
+                  const ret =
+                    (val instanceof Array &&
+                      val.find((arrayBuffer) => arrayBuffer?.byteLength)) ||
+                    undefined;
+                  value.Value = ret;
+                  return ret;
+                });
             };
           }
         });
@@ -562,14 +594,14 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
 
       // Google Cloud Healthcare doesn't return StudyInstanceUID, so we need to add
       // it manually here
-      seriesSummaryMetadata.forEach(aSeries => {
+      seriesSummaryMetadata.forEach((aSeries) => {
         aSeries.StudyInstanceUID = StudyInstanceUID;
       });
 
       DicomMetadataStore.addSeriesMetadata(seriesSummaryMetadata, madeInClient);
 
-      const seriesDeliveredPromises = seriesPromises.map(promise =>
-        promise.then(instances => {
+      const seriesDeliveredPromises = seriesPromises.map((promise) =>
+        promise.then((instances) => {
           storeInstances(instances);
         })
       );
@@ -585,7 +617,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
         return imageIds;
       }
 
-      displaySet.images.forEach(instance => {
+      displaySet.images.forEach((instance) => {
         const NumberOfFrames = instance.NumberOfFrames;
 
         if (NumberOfFrames > 1) {
