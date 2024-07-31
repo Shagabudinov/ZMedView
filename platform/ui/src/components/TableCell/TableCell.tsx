@@ -1,18 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 const TableCell = ({
   children,
-  className,
-  colSpan,
+  className = '',
+  colSpan = 1,
   // ignored because we don't want to expose this prop
   // eslint-disable-next-line react/prop-types
   cellsNum,
-  isTableHead,
-  align,
-  style,
+  isTableHead = false,
+  align = 'left',
+  style = {},
 }) => {
+  const { t } = useTranslation('StudyList');
   const classes = {
     align: {
       left: 'text-left',
@@ -37,17 +39,9 @@ const TableCell = ({
       )}
       style={style}
     >
-      {children}
+      {t(children)}
     </div>
   );
-};
-
-TableCell.defaultProps = {
-  align: 'left',
-  className: '',
-  colSpan: 1,
-  isTableHead: false,
-  style: {},
 };
 
 TableCell.propTypes = {

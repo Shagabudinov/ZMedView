@@ -15,15 +15,19 @@
     "paths": {
       "@ohif/core": ["platform/core/src"],
       "@ohif/ui": ["platform/ui/src"],
+      "@ohif/ui-next": ["platform/ui-next/src"],
       "@ohif/i18n": ["platform/i18n/src"],
       "@ohif/app": ["platform/app/src"]
     }
   },
   "include": [
     "platform/**/src/**/*",
+    "platform/**/public/**/*",
     "extensions/**/src/**/*",
     "modes/**/src/**/*",
-    "zmed-extensions/zmed-common/src/hooks/useToolbar.tsx"
+    "custom.d.ts",
+    "zmed-extensions/zmed-common/src/hooks/useToolbar.tsx",
+    "zmed-extensions/**/src/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }

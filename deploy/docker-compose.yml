@@ -13,13 +13,14 @@ services:
       context: ./../
       # Relative to context
       dockerfile: ./deploy/dockerfile
+      args:
+        - ZVIEWER_HOST=${ZVIEWER_HOST}
+        - ZVIEWER_APP_CONFIG=${ZVIEWER_APP_CONFIG}
     image: zmed_webapp:latest
     container_name: zmed_webapp
-    environment:
-      - REACT_APP_AIKEY=${AIKEY}
     volumes:
       # Nginx config
-      - ./config/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./config/${ZVIEWER_HOST}.nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
       # Logs
       - ./logs/nginx:/var/logs/nginx
       # Ssl Encrypt
@@ -56,10 +57,10 @@ services:
       # Theme: https://www.keycloak.org/docs/latest/server_development/index.html#_themes
       - ./volumes/keycloak-themes/ohif:/opt/jboss/keycloak/themes/ohif
       # Previous Realm Config
-      - ./config/ohif-keycloak-realm.json:/tmp/ohif-keycloak-realm.json
+      - ./config/${ZVIEWER_KEYCLOAK_CONFIG}:/tmp/ohif-keycloak-realm.json
       # ssl
-      - ./certs/app.zmed.z-union.ru/app.zmed.z-union.ru.crt:/etc/x509/https/tls.crt
-      - ./certs/app.zmed.z-union.ru/app.zmed.z-union.ru.key:/etc/x509/https/tls.key
+      - ./certs/${ZVIEWER_HOST}/${ZVIEWER_HOST}.crt:/etc/x509/https/tls.crt
+      - ./certs/${ZVIEWER_HOST}/${ZVIEWER_HOST}.key:/etc/x509/https/tls.key
     environment:
       # Database
       DB_VENDOR: postgres
@@ -77,7 +78,7 @@ services:
       # KEYCLOAK_DEFAULT_THEME: <theme-name>
       # KEYCLOAK_HOSTNAME: https://app.zmed.z-union.ru/
       # KEYCLOAK_LOGLEVEL: DEBUG
-      KC_HOSTNAME_URL: https://dev.app.zmed.z-union.ru/auth
+      KC_HOSTNAME_URL: https://${ZVIEWER_HOST}/auth
       PROXY_ADDRESS_FORWARDING: 'true'
     ports:
       - "18443:8443"

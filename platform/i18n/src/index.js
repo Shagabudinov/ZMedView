@@ -8,6 +8,7 @@ import customDebug from './debugger';
 import pkg from '../package.json';
 import { debugMode, detectionOptions } from './config';
 import { getLanguageLabel, getAvailableLanguagesInfo } from './utils.js';
+import { formatDate, formatFullDateWithTimezone } from './utilsZmed.js';
 
 // Note: The index.js files inside src/locales are dynamically generated
 // by the pullTranslations.sh script
@@ -148,5 +149,7 @@ i18n.currentLanguage = () => ({
   label: getLanguageLabel(i18n.language),
   value: i18n.language,
 });
+i18n.formatDate = formatDate;
+i18n.formatFullDateWithTimezone = formatFullDateWithTimezone;
 
 export default i18n;

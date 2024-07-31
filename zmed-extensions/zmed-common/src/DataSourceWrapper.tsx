@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ExtensionManager, MODULE_TYPES } from '@ohif/core';
+import { Types } from '@ohif/core';
 //
 // import { extensionManager } from '../App.tsx';
 import { useParams, useLocation } from 'react-router';
@@ -104,11 +105,11 @@ function DataSourceWrapper(props) {
   });
 
   const [data, setData] = useState(DEFAULT_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [pages, setPages] = useState(null);
-  const [size, setSize] = useState(null);
-  const [total, setTotal] = useState(null);
-  const cache = useRef(new Map());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [pages, setPages] = useState<number | null>(null);
+  const [size, setSize] = useState<number | null>(null);
+  const [totalStudies, setTotalStudies] = useState<number | null>(null);
+  const cache = useRef<Map<string, Types.StudyListWithPagination>>(new Map());
 
   /**
    * The effect to initialize the data source whenever it changes. Similar to
@@ -157,16 +158,16 @@ function DataSourceWrapper(props) {
     const getData = async () => {
       setIsLoading(true);
 
-      const updateState = ({ studies = [], pages, size, total }) => {
+      const updateState = ({ studies = [], pages, size, total }: Types.StudyListWithPagination) => {
         setPages(pages);
         setSize(size);
-        setTotal(total);
-        setData({ studies, total, ...queryFilterValues, location });
+        setTotalStudies(studies.length);
+        setData({ studies, total: studies.length, ...queryFilterValues, location });
       };
-    
+
       if (data.location === 'Not a valid location, causes first load to occur') cache.current.clear();
       const queryKey = JSON.stringify(queryFilterValues);
-    
+
       if (cache.current.has(queryKey)) { //Данные из кэша
         const cachedData = cache.current.get(queryKey);
         updateState(cachedData);
@@ -175,7 +176,7 @@ function DataSourceWrapper(props) {
         cache.current.set(queryKey, data);
         updateState(data);
       }
-    
+
       setIsLoading(false);
     };
 

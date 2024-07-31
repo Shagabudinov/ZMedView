@@ -1,5 +1,7 @@
 {
   "Display Set Messages": "Display Set Messages",
+  "One or more of the requested studies are not available at this time.Return to the study list to select a different study to view.": "One or more of the requested studies are not available at this time.Return to the study list to select a different study to view.",
+  "Unable to query for studies at this time. Check your data source configuration or network connection": "Unable to query for studies at this time. Check your data source configuration or network connection",
   "1": "No valid instances found in series.",
   "2": "Display set has missing position information.",
   "3": "Display set is not a reconstructable 3D volume.",

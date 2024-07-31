@@ -10,9 +10,10 @@ import { useTranslation } from 'react-i18next';
 import filtersMeta from './filtersMeta.js';
 import { useAppConfig } from '@state';
 import { useDebounce, useSearchParams } from '@hooks';
-import { utils, hotkeys, ServicesManager } from '@ohif/core';
+import { utils, hotkeys, ServicesManager, Types as CoreTypes } from '@ohif/core';
 
 import {
+  ConfirmContent,
   Icon,
   StudyListExpandedRow,
   LegacyButton,
@@ -34,7 +35,7 @@ import i18n from '@ohif/i18n';
 
 import { Types } from '@ohif/ui';
 
-const { sortBySeriesDate } = utils;
+const { sortBySeriesDate, getDateWithTimezone } = utils;
 
 const { availableLanguages, defaultLanguage, currentLanguage } = i18n;
 
@@ -59,6 +60,7 @@ function WorkSheet({
   servicesManager,
 }) {
   const { hotkeyDefinitions, hotkeyDefaults } = hotkeysManager;
+  const { uiNotificationService, uiModalService } = servicesManager.services;
   const { show, hide } = useModal();
   const { t } = useTranslation('StudyList');
   // ~ Modes
@@ -97,8 +99,7 @@ function WorkSheet({
     shouldUseDefaultSort && canSort
       ? { sortBy: 'studyDate', sortDirection: 'ascending' }
       : {};
-  const sortedStudies = studies;
-
+  const sortedStudies: CoreTypes.StudiesMetadata[] = studies;
   if (canSort) {
     studies.sort((s1, s2) => {
       if (shouldUseDefaultSort) {
@@ -253,15 +254,23 @@ function WorkSheet({
       patientName,
       date,
       time,
+      uploadedAt
     } = study;
-    const studyDate =
-      date &&
-      moment(date, ['YYYYMMDD', 'YYYY.MM.DD'], true).isValid() &&
-      moment(date, ['YYYYMMDD', 'YYYY.MM.DD']).format('MMM-DD-YYYY');
-    const studyTime =
-      time &&
-      moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).isValid() &&
-      moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).format('hh:mm A');
+
+    const [studyDate, studyTime] = i18n.formatFullDateWithTimezone(date, time);
+    const [uploadDate, uploadTime] = i18n.formatFullDateWithTimezone(uploadedAt);
+
+    const handleClickYes = async (e) => {
+      e.preventDefault();
+      await dataSource.query.studies.delete(studyInstanceUid);
+      onRefresh();
+      uiModalService.hide();
+    }
+
+    const handleClickNo = async (e) => {
+      e.preventDefault();
+      uiModalService.hide();
+    }
 
     return {
       row: [
@@ -277,7 +286,18 @@ function WorkSheet({
         {
           key: 'mrn',
           content: <TooltipClipboard>{mrn}</TooltipClipboard>,
-          gridCol: 3,
+          gridCol: 2,
+        },
+        {
+          key: 'studyUploadedAt',
+          content: (
+            <>
+              {uploadDate && <span className="mr-4">{uploadDate}</span>}
+              {uploadTime && <span>{uploadTime}</span>}
+            </>
+          ),
+          title: `${uploadDate || ''} ${uploadTime || ''}`,
+          gridCol: 5,
         },
         {
           key: 'studyDate',
@@ -289,11 +309,6 @@ function WorkSheet({
           ),
           title: `${studyDate || ''} ${studyTime || ''}`,
           gridCol: 5,
-        },
-        {
-          key: 'description',
-          content: <TooltipClipboard>{description}</TooltipClipboard>,
-          gridCol: 4,
         },
         {
           key: 'modality',
@@ -403,11 +418,53 @@ function WorkSheet({
           </div>
         </StudyListExpandedRow>
       ),
-      onClickRow: () =>
-        setExpandedRows(s =>
-          isExpanded ? s.filter(n => rowKey !== n) : [...s, rowKey]
-        ),
+      onClickRow: () => {
+        // Переход на исследование сразу при нажатии на него
+        const basicViewerMode = appConfig.loadedModes.find(obj => obj.routeName === 'viewer')
+
+        const modalitiesToCheck = modalities.replaceAll('/', '\\');
+
+        const isValidModeCheck = basicViewerMode.isValidMode({
+          modalities: modalitiesToCheck,
+          study,
+        });
+
+        const isValidMode = isValidModeCheck === !! isValidModeCheck;
+
+        if (!isValidMode) {
+          uiNotificationService.show({
+            title: t('Invalid mode'),
+            message: t('Cannot open the study in basic Viewer'),
+            type: 'error',
+          });
+          return;
+        }
+
+        isValidMode && navigate(
+          `/${basicViewerMode.routeName}?StudyInstanceUIDs=${studyInstanceUid}`
+        )},
+
+        // Открытие окна с выбором мода (пока мод 1, можно отключить)
+        // setExpandedRows(s =>
+        //   isExpanded ? s.filter(n => rowKey !== n) : [...s, rowKey]
+        // ),
       isExpanded,
+      onClickDelete: (e) => {
+        e.stopPropagation();
+        uiModalService.show({
+          title: t('Delete study'),
+          containerDimensions: 'w-80',
+          content: () => {
+            return (
+                <ConfirmContent
+                  labelContent={t('Are you sure you wish to delete this study?')}
+                  handleClickYes={handleClickYes}
+                  handleClickNo={handleClickNo}
+                />
+            );
+          }
+        });
+      }
     };
   });
 

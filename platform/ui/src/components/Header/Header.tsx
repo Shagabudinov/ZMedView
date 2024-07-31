@@ -9,19 +9,21 @@ import Icon from '../Icon';
 import IconButton from '../IconButton';
 import Dropdown from '../Dropdown';
 import HeaderPatientInfo from '../HeaderPatientInfo';
+import Button from '../Button';
 import { PatientInfoVisibility } from '../../types/PatientInfoVisibility';
 
 function Header({
   children,
   menuOptions,
-  isReturnEnabled,
+  isReturnEnabled = true,
   onClickReturnButton,
-  isSticky,
+  isSticky = false,
   WhiteLabeling,
   showPatientInfo = PatientInfoVisibility.VISIBLE_COLLAPSED,
   servicesManager,
   Secondary,
   appConfig,
+  onClickDelete,
   ...props
 }: withAppTypes): ReactNode {
   const { t } = useTranslation('Header');
@@ -66,10 +68,20 @@ function Header({
         </div>
         <div className="absolute right-0 top-1/2 flex -translate-y-1/2 select-none items-center">
           {showPatientInfo !== PatientInfoVisibility.DISABLED && (
-            <HeaderPatientInfo
-              servicesManager={servicesManager}
-              appConfig={appConfig}
-            />
+            <>
+              <HeaderPatientInfo
+                servicesManager={servicesManager}
+                appConfig={appConfig}
+              />
+              <div className="border-primary-dark mx-1.5 h-[25px] border-r"></div>
+              <Button
+                size="small"
+                className="bg-red-600 hover:bg-red-500"
+                onClick={e => {onClickDelete(e)}}
+              >
+                {t('Delete')}
+              </Button>
+            </>
           )}
           <div className="border-primary-dark mx-1.5 h-[25px] border-r"></div>
           <div className="flex-shrink-0">
@@ -111,11 +123,6 @@ Header.propTypes = {
   WhiteLabeling: PropTypes.object,
   showPatientInfo: PropTypes.string,
   servicesManager: PropTypes.object,
-};
-
-Header.defaultProps = {
-  isReturnEnabled: true,
-  isSticky: false,
 };
 
 export default Header;

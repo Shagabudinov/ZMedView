@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { LayoutSelector as OHIFLayoutSelector, ToolbarButton, LayoutPreset } from '@ohif/ui';
+import { useTranslation } from 'react-i18next';
 
 const defaultCommonPresets = [
   {
@@ -124,8 +125,9 @@ function ToolbarLayoutSelectorWithServices({
 }
 
 function LayoutSelector({
-  rows,
-  columns,
+  rows = 3,
+  columns = 4,
+  onLayoutChange = () => {},
   className,
   onSelection,
   onSelectionPreset,
@@ -133,23 +135,32 @@ function LayoutSelector({
   tooltipDisabled,
   ...rest
 }: withAppTypes) {
+  const { t } = useTranslation("ToolbarLayoutSelector")
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const { customizationService } = servicesManager.services;
   const commonPresets = customizationService.get('commonPresets') || defaultCommonPresets;
   const advancedPresets =
     customizationService.get('advancedPresets') || generateAdvancedPresets({ servicesManager });
 
-  const closeOnOutsideClick = () => {
-    if (isOpen) {
+  const closeOnOutsideClick = event => {
+    if (isOpen && dropdownRef.current) {
       setIsOpen(false);
     }
   };
 
   useEffect(() => {
-    window.addEventListener('click', closeOnOutsideClick);
+    if (!isOpen) {
+      return;
+    }
+
+    setTimeout(() => {
+      window.addEventListener('click', closeOnOutsideClick);
+    }, 0);
     return () => {
       window.removeEventListener('click', closeOnOutsideClick);
+      dropdownRef.current = null;
     };
   }, [isOpen]);
 
@@ -169,9 +180,12 @@ function LayoutSelector({
       disableToolTip={tooltipDisabled}
       dropdownContent={
         DropdownContent !== null && (
-          <div className="flex ">
+          <div
+            className="flex"
+            ref={dropdownRef}
+          >
             <div className="bg-secondary-dark flex flex-col gap-2.5 p-2">
-              <div className="text-aqua-pale text-xs">Common</div>
+              <div className="text-aqua-pale text-xs">{t("Common")}</div>
 
               <div className="flex gap-4">
                 {commonPresets.map((preset, index) => (
@@ -187,7 +201,7 @@ function LayoutSelector({
 
               <div className="h-[2px] bg-black"></div>
 
-              <div className="text-aqua-pale text-xs">Advanced</div>
+              <div className="text-aqua-pale text-xs">{t("Advanced")}</div>
 
               <div className="flex flex-col gap-2.5">
                 {advancedPresets.map((preset, index) => (
@@ -205,14 +219,14 @@ function LayoutSelector({
             </div>
 
             <div className="bg-primary-dark flex flex-col gap-2.5 border-l-2 border-solid border-black  p-2">
-              <div className="text-aqua-pale text-xs">Custom</div>
+              <div className="text-aqua-pale text-xs">{t("Custom")}</div>
               <DropdownContent
                 rows={rows}
                 columns={columns}
                 onSelection={onSelection}
               />
               <p className="text-aqua-pale text-xs leading-tight">
-                Hover to select <br></br>rows and columns <br></br> Click to apply
+                {t("Hover to select")} <br></br>{t("rows and columns")} <br></br> {t("Click to apply")}
               </p>
             </div>
           </div>
@@ -229,12 +243,6 @@ LayoutSelector.propTypes = {
   columns: PropTypes.number,
   onLayoutChange: PropTypes.func,
   servicesManager: PropTypes.object.isRequired,
-};
-
-LayoutSelector.defaultProps = {
-  columns: 4,
-  rows: 3,
-  onLayoutChange: () => {},
 };
 
 export default ToolbarLayoutSelectorWithServices;
