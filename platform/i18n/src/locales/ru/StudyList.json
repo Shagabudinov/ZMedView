@@ -3,7 +3,7 @@
   "AccessionNumber": "Номер выборки",
   "Are you sure you wish to delete this study?": "Вы действительно хотите удалить это исследование?",
   "Basic Viewer": "Базовый Viewer",
-  "Cannot open the study in basic Viewer": "Невозможно открыть исследование в basic Viewer",
+  "Cannot open the study in any Viewer": "Невозможно открыть исследование ни в одном из доступных режимов Вьювера",
   "ClearFilters": "Очистить фильтры",
   "Delete study": "Удаление Исследования",
   "Description": "Описание",

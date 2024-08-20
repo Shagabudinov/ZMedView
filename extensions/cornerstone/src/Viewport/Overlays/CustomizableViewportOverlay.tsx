@@ -261,6 +261,32 @@ function CustomizableViewportOverlay({
         .flat()
     : [];
 
+  const ViewPosition = {
+    id: 'ViewPosition',
+    customizationType: 'ohif.overlayItem',
+    label: '',
+    title: 'View Position',
+    condition: ({ instance }) => instance && instance.ImageLaterality && instance.ViewPosition,
+    contentF: ({ instance }) => (
+      <p className="text-xl font-semibold">
+        {instance.ImageLaterality + '-' + instance.ViewPosition}
+      </p>
+    ),
+  };
+
+  const bottomLeftItems = instances
+    ? instances
+        .map((instance, index) => {
+          return [
+            {
+              ...ViewPosition,
+              instanceIndex: index,
+            },
+          ];
+        })
+        .flat()
+    : [];
+
   return (
     <ViewportOverlay
       topLeft={
@@ -273,6 +299,7 @@ function CustomizableViewportOverlay({
       bottomLeft={getContent(
         bottomLeftCustomization,
         [
+          ...bottomLeftItems,
           {
             id: 'WindowLevel',
             customizationType: 'ohif.overlayItem.windowLevel',

@@ -420,29 +420,30 @@ function WorkSheet({
       ),
       onClickRow: () => {
         // Переход на исследование сразу при нажатии на него
-        const basicViewerMode = appConfig.loadedModes.find(obj => obj.routeName === 'viewer')
+
+        // В массиве моды в режиме их приоритета
+        const modes = [
+          appConfig.loadedModes.find((obj) => obj.routeName === 'viewer-mg'),
+          appConfig.loadedModes.find((obj) => obj.routeName === 'viewer'),
+        ];
 
         const modalitiesToCheck = modalities.replaceAll('/', '\\');
 
-        const isValidModeCheck = basicViewerMode.isValidMode({
-          modalities: modalitiesToCheck,
-          study,
-        });
+        const isValidMode = (mode) =>
+          mode?.isValidMode({ modalities: modalitiesToCheck, study }) || false;
 
-        const isValidMode = isValidModeCheck === !! isValidModeCheck;
+        const validMode = modes.find(isValidMode);
 
-        if (!isValidMode) {
+        if (validMode) {
+          navigate(`/${validMode.routeName}?StudyInstanceUIDs=${studyInstanceUid}`);
+        } else {
           uiNotificationService.show({
             title: t('Invalid mode'),
-            message: t('Cannot open the study in basic Viewer'),
+            message: t('Cannot open the study in any Viewer'),
             type: 'error',
           });
-          return;
         }
-
-        isValidMode && navigate(
-          `/${basicViewerMode.routeName}?StudyInstanceUIDs=${studyInstanceUid}`
-        )},
+      },
 
         // Открытие окна с выбором мода (пока мод 1, можно отключить)
         // setExpandedRows(s =>

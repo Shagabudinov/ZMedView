@@ -45,6 +45,43 @@ const _areSelectorsValid = (hp, displaySets, hangingProtocolService) => {
   );
 };
 
+const generatePresetsByProtocolStages = ({ servicesManager }: withAppTypes) => {
+  const { hangingProtocolService, viewportGridService } =
+    servicesManager.services;
+
+  const stages = hangingProtocolService?.protocol?.stages;
+  const currentProtocolId = hangingProtocolService?.protocol?.id;
+
+  if (stages?.length === 0 || stages?.length === 1) {
+    return [];
+  }
+
+  const viewportId = viewportGridService.getActiveViewportId();
+
+  if (!viewportId) {
+    return [];
+  }
+  const displaySetInsaneUIDs =
+    viewportGridService.getDisplaySetsUIDsForViewport(viewportId);
+
+  if (!displaySetInsaneUIDs) {
+    return [];
+  }
+
+  return stages
+    .map((hp, hpIndex) => {
+      const areValid = hp.availableHps.includes(currentProtocolId);
+
+      return {
+        icon: hp.icon,
+        title: hp.name,
+        commandOptions: { protocolId: currentProtocolId, stageIndex: hpIndex },
+        disabled: !areValid,
+      };
+    })
+    .filter((preset) => preset !== null);
+};
+
 const generateAdvancedPresets = ({ servicesManager }: withAppTypes) => {
   const { hangingProtocolService, viewportGridService, displaySetService } =
     servicesManager.services;
@@ -143,6 +180,9 @@ function LayoutSelector({
   const commonPresets = customizationService.get('commonPresets') || defaultCommonPresets;
   const advancedPresets =
     customizationService.get('advancedPresets') || generateAdvancedPresets({ servicesManager });
+  const presetsByProtocolStages = generatePresetsByProtocolStages({
+    servicesManager,
+  });
 
   const closeOnOutsideClick = event => {
     if (isOpen && dropdownRef.current) {
@@ -168,6 +208,14 @@ function LayoutSelector({
     setIsOpen(!isOpen);
   };
   const DropdownContent = isOpen ? OHIFLayoutSelector : null;
+
+  const showAdvancedPresets = !!advancedPresets.filter(
+    (preset) => !preset.disabled
+  ).length;
+
+  const showPresetsByProtocolStages = presetsByProtocolStages
+    ? !!presetsByProtocolStages.filter((preset) => !preset.disabled).length
+    : false;
 
   return (
     <ToolbarButton
@@ -199,23 +247,51 @@ function LayoutSelector({
                 ))}
               </div>
 
-              <div className="h-[2px] bg-black"></div>
+              {showAdvancedPresets && (
+                <>
+                  <div className="h-[2px] bg-black"></div>
 
               <div className="text-aqua-pale text-xs">{t("Advanced")}</div>
 
-              <div className="flex flex-col gap-2.5">
-                {advancedPresets.map((preset, index) => (
-                  <LayoutPreset
-                    key={index + commonPresets.length}
-                    classNames="hover:bg-primary-dark group flex gap-2 p-1 cursor-pointer"
-                    icon={preset.icon}
-                    title={preset.title}
-                    disabled={preset.disabled}
-                    commandOptions={preset.commandOptions}
-                    onSelection={onSelectionPreset}
-                  />
-                ))}
-              </div>
+                  <div className="flex flex-col gap-2.5">
+                    {advancedPresets.map((preset, index) => (
+                      <LayoutPreset
+                        key={index + commonPresets.length}
+                        classNames="hover:bg-primary-dark group flex gap-2 p-1 cursor-pointer"
+                        icon={preset.icon}
+                        title={preset.title}
+                        disabled={preset.disabled}
+                        commandOptions={preset.commandOptions}
+                        onSelection={onSelectionPreset}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {showPresetsByProtocolStages && (
+                <>
+                  <div className="h-[2px] bg-black"></div>
+
+                  <div className="text-aqua-pale text-xs">
+                    {t('Presets')}
+                  </div>
+
+                  <div className="flex flex-col gap-2.5">
+                    {presetsByProtocolStages.map((preset, index) => (
+                      <LayoutPreset
+                        key={index}
+                        classNames="hover:bg-primary-dark group flex gap-2 p-1 cursor-pointer"
+                        icon={preset.icon}
+                        title={preset.title}
+                        disabled={preset.disabled}
+                        commandOptions={preset.commandOptions}
+                        onSelection={onSelectionPreset}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="bg-primary-dark flex flex-col gap-2.5 border-l-2 border-solid border-black  p-2">

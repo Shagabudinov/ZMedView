@@ -1,4 +1,5 @@
 import { ServicesManager, utils, Types } from '@ohif/core';
+import reuseCachedLayouts from './utils/reuseCachedLayouts';
 
 // import {
   // ContextMenuController,
@@ -98,10 +99,48 @@ const commandsModule = ({
         title: 'ZMed Analyzer',
       });
     },
+    changeStageByIndex: ({ protocolId, stageId, stageIndex, reset = false }) => {
+      const state = viewportGridService.getState();
+
+      const stateSyncReduce = reuseCachedLayouts(
+        state,
+        hangingProtocolService,
+        stateSyncService
+      );
+      const {
+        hangingProtocolStageIndexMap,
+        viewportGridStore,
+        displaySetSelectorMap,
+      } = stateSyncReduce;
+
+      const useStageIdx =
+        stageIndex ??
+        hangingProtocolService.getStageIndex(protocolId, {
+          stageId,
+          stageIndex,
+        });
+
+      const storedHanging = `${hangingProtocolService.getState().activeStudyUID}:${protocolId}:${
+        useStageIdx || 0
+      }`;
+
+      const restoreProtocol = !reset && viewportGridStore[storedHanging];
+
+      hangingProtocolService.setProtocol(protocolId, {
+        displaySetSelectorMap,
+        stageId,
+        stageIndex,
+        restoreProtocol,
+      });
+    },
   };
+
   const definitions = {
     openGPTAnalyzer: {
       commandFn: actions.openGPTAnalyzer,
+    },
+    changeStageByIndex: {
+      commandFn: actions.changeStageByIndex,
     },
   };
 

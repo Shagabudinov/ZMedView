@@ -116,7 +116,7 @@ window.config = {
       // Authorization Server URL
       authority: 'https://dev-zview.z-union.ru/auth/realms/ohif',
       client_id: 'ohif-viewer',
-      redirect_uri: 'https://dev-zview.z-union.ru/callback', // `OHIFStandaloneViewer.js`
+      redirect_uri: 'http://localhost:3000/callback', // `OHIFStandaloneViewer.js`
       // "Authorization Code Flow"
       // Resource: https://medium.com/@darutk/diagrams-of-all-the-openid-connect-flows-6968e3990660
       response_type: 'code',
@@ -144,7 +144,7 @@ window.config = {
     },
   },
   sortDisplaySets: {
-    getZmedDisplaySetSortFunction: function () {
+    getZmedDisplaySetSortFunction: function (protocol) {
       return (a, b) => {
         const aModality = a.Modality;
         const bModality = b.Modality;
@@ -153,123 +153,126 @@ window.config = {
         const bDate = b.SeriesDate !== undefined ? Number(b.SeriesDate) : -Infinity;
         const bTime = b.SeriesTime !== undefined ? Number(b.SeriesTime) : -Infinity;
 
-        // 1. Сортировка по модальности: 'OT' и 'SR' в конец
-        if (aModality !== 'OT' && aModality !== 'SR') {
-          return -1;
-        } else if (bModality !== 'OT' && bModality !== 'SR') {
-          return 1;
-        }
+        switch (protocol.id) {
+          case 'default': {
+            // 1. Сортировка по модальности: 'OT' и 'SR' в конец
+            if (aModality !== 'OT' && aModality !== 'SR') {
+              return -1;
+            } else if (bModality !== 'OT' && bModality !== 'SR') {
+              return 1;
+            }
 
-        // 2. Сортировка по дате
-        if (aDate < bDate) {
-          return 1;
-        } else if (aDate > bDate) {
-          return -1;
-        }
+            // 2. Сортировка по дате
+            if (aDate < bDate) {
+              return 1;
+            } else if (aDate > bDate) {
+              return -1;
+            }
 
-        // 3. Сортировка по времени
-        if (aTime < bTime) {
-          return 1;
-        } else if (aTime > bTime) {
-          return -1;
-        }
+            // 3. Сортировка по времени
+            if (aTime < bTime) {
+              return 1;
+            } else if (aTime > bTime) {
+              return -1;
+            }
 
-        // 4. Сортировка по описанию
-        return b.SeriesDescription.localeCompare(a.SeriesDescription);
+            // 4. Сортировка по описанию
+            return b.SeriesDescription.localeCompare(a.SeriesDescription);
+          }
+          case '@zmed/mammo': {
+            const order = {
+              'R-MLO': 0,
+              'L-MLO': 1,
+              'R-CC': 2,
+              'L-CC': 3,
+            };
+
+            const aImageLaterality = a.instance.ImageLaterality;
+            const bImageLaterality = b.instance.ImageLaterality;
+            const aViewPosition = a.instance.ViewPosition;
+            const bViewPosition = b.instance.ViewPosition;
+
+            const normalizeViewPosition = viewPosition =>
+              viewPosition === 'ML' ? 'MLO' : viewPosition;
+
+            const aKey = `${aImageLaterality}-${normalizeViewPosition(aViewPosition)}`;
+            const bKey = `${bImageLaterality}-${normalizeViewPosition(bViewPosition)}`;
+
+            const sortValue =
+              order[aKey] - order[bKey] >= 1 ? 1 : order[aKey] - order[bKey] <= -1 ? -1 : 0;
+
+            return sortValue;
+          }
+          default: {
+            return 0;
+          }
+        }
       };
     },
   },
   hotkeys: [
     {
-      commandName: 'incrementActiveViewport',
-      label: 'Next Viewport',
-      keys: ['right'],
-    },
-    {
-      commandName: 'decrementActiveViewport',
-      label: 'Previous Viewport',
-      keys: ['left'],
-    },
-    { commandName: 'rotateViewportCW', label: 'Rotate Right', keys: ['r'] },
-    { commandName: 'rotateViewportCCW', label: 'Rotate Left', keys: ['l'] },
-    { commandName: 'invertViewport', label: 'Invert', keys: ['i'] },
-    {
-      commandName: 'flipViewportHorizontal',
-      label: 'Flip Horizontally',
-      keys: ['h'],
-    },
-    {
-      commandName: 'flipViewportVertical',
-      label: 'Flip Vertically',
-      keys: ['v'],
-    },
-    { commandName: 'scaleUpViewport', label: 'Zoom In', keys: ['+'] },
-    { commandName: 'scaleDownViewport', label: 'Zoom Out', keys: ['-'] },
-    { commandName: 'fitViewportToWindow', label: 'Zoom to Fit', keys: ['='] },
-    { commandName: 'resetViewport', label: 'Reset', keys: ['space'] },
-    { commandName: 'nextImage', label: 'Next Image', keys: ['down'] },
-    { commandName: 'previousImage', label: 'Previous Image', keys: ['up'] },
-    // {
-    //   commandName: 'previousViewportDisplaySet',
-    //   label: 'Previous Series',
-    //   keys: ['pagedown'],
-    // },
-    // {
-    //   commandName: 'nextViewportDisplaySet',
-    //   label: 'Next Series',
-    //   keys: ['pageup'],
-    // },
-    {
-      commandName: 'setToolActive',
-      commandOptions: { toolName: 'Zoom' },
-      label: 'Zoom',
-      keys: ['z'],
-    },
-    // ~ Window level presets
-    {
-      commandName: 'windowLevelPreset1',
-      label: 'W/L Preset 1',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 0 },
+      label: 'MLO/CC',
       keys: ['1'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset2',
-      label: 'W/L Preset 2',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 1 },
+      label: 'RMLO/RCC',
       keys: ['2'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset3',
-      label: 'W/L Preset 3',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 2 },
+      label: 'LMLO/LCC',
       keys: ['3'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset4',
-      label: 'W/L Preset 4',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 3 },
+      label: 'MLO',
       keys: ['4'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset5',
-      label: 'W/L Preset 5',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 4 },
+      label: 'CC',
       keys: ['5'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset6',
-      label: 'W/L Preset 6',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 5 },
+      label: 'RMLO',
       keys: ['6'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset7',
-      label: 'W/L Preset 7',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 6 },
+      label: 'RCC',
       keys: ['7'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset8',
-      label: 'W/L Preset 8',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 7 },
+      label: 'LMLO',
       keys: ['8'],
+      isEditable: true,
     },
     {
-      commandName: 'windowLevelPreset9',
-      label: 'W/L Preset 9',
+      commandName: 'changeStageByIndex',
+      commandOptions: { protocolId: '@zmed/mammo', stageIndex: 8 },
+      label: 'LCC',
       keys: ['9'],
+      isEditable: true,
     },
   ],
 };

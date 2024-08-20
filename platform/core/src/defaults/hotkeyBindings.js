@@ -143,36 +143,36 @@ const bindings = [
     label: 'Cancel Cornerstone Measurement',
     keys: ['esc'],
   },
-  {
-    commandName: 'setWindowLevel',
-    commandOptions: windowLevelPresets[1],
-    label: 'W/L Preset 1',
-    keys: ['1'],
-  },
-  {
-    commandName: 'setWindowLevel',
-    commandOptions: windowLevelPresets[2],
-    label: 'W/L Preset 2',
-    keys: ['2'],
-  },
-  {
-    commandName: 'setWindowLevel',
-    commandOptions: windowLevelPresets[3],
-    label: 'W/L Preset 3',
-    keys: ['3'],
-  },
-  {
-    commandName: 'setWindowLevel',
-    commandOptions: windowLevelPresets[4],
-    label: 'W/L Preset 4',
-    keys: ['4'],
-  },
-  {
-    commandName: 'setWindowLevel',
-    commandOptions: windowLevelPresets[5],
-    label: 'W/L Preset 5',
-    keys: ['5'],
-  },
+  // {
+  //   commandName: 'setWindowLevel',
+  //   commandOptions: windowLevelPresets[1],
+  //   label: 'W/L Preset 1',
+  //   keys: ['1'],
+  // },
+  // {
+  //   commandName: 'setWindowLevel',
+  //   commandOptions: windowLevelPresets[2],
+  //   label: 'W/L Preset 2',
+  //   keys: ['2'],
+  // },
+  // {
+  //   commandName: 'setWindowLevel',
+  //   commandOptions: windowLevelPresets[3],
+  //   label: 'W/L Preset 3',
+  //   keys: ['3'],
+  // },
+  // {
+  //   commandName: 'setWindowLevel',
+  //   commandOptions: windowLevelPresets[4],
+  //   label: 'W/L Preset 4',
+  //   keys: ['4'],
+  // },
+  // {
+  //   commandName: 'setWindowLevel',
+  //   commandOptions: windowLevelPresets[5],
+  //   label: 'W/L Preset 5',
+  //   keys: ['5'],
+  // },
   // These don't exist, so don't try applying them....
   // {
   //   commandName: 'setWindowLevel',
