@@ -116,7 +116,7 @@ window.config = {
       // Authorization Server URL
       authority: 'https://dev-zview.z-union.ru/auth/realms/ohif',
       client_id: 'ohif-viewer',
-      redirect_uri: 'http://localhost:3000/callback', // `OHIFStandaloneViewer.js`
+      redirect_uri: 'https://dev-zview.z-union.ru/callback', // `OHIFStandaloneViewer.js`
       // "Authorization Code Flow"
       // Resource: https://medium.com/@darutk/diagrams-of-all-the-openid-connect-flows-6968e3990660
       response_type: 'code',
