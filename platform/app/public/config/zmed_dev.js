@@ -42,9 +42,9 @@ window.config = {
       configuration: {
         friendlyName: 'Orthanc Server',
         name: 'Orthanc',
-        wadoUriRoot: 'https://dev-zview.z-union.ru/pacs/wado',
-        qidoRoot: 'https://dev-zview.z-union.ru/pacs/dicom-web',
-        wadoRoot: 'https://dev-zview.z-union.ru/pacs/dicom-web',
+        wadoUriRoot: 'https://atlas.z-union.ru/pacs/wado',
+        qidoRoot: 'https://atlas.z-union.ru/pacs/dicom-web',
+        wadoRoot: 'https://atlas.z-union.ru/pacs/dicom-web',
         qidoSupportsIncludeField: false,
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',
@@ -102,21 +102,21 @@ window.config = {
     console.warn(error.status);
 
     // Could use services manager here to bring up a dialog/modal if needed.
-    console.warn('test, navigate to https://dev-zview.z-union.ru/');
+    console.warn('test, navigate to https://atlas.z-union.ru/');
   },
   zmedtools: {
-    covidURL: 'https://dev-zview.z-union.ru/zmedtools/',
-    mammoURL: 'https://dev-zview.z-union.ru/zmedtools/',
-    innpolisURL: 'https://dev-zview.z-union.ru/zmedtools/',
+    covidURL: 'https://atlas.z-union.ru/zmedtools/',
+    mammoURL: 'https://atlas.z-union.ru/zmedtools/',
+    innpolisURL: 'https://atlas.z-union.ru/zmedtools/',
   },
   // This is an array, but we'll only use the first entry for now
   oidc: [
     {
       // ~ REQUIRED
       // Authorization Server URL
-      authority: 'https://dev-zview.z-union.ru/auth/realms/ohif',
+      authority: 'https://atlas.z-union.ru/auth/realms/ohif',
       client_id: 'ohif-viewer',
-      redirect_uri: 'https://dev-zview.z-union.ru/callback', // `OHIFStandaloneViewer.js`
+      redirect_uri: 'https://atlas.z-union.ru/callback', // `OHIFStandaloneViewer.js`
       // "Authorization Code Flow"
       // Resource: https://medium.com/@darutk/diagrams-of-all-the-openid-connect-flows-6968e3990660
       response_type: 'code',
@@ -187,10 +187,14 @@ window.config = {
               'L-CC': 3,
             };
 
-            const aImageLaterality = a.instance.ImageLaterality;
-            const bImageLaterality = b.instance.ImageLaterality;
-            const aViewPosition = a.instance.ViewPosition;
-            const bViewPosition = b.instance.ViewPosition;
+            const aImageLaterality =
+              a.instance.ImageLaterality ?? a.getReferenceDisplaySet().instance.ImageLaterality;
+            const bImageLaterality =
+              b.instance.ImageLaterality ?? b.getReferenceDisplaySet().instance.ImageLaterality;
+            const aViewPosition =
+              a.instance.ViewPosition ?? a.getReferenceDisplaySet().instance.ViewPosition;
+            const bViewPosition =
+              b.instance.ViewPosition ?? b.getReferenceDisplaySet().instance.ViewPosition;
 
             const normalizeViewPosition = viewPosition =>
               viewPosition === 'ML' ? 'MLO' : viewPosition;
