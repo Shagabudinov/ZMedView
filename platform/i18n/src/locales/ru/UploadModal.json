@@ -1,8 +1,11 @@
 {
   "Add files": "Добавить файлы",
+  "Add zip files": "Добавить zip архив(ы)",
   "Add folder": "Добавить папки",
   "DICOM files supported": "(Формат DICOM поддерживается)",
+  "DICOM, nrrd files supported": "(Поддерживаются форматы DICOM, nrrd для исследования и сегментации соответственно)",
   "or drag images or folders here": "Или перетащите файлы/папки сюда",
+  "or drag zip files here": "Или перетащите zip архив(ы) сюда",
   "files": "файлов",
   "file": "файл",
   "completed": "загружено",

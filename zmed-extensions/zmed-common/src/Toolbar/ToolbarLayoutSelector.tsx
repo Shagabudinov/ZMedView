@@ -106,8 +106,11 @@ const generateAdvancedPresets = ({ servicesManager }: withAppTypes) => {
       if (!hp.isPreset) {
         return null;
       }
+      const activeDisplaysets = displaySetService.activeDisplaySets;
+      const studyWithCTModality = activeDisplaysets.find((item) => item.Modality === 'CT');
+      const isFakeCT = studyWithCTModality['trueModality'] === 'MG';
 
-      const areValid = _areSelectorsValid(hp, displaySets, hangingProtocolService);
+      const areValid = _areSelectorsValid(hp, displaySets, hangingProtocolService) && !isFakeCT;
 
       return {
         icon: hp.icon,

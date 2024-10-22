@@ -46,17 +46,21 @@ function DicomUpload({
               <Dropzone
                 onDrop={onDrop}
                 noDrag
+                accept=".zip"
               >
                 {({ getRootProps, getInputProps }) => (
                   <div {...getRootProps()}>
-                    <Button disabled={false} onClick={() => {}}>
-                      {t('Add files')}
+                    <Button
+                      disabled={false}
+                      onClick={() => {}}
+                    >
+                      {t('Add zip files')}
                       <input {...getInputProps()} />
                     </Button>
                   </div>
                 )}
               </Dropzone>
-              <Dropzone
+              {/* <Dropzone
                 onDrop={onDrop}
                 noDrag
               >
@@ -76,12 +80,10 @@ function DicomUpload({
                     </Button>
                   </div>
                 )}
-              </Dropzone>
+              </Dropzone> */}
             </div>
-            <div className="pt-5">{t('or drag images or folders here')}</div>
-            <div className="pt-3 text-aqua-pale text-lg">
-              {t('DICOM files supported')}
-            </div>
+            <div className="pt-5">{t('or drag zip files here')}</div>
+            <div className="text-aqua-pale pt-3 text-lg">{t('DICOM, nrrd files supported')}</div>
           </div>
         )}
       </Dropzone>

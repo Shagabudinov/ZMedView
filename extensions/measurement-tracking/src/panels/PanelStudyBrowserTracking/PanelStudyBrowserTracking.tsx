@@ -504,6 +504,7 @@ function _mapDisplaySets(
         },
         isTracked: trackedSeriesInstanceUIDs.includes(ds.SeriesInstanceUID),
         isHydratedForDerivedDisplaySet: ds.isHydrated,
+        imageView: ds.imageView,
       };
 
       if (componentType === 'thumbnailNoImage') {

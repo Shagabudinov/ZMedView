@@ -117,12 +117,10 @@ export default class DicomFileUploader extends PubSubService {
             return;
           }
 
-          if (!this._checkDicomFile(dicomFile)) {
-            // The file is not DICOM
-            this._reject(
-              reject,
-              new UploadRejection(UploadStatus.Failed, 'Not a valid DICOM file.')
-            );
+          // if (!this._checkDicomFile(dicomFile)) {
+          if (!this._checkZipFile(dicomFile)) {
+            // The file is not ZIP
+            this._reject(reject, new UploadRejection(UploadStatus.Failed, 'Not a valid ZIP file.'));
             return;
           }
 
@@ -200,5 +198,12 @@ export default class DicomFileUploader extends PubSubService {
     const arr = new Uint8Array(arrayBuffer.slice(128, 132));
     // bytes from 128 to 132 must be "DICM"
     return Array.from('DICM').every((char, i) => char.charCodeAt(0) === arr[i]);
+  }
+
+  private _checkZipFile(arrayBuffer: ArrayBuffer) {
+    const zipSignature = [0x50, 0x4b, 0x03, 0x04];
+    const bytes = new Uint8Array(arrayBuffer);
+
+    return zipSignature.every((byte, i) => byte === bytes[i]);
   }
 }

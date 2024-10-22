@@ -37,6 +37,7 @@ const ThumbnailList = ({
           imageAltText,
           isHydratedForDerivedDisplaySet,
           PhotometricInterpretation,
+          imageView,
         }) => {
           const isActive = activeDisplaySetInstanceUIDs.includes(displaySetInstanceUID);
           if (PhotometricInterpretation === 'RGB' && description === '') {
@@ -98,6 +99,7 @@ const ThumbnailList = ({
                   onClick={() => onThumbnailClick(displaySetInstanceUID)}
                   onDoubleClick={() => onThumbnailDoubleClick(displaySetInstanceUID)}
                   isHydratedForDerivedDisplaySet={isHydratedForDerivedDisplaySet}
+                  imageView={imageView}
                 />
               );
             default:

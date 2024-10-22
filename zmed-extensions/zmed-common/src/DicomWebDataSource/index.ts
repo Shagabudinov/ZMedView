@@ -1,6 +1,7 @@
 import { StudyList } from './../../../../platform/core/src/types/StudyList';
 import { api } from 'dicomweb-client';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import qs from 'qs';
 import {
   DicomMetadataStore,
   IWebApiDataSource,
@@ -133,7 +134,10 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
       studies: {
         mapParams: mapParams.bind(),
         search: async function (
-          origParams: Types.SearchParams
+          origParams: Types.SearchParams,
+          shouldGetFilteredData,
+          selectedFilterOptions,
+          filterAge
         ): Promise<Types.SearchStudies> {
           const headers = getAuthrorizationHeader();
           qidoDicomWebClient.headers = headers;
@@ -141,30 +145,57 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
           let results = [];
           let response: AxiosResponse<Types.StudyListWithPaginationQuery>;
           const date = new Map();
+          const projections = new Map();
 
           if (origParams.me) {
             const head = headers;
             head['Content-Type'] = 'application/json';
-            const params = {
+            const basicParams = {
               page: origParams.pageNumber,
               size: origParams.resultsPerPage,
             };
+            const params = { ...basicParams };
+            const newParams = {};
             const config: AxiosRequestConfig = {
               method: 'get',
-              url: dicomWebConfig.personalAccountUri + '/api/v2/study/',
+              url: dicomWebConfig.personalAccountUri + '/study/',
               headers: head,
               params,
+              paramsSerializer: (params) => {
+                return qs.stringify(params, { encode: false });
+              },
             };
+            if (shouldGetFilteredData) {
+              if (filterAge.length > 0) {
+                let ageRange = filterAge.join(',');
+                newParams['age_range'] = encodeURIComponent(ageRange);
+              }
+              if (selectedFilterOptions.size > 0) {
+                const biRadsCategories = [...selectedFilterOptions].join(',');
+                newParams['bi_rads_categories'] =
+                  encodeURIComponent(biRadsCategories);
+              }
 
-            let studies: string[];
+              config['url'] = dicomWebConfig.personalAccountUri + '/study/search';
+              config['params'] = newParams;
+            }
+            let studiesUids: Set<string> = new Set();
             response = await axios(config);
             if (response.status == 200) {
-              studies = response.data.items.map((el) => {
-                date.set(el.study_instance_uid, el.uploaded_at);
-                return el.study_instance_uid;
+              response.data.forEach((el) => {
+                date.set(el.study_uid, el.uploaded_at);
+                if (projections.has(el.study_uid)) {
+                  projections.set(el.study_uid, [
+                    ...projections.get(el.study_uid),
+                    el.projection,
+                  ]);
+                } else {
+                  projections.set(el.study_uid, [el.projection]);
+                }
+                studiesUids.add(el.study_uid);
               });
-              if (studies.length > 0) {
-                origParams.studyInstanceUid = studies;
+              if (studiesUids.size > 0) {
+                origParams.studyInstanceUid = [...studiesUids];
                 origParams.size = response.data.size;
                 const { studyInstanceUid, seriesInstanceUid, ...mappedParams } =
                   mapParams(origParams, {
@@ -200,6 +231,10 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
 
           finalStudies.forEach((el) => {
             el['uploadedAt'] = date.get(el['studyInstanceUid']);
+            el['projections'] = projections.get(el['studyInstanceUid']);
+            if (el['projections'].length > 0) {
+              el['modalities'] = el['modalities'].replace('CT', 'MG');
+            }
           });
 
           return {
@@ -219,17 +254,10 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
             'Content-Type': 'application/json',
           };
 
-          const body = JSON.stringify([
-            {
-              study_instance_uid: studyInstanceUid,
-            },
-          ]);
-
           let config: AxiosRequestConfig = {
             method: 'delete',
-            url: dicomWebConfig.personalAccountUri + '/api/v2/study/',
+            url: `${dicomWebConfig.personalAccountUri}/study/${studyInstanceUid}`,
             headers: head,
-            data: body,
           };
 
           await axios(config);
@@ -334,28 +362,21 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
 
     store: {
       dicom: async (dataset, request) => {
+        function upload() {
+          const headers = {
+            ...getAuthrorizationHeader(),
+            'Content-Type': 'application/json',
+          };
+          return axios.post(dicomWebConfig.personalAccountUri + '/study/', formData, {
+            headers,
+          });
+        }
         const blob = new Blob([dataset], { type: 'application/dicom' });
         const formData = new FormData();
-        formData.append('files', blob, 'filename.dcm');
+        formData.append('file', blob, 'filename.dcm');
         wadoDicomWebClient.headers = getAuthrorizationHeader();
         if (dataset instanceof ArrayBuffer) {
-          const options = {
-            datasets: [dataset],
-            request,
-          };
-          return await wadoDicomWebClient
-            .storeInstances(options)
-            .then(function () {
-              const headers = {
-                ...getAuthrorizationHeader(),
-                'Content-Type': 'application/json',
-              };
-              return axios.post(
-                dicomWebConfig.personalAccountUri + '/api/v2/study/',
-                formData,
-                { headers }
-              );
-            });
+          return upload();
         } else {
           const meta = {
             FileMetaInformationVersion:
@@ -504,6 +525,14 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
        */
       const addRetrieveBulkData = (instance) => {
         const naturalized = naturalizeDataset(instance);
+
+        if (instance['00190020'] != undefined) {
+          naturalized.imageView = instance['00190020']['Value'][0];
+        }
+
+        if (instance['00190010'] != undefined) {
+          naturalized.trueModality = instance['00190010']['Value'][0];
+        }
 
         // if we konw the server doesn't use bulkDataURI, then don't
         if (!dicomWebConfig.bulkDataURI?.enabled) {

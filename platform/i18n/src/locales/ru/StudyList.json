@@ -1,10 +1,12 @@
 {
   "4D PT/CT": "4D (PT/CT)",
   "AccessionNumber": "Номер выборки",
+  "Advanced filters": "Расширенные фильтры",
   "Are you sure you wish to delete this study?": "Вы действительно хотите удалить это исследование?",
   "Basic Viewer": "Базовый Viewer",
   "Cannot open the study in any Viewer": "Невозможно открыть исследование ни в одном из доступных режимов Вьювера",
   "ClearFilters": "Очистить фильтры",
+  "Clear advanced filters": "Очистить расширенные фильтры",
   "Delete study": "Удаление Исследования",
   "Description": "Описание",
   "Empty": "Пусто",

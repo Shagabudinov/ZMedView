@@ -72,6 +72,7 @@ import Header from './Header';
 import ImageScrollbar from './ImageScrollbar';
 import ViewportOverlay from './ViewportOverlay';
 import InputRange from './InputRange';
+import InputTwoDigitsRange from './InputTwoDigitsRange';
 import InputNumber from './InputNumber';
 import CheckBox from './CheckBox';
 import LoadingIndicatorProgress from './LoadingIndicatorProgress';
@@ -128,6 +129,7 @@ export {
   InputFilterText,
   InputGroup,
   InputRange,
+  InputTwoDigitsRange,
   InputDoubleRange,
   InputNumber,
   InputLabelWrapper,

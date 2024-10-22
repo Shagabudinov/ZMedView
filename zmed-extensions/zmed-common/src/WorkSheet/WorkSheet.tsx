@@ -58,6 +58,9 @@ function WorkSheet({
   dataPath,
   onRefresh,
   servicesManager,
+  dataIsFiltered,
+  onClickFiltering,
+  onClickResetFiltering,
 }) {
   const { hotkeyDefinitions, hotkeyDefaults } = hotkeysManager;
   const { uiNotificationService, uiModalService } = servicesManager.services;
@@ -568,6 +571,9 @@ function WorkSheet({
       <div className="overflow-y-auto ohif-scrollbar flex flex-col grow">
         <StudyListFilter
           numOfStudies={numOfStudies}
+          onClickFiltering={onClickFiltering}
+          dataIsFiltered={dataIsFiltered}
+          onClickResetFiltering={onClickResetFiltering}
           filtersMeta={filtersMeta}
           filterValues={{ ...filterValues, ...defaultSortValues }}
           onChange={setFilterValues}

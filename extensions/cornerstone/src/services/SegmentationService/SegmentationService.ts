@@ -511,6 +511,7 @@ class SegmentationService extends PubSubService {
           referencedVolumeId: segDisplaySet.referencedVolumeId,
         },
       },
+      imageView: segDisplaySet.imageView || null,
     };
 
     const labelmap = this.getLabelmapVolume(segmentationId);

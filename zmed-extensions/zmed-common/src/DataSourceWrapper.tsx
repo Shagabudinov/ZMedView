@@ -8,6 +8,7 @@ import { Types } from '@ohif/core';
 import { useParams, useLocation } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import useSearchParams from './hooks/useSearchParams';
+import FilteringModal from './FilteringModal';
 
 /**
  * Determines if two React Router location objects are the same.
@@ -31,6 +32,7 @@ const areLocationsTheSame = (location0, location1) => {
 function DataSourceWrapper(props) {
   const navigate = useNavigate();
   const { children: LayoutTemplate, ...rest } = props;
+  const { uiModalService } = rest.servicesManager.services;
   const params = useParams();
   const location = useLocation();
   const lowerCaseSearchParams = useSearchParams({ lowerCaseKeys: true });
@@ -109,7 +111,36 @@ function DataSourceWrapper(props) {
   const [pages, setPages] = useState<number | null>(null);
   const [size, setSize] = useState<number | null>(null);
   const [totalStudies, setTotalStudies] = useState<number | null>(null);
+  const [selectedFilterOptions, setSelectedFilterOptions] = useState(new Set());
+  const [filterRangeAge, setFilterRangeAge] = useState([]);
+  const [shouldGetFilteredData, setShouldGetFilteredData] = useState(false);
+  const [dataIsFiltered, setDataIsFiltered] = useState(false);
   const cache = useRef<Map<string, Types.StudyListWithPagination>>(new Map());
+
+  const onClickCancelFiltering = async (e) => {
+    e.preventDefault();
+    setSelectedFilterOptions(() => {
+      return new Set();
+    });
+    setFilterRangeAge(() => {
+      return [0, 100]
+    });
+    uiModalService.hide();
+  };
+
+  const onClickAcceptFiltering = async (e) => {
+    e.preventDefault();
+    uiModalService.hide();
+  };
+
+  const onClickResetFiltering = async (e) => {
+    e.preventDefault();
+    setSelectedFilterOptions(() => {
+      return new Set();
+    });
+    setData(DEFAULT_DATA);
+    setDataIsFiltered(false);
+  };
 
   /**
    * The effect to initialize the data source whenever it changes. Similar to
@@ -158,23 +189,42 @@ function DataSourceWrapper(props) {
     const getData = async () => {
       setIsLoading(true);
 
-      const updateState = ({ studies = [], pages, size, total }: Types.StudyListWithPagination) => {
+      const updateState = ({
+        studies = [],
+        pages,
+        size,
+        total,
+      }: Types.StudyListWithPagination) => {
         setPages(pages);
         setSize(size);
         setTotalStudies(studies.length);
-        setData({ studies, total: studies.length, ...queryFilterValues, location });
+        setData({
+          studies,
+          total: studies.length,
+          ...queryFilterValues,
+          location,
+        });
       };
 
       if (data.location === 'Not a valid location, causes first load to occur') cache.current.clear();
       const queryKey = JSON.stringify(queryFilterValues);
 
-      if (cache.current.has(queryKey)) { //Данные из кэша
+      if (cache.current.has(queryKey)) {
+        //Данные из кэша
         const cachedData = cache.current.get(queryKey);
         updateState(cachedData);
-      } else {                           //Данные из сетевого запроса
-        const data = await dataSource.query.studies.search(queryFilterValues);
+      } else {
+        //Данные из сетевого запроса
+        const data = await dataSource.query.studies.search(
+          queryFilterValues,
+          shouldGetFilteredData,
+          selectedFilterOptions,
+
+          filterRangeAge,
+        );
         cache.current.set(queryKey, data);
         updateState(data);
+        setShouldGetFilteredData(false);
       }
 
       setIsLoading(false);
@@ -222,6 +272,28 @@ function DataSourceWrapper(props) {
   ]);
   // queryFilterValues
 
+  const onClickFiltering = (e) => {
+    e.preventDefault();
+
+    uiModalService.show({
+      title: 'Расширенные фильтры',
+      containerDimensions: 'w-[70%] max-w-[900px]',
+      customClassName: 'overflow-auto',
+      content: FilteringModal,
+      contentProps: {
+        filterRangeAge,
+        setFilterRangeAge,
+        setShouldGetFilteredData,
+        setData,
+        DEFAULT_DATA,
+        setDataIsFiltered,
+        selectedFilterOptions,
+        setSelectedFilterOptions,
+        onClose: uiModalService.hide,
+      },
+    });
+  };
+
   // TODO: Better way to pass DataSource?
   return (
     <LayoutTemplate
@@ -233,6 +305,11 @@ function DataSourceWrapper(props) {
       isLoadingData={isLoading}
       pages={pages}
       size={size}
+      dataIsFiltered={dataIsFiltered}
+      onClickFiltering={onClickFiltering}
+      onClickAcceptFiltering={onClickAcceptFiltering}
+      onClickCancelFiltering={onClickCancelFiltering}
+      onClickResetFiltering={onClickResetFiltering}
       // To refresh the data, simply reset it to DEFAULT_DATA which invalidates it and triggers a new query to fetch the data.
       onRefresh={() => setData(DEFAULT_DATA)}
     />

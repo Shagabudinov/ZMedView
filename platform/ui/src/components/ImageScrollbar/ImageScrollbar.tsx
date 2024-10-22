@@ -12,7 +12,8 @@ class ImageScrollbar extends PureComponent {
   };
 
   render() {
-    if (this.props.max === 0) {
+    this.unsupportedMaxValues = [0, 1, 2];
+    if (this.unsupportedMaxValues.includes(this.props.max)) {
       return null;
     }
 

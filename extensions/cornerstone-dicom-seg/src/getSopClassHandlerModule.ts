@@ -28,6 +28,7 @@ function _getDisplaySetsFromSeries(
     wadoRoot,
     wadoUri,
     wadoUriRoot,
+    imageView,
   } = instance;
 
   const displaySet = {
@@ -57,6 +58,7 @@ function _getDisplaySetsFromSeries(
     wadoUriRoot,
     wadoUri,
     isOverlayDisplaySet: true,
+    imageView,
   };
 
   const referencedSeriesSequence = instance.ReferencedSeriesSequence;

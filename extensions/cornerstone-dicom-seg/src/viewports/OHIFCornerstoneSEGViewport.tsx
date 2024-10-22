@@ -150,17 +150,34 @@ function OHIFCornerstoneSEGViewport(props: withAppTypes) {
       return;
     }
 
-    promptHydrateSEG({
-      servicesManager,
-      viewportId,
-      segDisplaySet,
-      preHydrateCallbacks: [storePresentationState],
-      hydrateSEGDisplaySet,
-    }).then(isHydrated => {
-      if (isHydrated) {
-        setIsHydrated(true);
-      }
-    });
+    // Применение всех сегментаций (при открытии исследования)
+    const hydrateSeg = () => {
+      setIsHydrated(false);
+      return new Promise(function (resolve, reject) {
+        const preHydrateCallbacks = [storePresentationState];
+
+        preHydrateCallbacks?.forEach(callback => {
+          callback();
+        });
+
+        window.setTimeout(async () => {
+          const isHydrated = await hydrateSEGDisplaySet({
+            segDisplaySet,
+            viewportId,
+          });
+
+          resolve(isHydrated);
+        }, 0);
+      })
+        .then(isHydrated => {
+          if (isHydrated) {
+            setIsHydrated(true);
+          }
+        })
+        .then(() => setIsHydrated(true));
+    };
+
+    hydrateSeg();
   }, [servicesManager, viewportId, segDisplaySet, segIsLoading]);
 
   useEffect(() => {

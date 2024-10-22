@@ -26,6 +26,13 @@ const LCCSeriesMatchingRules = [
       contains: 'CC',
     },
   },
+  {
+    weight: 100,
+    attribute: 'imageView',
+    constraint: {
+      contains: 'L-CC',
+    },
+  },
 ];
 
 const RCCSeriesMatchingRules = [
@@ -41,6 +48,13 @@ const RCCSeriesMatchingRules = [
     attribute: 'ViewPosition',
     constraint: {
       contains: 'CC',
+    },
+  },
+  {
+    weight: 100,
+    attribute: 'imageView',
+    constraint: {
+      contains: 'R-CC',
     },
   },
 ];
@@ -60,6 +74,13 @@ const LMLOSeriesMatchingRules = [
       contains: 'ML' || 'MLO',
     },
   },
+  {
+    weight: 100,
+    attribute: 'imageView',
+    constraint: {
+      contains: 'L-MLO' || 'L-ML',
+    },
+  },
 ];
 
 const RMLOSeriesMatchingRules = [
@@ -75,6 +96,13 @@ const RMLOSeriesMatchingRules = [
     attribute: 'ViewPosition',
     constraint: {
       contains: 'ML' || 'MLO',
+    },
+  },
+  {
+    weight: 100,
+    attribute: 'imageView',
+    constraint: {
+      contains: 'R-MLO' || 'R-ML',
     },
   },
 ];

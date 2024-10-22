@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import Icon from '../Icon';
+import { getMammoLabel } from './getMammoLabel';
 
 const SegmentItem = ({
   segmentIndex,
@@ -92,7 +93,9 @@ const SegmentItem = ({
                 }}
               />
             </div>
-            <div className="flex items-center py-1 hover:cursor-pointer">{label}</div>
+            <div className="flex items-center py-1 hover:cursor-pointer">
+              {getMammoLabel(label)}
+            </div>
           </div>
           <div
             className={classnames(

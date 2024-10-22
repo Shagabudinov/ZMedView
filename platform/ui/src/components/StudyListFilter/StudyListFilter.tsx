@@ -6,6 +6,7 @@ import LegacyButton from '../LegacyButton';
 import Icon from '../Icon';
 import Typography from '../Typography';
 import InputGroup from '../InputGroup';
+import Button from '../Button';
 
 const StudyListFilter = ({
   filtersMeta,
@@ -16,6 +17,9 @@ const StudyListFilter = ({
   numOfStudies,
   onUploadClick,
   getDataSourceConfigurationComponent,
+  onClickFiltering,
+  dataIsFiltered,
+  onClickResetFiltering,
 }) => {
   const { t } = useTranslation('StudyList');
   const { sortBy, sortDirection } = filterValues;
@@ -32,8 +36,8 @@ const StudyListFilter = ({
     <React.Fragment>
       <div>
         <div className="bg-black">
-          <div className="container relative mx-auto flex flex-col pt-5">
-            <div className="mb-5 flex flex-row justify-between">
+          <div className="container relative mx-auto flex flex-col pt-3">
+            <div className="mb-2 flex flex-row justify-between">
               <div className="flex min-w-[1px] shrink flex-row items-center gap-6">
                 <Typography
                   variant="h6"
@@ -54,19 +58,6 @@ const StudyListFilter = ({
               </div>
               <div className="flex h-[34px] flex-row items-center">
                 {/* TODO revisit the completely rounded style of button used for clearing the study list filter - for now use LegacyButton*/}
-                {isFiltering && (
-                  <LegacyButton
-                    rounded="full"
-                    variant="outlined"
-                    color="primaryActive"
-                    border="primaryActive"
-                    className="mx-8"
-                    startIcon={<Icon name="cancel" />}
-                    onClick={clearFilters}
-                  >
-                    {t('ClearFilters')}
-                  </LegacyButton>
-                )}
                 <Typography
                   variant="h6"
                   className="text-primary-light mr-2"
@@ -83,6 +74,43 @@ const StudyListFilter = ({
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="container relative mx-auto mb-2 flex justify-between">
+        <div className="flex gap-6">
+          <Button
+            onClick={e => onClickFiltering(e)}
+            className=""
+          >
+            {t('Advanced filters')}
+          </Button>
+          {dataIsFiltered && (
+            <LegacyButton
+              rounded="full"
+              variant="outlined"
+              color="primaryActive"
+              border="primaryActive"
+              startIcon={<Icon name="cancel" />}
+              onClick={onClickResetFiltering}
+            >
+              {t('Clear advanced filters')}
+            </LegacyButton>
+          )}
+        </div>
+        <div className="flex">
+          {isFiltering && (
+            <LegacyButton
+              rounded="full"
+              variant="outlined"
+              color="primaryActive"
+              border="primaryActive"
+              className="mx-0"
+              startIcon={<Icon name="cancel" />}
+              onClick={clearFilters}
+            >
+              {t('ClearFilters')}
+            </LegacyButton>
+          )}
         </div>
       </div>
       <div className="sticky -top-1 z-10 mx-auto border-b-4 border-black">

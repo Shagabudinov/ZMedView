@@ -125,8 +125,9 @@ function modeFactory({ modeConfiguration }) {
     isValidMode: function ({ modalities }) {
       const modalities_list = modalities.split('\\');
 
-      return !!modalities_list.filter(modality => ALLOWED_MODALITIES.indexOf(modality) !== -1)
-        .length;
+      return (
+        !!modalities_list.filter(modality => ALLOWED_MODALITIES.indexOf(modality) !== -1).length
+      );
     },
     /**
      * Mode Routes are used to define the mode's behavior. A list of Mode Route

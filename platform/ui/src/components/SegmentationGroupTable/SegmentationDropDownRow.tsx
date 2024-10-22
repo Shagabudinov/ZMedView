@@ -21,10 +21,12 @@ function SegmentationDropDownRow({
     onActiveSegmentationChange(option.value); // Notify the parent
   };
 
-  const selectOptions = segmentations.map(s => ({
-    value: s.id,
-    label: s.label,
-  }));
+  const selectOptions = segmentations.map(s => {
+    return {
+      value: s.id,
+      label: s.imageView,
+    };
+  });
   const { t } = useTranslation('SegmentationTable');
 
   if (!activeSegmentation) {

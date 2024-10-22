@@ -22,6 +22,7 @@ const ThumbnailNoImage = ({
   dragData,
   isActive,
   isHydratedForDerivedDisplaySet,
+  imageView,
 }) => {
   const { t } = useTranslation('Common');
   const [collectedProps, drag, dragPreview] = useDrag({
@@ -102,9 +103,10 @@ const ThumbnailNoImage = ({
                 onClick={onReject}
               />
             )}
-            <div className="ml-4 text-base text-white break-all">
-              {t(description)}
-            </div>
+            <div className="ml-4 break-all text-base text-white">{t(description)}</div>
+            {modality === 'SEG' && (
+              <div className="ml-4 break-all text-base text-white">{imageView}</div>
+            )}
           </div>
         </div>
       </div>
