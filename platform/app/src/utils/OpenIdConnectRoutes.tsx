@@ -94,7 +94,8 @@ function OpenIdConnectRoutes({ oidc, routerBasename, userAuthenticationService }
   const userManager = initUserManager(oidc, routerBasename);
 
   const getAuthorizationHeader = () => {
-    const user = userAuthenticationService.getUser();
+    //const user = userAuthenticationService.getUser();
+    const user = JSON.parse(sessionStorage.getItem(`oidc.user:${oidc[0].authority}:ohif-viewer`));
 
     // if the user is null return early, next time
     // we hit this function we will have a user
