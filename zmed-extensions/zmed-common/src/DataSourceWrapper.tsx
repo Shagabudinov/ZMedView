@@ -47,7 +47,7 @@ function DataSourceWrapper(props) {
   const DEFAULT_DATA = {
     studies: [],
     total: 0,
-    resultsPerPage: 25,
+    resultsPerPage: 100,
     pageNumber: 1,
     location: 'Not a valid location, causes first load to occur',
   };
@@ -332,7 +332,7 @@ function _getQueryFilterValues(query, queryLimit) {
   query = new URLSearchParams(query);
 
   const pageNumber = _tryParseInt(query.get('pageNumber'), 1);
-  const resultsPerPage = _tryParseInt(query.get('resultsPerPage'), 25);
+  const resultsPerPage = _tryParseInt(query.get('resultsPerPage'), 100);
 
   const queryFilterValues = {
     // DCM

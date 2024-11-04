@@ -641,7 +641,7 @@ const defaultFilterValues = {
   sortBy: '',
   sortDirection: 'none',
   pageNumber: 1,
-  resultsPerPage: 25,
+  resultsPerPage: 100,
   datasources: '',
   configUrl: null,
 };
