@@ -1,7 +1,11 @@
 import { createReportAsync } from '@ohif/extension-default';
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { SegmentationGroupTable, SegmentationGroupTableExpanded } from '@ohif/ui';
+import {
+  SegmentationGroupTable,
+  SegmentationGroupTableExpanded,
+  SegmentationGroupTableAtlas,
+} from '@ohif/ui';
 import { SegmentationPanelMode } from '../types/segmentation';
 import callInputDialog from './callInputDialog';
 import callColorPickerDialog from './colorPickerDialog';
@@ -237,6 +241,33 @@ export default function PanelSegmentation({
     });
   };
 
+  const onToggleSegmentsVisibility = (segmentationId, segmentIndexesArray, forceVisible = null) => {
+    const segmentation = segmentationService.getSegmentation(segmentationId);
+    const toolGroupIds = getToolGroupIds(segmentationId);
+
+    const typeOfSegmentIndexesArray = typeof segmentIndexesArray;
+
+    if (typeOfSegmentIndexesArray === 'number') {
+      onToggleSegmentVisibility(segmentationId, segmentIndexesArray);
+    } else if (typeOfSegmentIndexesArray === 'object') {
+      segmentIndexesArray.forEach(segmentIndex => {
+        const segmentInfo = segmentation.segments[segmentIndex];
+        const isVisible = forceVisible !== null ? forceVisible : !segmentInfo.isVisible;
+
+        toolGroupIds.forEach(toolGroupId => {
+          segmentationService.setSegmentVisibility(
+            segmentationId,
+            segmentIndex,
+            isVisible,
+            toolGroupId
+          );
+        });
+      });
+    } else {
+      console.warn('segmentIndex is not a number or array.');
+    }
+  };
+
   const onToggleSegmentLock = (segmentationId, segmentIndex) => {
     segmentationService.toggleSegmentLocked(segmentationId, segmentIndex);
   };
@@ -318,9 +349,13 @@ export default function PanelSegmentation({
       ? configuration?.onSegmentationAdd
       : onSegmentationAdd;
 
+  const SegmentationGroupTableAtlasComponent =
+    components[configuration?.segmentationPanelMode] || SegmentationGroupTableAtlas;
+
   return (
-    <SegmentationGroupTableComponent
+    <SegmentationGroupTableAtlasComponent
       title={t('Segmentations')}
+      viewportGridService={viewportGridService}
       segmentations={segmentations}
       disableEditing={configuration.disableEditing}
       activeSegmentationId={selectedSegmentationId || ''}
@@ -339,6 +374,7 @@ export default function PanelSegmentation({
       onSegmentColorClick={onSegmentColorClick}
       onSegmentDelete={onSegmentDelete}
       onToggleSegmentVisibility={onToggleSegmentVisibility}
+      onToggleSegmentsVisibility={onToggleSegmentsVisibility}
       onToggleSegmentLock={onToggleSegmentLock}
       onToggleSegmentationVisibility={onToggleSegmentationVisibility}
       showDeleteSegment={true}

@@ -31,7 +31,11 @@ import Notification from './Notification';
 import ProgressDropdown from './ProgressDropdown';
 import Select from './Select';
 import SegmentationTable from './SegmentationTable';
-import { SegmentationGroupTable, SegmentationGroupTableExpanded } from './SegmentationGroupTable';
+import {
+  SegmentationGroupTable,
+  SegmentationGroupTableExpanded,
+  SegmentationGroupTableAtlas,
+} from './SegmentationGroupTable';
 import SidePanel from './SidePanel';
 import SplitButton from './SplitButton';
 import StudyBrowser from './StudyBrowser';
@@ -155,6 +159,7 @@ export {
   Select,
   SegmentationTable,
   SegmentationGroupTable,
+  SegmentationGroupTableAtlas,
   SegmentationGroupTableExpanded,
   SidePanel,
   SplitButton,

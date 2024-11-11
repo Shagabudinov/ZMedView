@@ -2,6 +2,7 @@ import React from 'react';
 import { Select, Icon, Dropdown, Tooltip } from '../../components';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { useViewportGrid } from '@ohif/ui';
 
 function SegmentationDropDownRow({
   segmentations = [],
@@ -17,11 +18,23 @@ function SegmentationDropDownRow({
   onSegmentationAdd,
   addSegmentationClassName,
 }) {
+  const [viewportGrid] = useViewportGrid();
+  const { viewports } = viewportGrid;
+
+  const availableSegmentations = segmentations.filter(segmentation => {
+    for (const viewport of viewports) {
+      if (viewport[1]?.displaySetOptions[0]?.id === segmentation.imageView.replace('-', '')) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   const handleChange = option => {
     onActiveSegmentationChange(option.value); // Notify the parent
   };
 
-  const selectOptions = segmentations.map(s => {
+  const selectOptions = availableSegmentations.map(s => {
     return {
       value: s.id,
       label: s.imageView,

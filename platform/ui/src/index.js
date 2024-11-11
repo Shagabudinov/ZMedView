@@ -85,6 +85,7 @@ export {
   Select,
   SegmentationTable,
   SegmentationGroupTable,
+  SegmentationGroupTableAtlas,
   SegmentationGroupTableExpanded,
   SidePanel,
   SplitButton,

@@ -137,6 +137,7 @@ function ViewerLayout({
                 side="left"
                 activeTabIndex={leftPanelClosedState ? null : 0}
                 servicesManager={servicesManager}
+                expandedWidth={248}
               />
             </ErrorBoundary>
           ) : null}
@@ -158,6 +159,7 @@ function ViewerLayout({
                 side="right"
                 activeTabIndex={rightPanelClosedState ? null : 0}
                 servicesManager={servicesManager}
+                expandedWidth={348}
               />
             </ErrorBoundary>
           ) : null}
